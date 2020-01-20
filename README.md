@@ -1,2 +1,2 @@
 # paramedics-web
-🚑 Web Server (Node + Express + GraphQL)
+🚑 Web Server (Node.js + Express + GraphQL)
