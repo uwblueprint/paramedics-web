@@ -16,5 +16,6 @@
     "express": "^4.16.1",
     "nodemon": "^2.0.2"
   },
-    "homepage": "https://github.com/uwblueprint/paramedics-web"
+  "homepage": "https://github.com/uwblueprint/paramedics-web"
 }
+
