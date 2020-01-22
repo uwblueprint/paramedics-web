@@ -1,12 +1,20 @@
 {
   "name": "paramedics-web",
   "version": "1.0.0",
+  "author": "UW Blueprint",
   "description": "Paramedics API",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uwblueprint/paramedics-web.git"
+  },
   "scripts": {
-    "start": "node server.js"
+    "prod": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.16.1"
-  }
+    "express": "^4.16.1",
+    "nodemon": "^2.0.2"
+  },
+    "homepage": "https://github.com/uwblueprint/paramedics-web"
 }
