@@ -18,7 +18,13 @@
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-tools": "^4.0.6",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.3"
   },
-  "homepage": "https://github.com/uwblueprint/paramedics-web"
+  "homepage": "https://github.com/uwblueprint/paramedics-web",
+  "devDependencies": {
+    "sequelize-cli": "^5.5.1"
+  }
 }
