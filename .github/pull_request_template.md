@@ -30,4 +30,4 @@ DESCRIPTION
 - [ ] Assign yourself to the PR
 - [ ] Make sure build passes
 
-@paramedics
+@uwblueprint/paramedics 
