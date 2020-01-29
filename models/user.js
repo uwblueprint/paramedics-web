@@ -1,14 +1,20 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  // TODO: Check if table name is lowercase
-  const User = sequelize.define('User', {
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
-  }, {});
-  User.associate = function(models) {
-    // associations can be defined here
-  };
-  return User;
+const { Sequelize, DataTypes } = require('sequelize');
+
+// TODO: this stuff can be set to env variables
+const sequelize = new Sequelize('paramedics-db', 'robot', 'robot_pwd', {
+  host: 'paramedics-db',
+  dialect: 'postgres'
+});
+
+const User = sequelize.define('user', {
+  firstName: DataTypes.STRING,
+  lastName: DataTypes.STRING,
+  email: DataTypes.STRING,
+  password: DataTypes.STRING
+}, {});
+User.associate = function(models) {
+  // associations can be defined here
 };
+
+exports.User = User;

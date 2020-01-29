@@ -1,32 +1,41 @@
 'use strict';
 
+const { merge } = require('lodash');
+const { userSchema } = require('./schema/user');
+const { userResolvers } = require('./resolvers/user');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 
+const { Sequelize } = require('sequelize');
+
+// TODO: this stuff can be set to env variables
+const sequelize = new Sequelize('paramedics', 'robot', 'robot_pwd', {
+  host: 'paramedics-db',
+  dialect: 'postgres'
+});
+
+
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
 
-const about = {
-  name: "Paramedics API",
-  version: 1.0,
-  author: "UW Blueprint",
-};
 // Schema
-const typeDefs = `
-  type Query { about: About }
-  type About { name: String, version: Float, author: String }
+
+const Query = `
+  type Query {
+    _empty: String
+  }
 `;
 
-const resolvers = {
-  Query: { about: () => about },
-};
-
+const resolvers = {};
+console.log(userSchema);
+console.log(merge(resolvers, userResolvers));
 const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
+  typeDefs: [ Query, userSchema ],
+  resolvers: merge(resolvers, userResolvers),
 });
 
 // App
