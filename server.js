@@ -31,8 +31,7 @@ const Query = `
 `;
 
 const resolvers = {};
-console.log(userSchema);
-console.log(merge(resolvers, userResolvers));
+
 const schema = makeExecutableSchema({
   typeDefs: [ Query, userSchema ],
   resolvers: merge(resolvers, userResolvers),
