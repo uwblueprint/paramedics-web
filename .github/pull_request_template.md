@@ -1,5 +1,7 @@
 ## Overview
->Brief description of high-level changes; link notion task
+>Brief description of high-level changes; link notion task and other relevant links
+
+[Notion task](https://www.notion.so/uwblueprintexecs/9224caeb21ce4350b8a1dc378d393323?v=43f44ac04d734394b7f7edc636c523b4)
 
 DESCRIPTION
 
@@ -20,7 +22,7 @@ DESCRIPTION
 
 ## Checklist
 - [ ] Change title to be more descriptive (shouldn't be just branch name)
-- [ ] Add notion task link
+- [ ] Update `Notion task` link
 - [ ] `Overview`
 - [ ] `Changes`
   - [ ] \(Optional) Add inline comments in diff
