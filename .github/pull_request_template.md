@@ -1,5 +1,5 @@
 ## Overview
->Brief description of high-level changes
+>Brief description of high-level changes; link notion task
 
 DESCRIPTION
 
@@ -20,6 +20,7 @@ DESCRIPTION
 
 ## Checklist
 - [ ] Change title to be more descriptive (shouldn't be just branch name)
+- [ ] Add notion task link
 - [ ] `Overview`
 - [ ] `Changes`
   - [ ] \(Optional) Add inline comments in diff
