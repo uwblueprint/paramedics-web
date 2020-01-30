@@ -1,15 +1,15 @@
 'use strict';
 
-const { Sequelize, DataTypes } = require('sequelize');
-const { User } = require('../models/user');
+const db = require('../models');
+
 const userResolvers = {
     Query: {
-        users: () =>  User.findAll(),
+        users: () =>  db.user.findAll(),
         user(obj, args, context, info) {
-            return User.findByPk(args.id);
+            return db.user.findByPk(args.id);
         },
 
     },
 };
 
-exports.userResolvers = userResolvers;
+exports.userResolvers =  userResolvers;
