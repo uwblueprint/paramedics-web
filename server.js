@@ -1,32 +1,35 @@
 'use strict';
 
+const { merge } = require('lodash');
+const { userSchema } = require('./schema/user');
+const { userResolvers } = require('./resolvers/user');
+const { eventSchema } = require('./schema/event');
+const { eventResolvers } = require('./resolvers/event');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 
+const { Sequelize } = require('sequelize');
+
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
 
-const about = {
-  name: "Paramedics API",
-  version: 1.0,
-  author: "UW Blueprint",
-};
 // Schema
-const typeDefs = `
-  type Query { about: About }
-  type About { name: String, version: Float, author: String }
+
+const Query = `
+  type Query {
+    _empty: String
+  }
 `;
 
-const resolvers = {
-  Query: { about: () => about },
-};
+const resolvers = {};
 
 const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
+  typeDefs: [ Query, userSchema, eventSchema ],
+  resolvers: merge(resolvers, userResolvers, eventResolvers),
 });
 
 // App
