@@ -4,11 +4,15 @@ const userSchema = `
     users: [User]
   }
   
+  extend type Mutation {
+    addUser(firstName: String!, lastName: String!, email: String!,  password: String!): User!
+  }
+  
   type User {
     id: ID!
-    firstName: String
-    lastName: String
-    email: String
+    firstName: String!
+    lastName: String!
+    email: String!
   }
   `
 ;
