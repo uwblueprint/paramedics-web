@@ -5,10 +5,12 @@ const userSchema = `
   }
   
   type User {
+    accessLevel: String
     id: ID!
     firstName: String
     lastName: String
     email: String
+    emergencyContact: String
   }
   `
 ;
