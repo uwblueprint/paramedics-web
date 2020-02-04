@@ -25,16 +25,10 @@ const Query = `
   }
 `;
 
-const Mutation = `
-  type Mutation {
-    _empty: String
-  }
-`;
-
 const resolvers = {};
 
 const schema = makeExecutableSchema({
-  typeDefs: [ Query, Mutation, userSchema, eventSchema ],
+  typeDefs: [ Query, userSchema, eventSchema ],
   resolvers: merge(resolvers, userResolvers, eventResolvers),
 });
 
