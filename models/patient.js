@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
         age: DataTypes.INTEGER,
         runNumber: DataTypes.BIGINT, // TODO: Clarify
         barcodeValue: DataTypes.BIGINT, // TODO: Clarify
-        incidentId: DataTypes.INTEGER, // TODO: foreign key
+        incidentId: DataTypes.INTEGER, // TODO: Foreign key
         status: DataTypes.STRING,
         triageLevel: DataTypes.ENUM, // TODO: Clarify
         notes: DataTypes.TEXT,
-        transportTime: DataTypes.DATE, // TODO: Need custom date type
+        transportTime: DataTypes.DATE
     }, {});
     Patient.associate = function (models) {
         // associations can be defined here

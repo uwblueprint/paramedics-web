@@ -13,8 +13,8 @@ const patientSchema = `
     status: String,
     triageLevel: Int, 
     notes: String,
-    transportTime: Int,
-    createdAt: Date,
+    transportTime: DateTime,
+    createdAt: DateTime,
   }
   `
   ;
