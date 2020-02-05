@@ -13,6 +13,8 @@ const userSchema = `
     firstName: String!
     lastName: String!
     email: String!
+    createdAt: DateTime
+    updatedAt: DateTime
   }
   `
 ;
