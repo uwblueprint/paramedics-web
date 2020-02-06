@@ -21,6 +21,8 @@ const userSchema = `
     lastName: String!
     email: String!
     emergencyContact: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
   `
 ;
