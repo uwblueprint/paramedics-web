@@ -1,7 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
-    accessLevel: DataTypes.STRING,
+    accessLevel: {
+      type: DataTypes.ENUM,
+      values: ['COMMANDER', 'SUPERVISOR', 'ADMIN']
+    },
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,

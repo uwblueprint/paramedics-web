@@ -1,4 +1,10 @@
 const userSchema = `
+  enum accessLevel {
+    COMMANDER
+    SUPERVISOR
+    ADMIN
+  }  
+
   extend type Query {
     user(id: Int!): User
     users: [User]
@@ -9,7 +15,7 @@ const userSchema = `
   }
   
   type User {
-    accessLevel: String
+    accessLevel: accessLevel
     id: ID!
     firstName: String!
     lastName: String!

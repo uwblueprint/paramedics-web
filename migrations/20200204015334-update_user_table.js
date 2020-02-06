@@ -7,7 +7,7 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.addColumn('users', 'accessLevel', {
-          type: Sequelize.DataTypes.STRING
+          type: Sequelize.DataTypes.ENUM('COMMANDER', 'SUPERVISOR', 'ADMIN'),
         }, { transaction: t }),
         queryInterface.addColumn('users', 'emergencyContact', {
           type: Sequelize.DataTypes.STRING,
@@ -16,6 +16,7 @@ module.exports = {
     });
   },
 
+  // TODO: remove enum on down
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([

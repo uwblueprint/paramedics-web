@@ -7,7 +7,7 @@ module.exports = {
         firstName: 'John',
         lastName: 'Doe',
         email: 'example@example.com',
-        accessLevel: 'Commander',
+        accessLevel: "COMMANDER",
         emergencyContact: '1234567890',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -16,7 +16,7 @@ module.exports = {
         firstName: 'Clark',
         lastName: 'Kent',
         email: 'clark.kent@example.com',
-        accessLevel: 'Supervisor',
+        accessLevel: "SUPERVISOR",
         emergencyContact: '1234567890',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -25,7 +25,7 @@ module.exports = {
         firstName: 'Chris',
         lastName: 'Paul',
         email: 'chris.paul@example.com',
-        accessLevel: 'Supervisor',
+        accessLevel: "ADMIN",
         emergencyContact: '1234567890',
         createdAt: new Date(),
         updatedAt: new Date()
