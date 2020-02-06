@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       triageLevel: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DataTypes.ENUM('GREEN', 'YELLOW', 'RED')
       },
       notes: {
         type: Sequelize.TEXT

@@ -7,11 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     barcodeValue: DataTypes.BIGINT,
     incidentId: DataTypes.INTEGER,
     status: DataTypes.STRING,
-    triageLevel: DataTypes.INTEGER,
+    triageLevel: {
+      type: DataTypes.ENUM,
+      values: ['GREEN', 'YELLOW', 'RED']
+    },
     notes: DataTypes.TEXT,
     transportTime: DataTypes.DATE
   }, {});
-  patient.associate = function(models) {
+  patient.associate = function (models) {
     // associations can be defined here
   };
   return patient;

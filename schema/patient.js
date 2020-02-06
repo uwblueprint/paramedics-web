@@ -1,4 +1,9 @@
 const patientSchema = `
+enum triageLevel {
+  GREEN
+  YELLOW
+  RED
+}
   extend type Query {
     patient(id: Int!): Patient
     patients: [Patient]
@@ -11,7 +16,7 @@ const patientSchema = `
     barcodeValue: Int!,
     incidentId: Int!,
     status: String,
-    triageLevel: Int, 
+    triageLevel: triageLevel, 
     notes: String,
     transportTime: DateTime,
     createdAt: DateTime,
