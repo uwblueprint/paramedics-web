@@ -1,11 +1,11 @@
 // THIS IS ONLY FOR SERVER ADMIN USE.
 // NOT FOR THE GENERAL PUBLIC
 
-#include <cxxopts.hpp>
 #include <stdio>
 #include <stdlib>
 #include <iostream>
 #include <string>
+#include ".dependencies/cxxopts.hpp"
 #include "state.h"
 #include "command.h"
 #include "command_center.h"
