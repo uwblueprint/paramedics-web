@@ -9,7 +9,9 @@ const { eventResolvers } = require('./resolvers/event');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
 const { makeExecutableSchema } = require('graphql-tools');
+
 
 const { Sequelize } = require('sequelize');
 
@@ -19,16 +21,34 @@ const HOST = '0.0.0.0';
 
 // Schema
 
+const scalars = `
+  scalar Date
+  scalar Time
+  scalar DateTime
+`;
+
 const Query = `
   type Query {
     _empty: String
   }
 `;
 
-const resolvers = {};
+const Mutation = `
+  type Mutation {
+    _empty: String
+  }
+`;
+
+const resolvers = {
+  // Custom scalars
+  Date: GraphQLDate,
+  Time: GraphQLTime,
+  DateTime: GraphQLDateTime,
+
+};
 
 const schema = makeExecutableSchema({
-  typeDefs: [ Query, userSchema, eventSchema ],
+  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema ],
   resolvers: merge(resolvers, userResolvers, eventResolvers),
 });
 
