@@ -1,4 +1,5 @@
 "use strict";
+const User = require("./user");
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     "event",
@@ -11,8 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Event.associate = function(models) {
-    // associations can be defined here
-  };
+  Event.belongsTo(User);
   return Event;
 };

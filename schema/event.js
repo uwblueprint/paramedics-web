@@ -8,7 +8,7 @@ const eventSchema = `
     id: ID!
     name: String
     date: String
-    createdBy: Int
+    createdBy: User
     isActive: Boolean
     description: String
   }
