@@ -14,13 +14,12 @@ module.exports = {
       assignedUsers: {
         type: Sequelize.INTEGER
       },
-      //TODO: implemented without NULL
       createdAt: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.DATE
       }
     });

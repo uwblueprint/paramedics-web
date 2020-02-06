@@ -10,7 +10,8 @@ type Incident {
 
     name: String
     assignedUsers: Int
-    createdAt: 
+    createdAt: Date
+    updatedAt: Date
 
 }
 `
