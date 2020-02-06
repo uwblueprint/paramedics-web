@@ -1,13 +1,16 @@
+#include "command_center.h"
+
+
 CommandCenter::CommandCenter(State* state) {
 	this->state = state;
-	this->initializeFileMap(mode);
-	this->initializeCommandMap(mode);
-	cout << "Command Center Initialized" << endl;
+	this->initializeFileMap();
+	this->initializeCommandMap();
+	std::cout << "Command Center Initialized" << std::endl;
 }
 
 CommandCenter::~CommandCenter() {
 	for (auto& command: this->command_map) {
-		delete command;
+		delete command.second;
 	}
 	delete this->state;
 }
@@ -16,11 +19,11 @@ CommandCenter::~CommandCenter() {
 void CommandCenter::initializeFileMap() {
 	auto mode = this->state->getMode();
 	switch (mode) {
-		case DEV:
+		case DEPLOY_STATE::DEV:
 			this->setFile("dockerfile", "Dockerfile.dev");
 			this->setFile("docker-compose", "docker-compose-dev.yaml");
 			break;
-		case PROD:
+		case DEPLOY_STATE::PROD:
 			this->setFile("dockerfile", "Dockerfile.prod");
 			this->setFile("docker-compose", "docker-compose-prod.yaml");
 			break;
@@ -31,8 +34,11 @@ void CommandCenter::initializeCommandMap() {
 	auto mode = this->state->getMode();
 	// Initialize Command Map
 	switch (mode) {
-		case DEV:
-			this->setCommand("build", new Command(vector<string>{}, this->state));
+		case DEPLOY_STATE::DEV:
+			this->setCommand(
+				"build", 
+				new Command(std::vector<std::string>(), this->state)
+			);
 			// this->setMap("rebuild", );
 			// this->setMap("run", );
 			// this->setMap("stop", );
@@ -41,7 +47,7 @@ void CommandCenter::initializeCommandMap() {
 			// this->setMap("shell", );
 			// this->setMap("database", );
 			break;
-		case PROD:
+		case DEPLOY_STATE::PROD:
 			// this->setMap("build", "");
 			// this->setMap("rebuild", );
 			// this->setMap("run", );
@@ -53,32 +59,32 @@ void CommandCenter::initializeCommandMap() {
 	// Core common commands
 }
 
-Boolean CommandCenter::evaluate(Command* command) {
-	int return_code = system(command->extractCommand());
+bool CommandCenter::evaluate(Command* command) {
+	int return_code = system("");
 	if (return_code != 0) {
-		cout << "Something went wrong during command evaluation" << endl;
-		return False;
+		std::cout << "Something went wrong during command evaluation" << std::endl;
+		return false;
 	}
 	return true;	
 }
 
-string CommandCenter::getFile(string file) {
+std::string CommandCenter::getFile(std::string file) {
 	return this->file_map.at(file);
 }
 
-void CommandCenter::setFile(string key, string val) {
-	this->file_map.insert({key: val});
+void CommandCenter::setFile(std::string key, std::string val) {
+	this->file_map.insert(std::pair<std::string, std::string>(key, val));
 }
 
-Command* CommandCenter::getCommand(string cmd) {
-	return this->file_map.at(cmd);
+Command* CommandCenter::getCommand(std::string cmd) {
+	return this->command_map.at(cmd);
 }
 
-void CommandCenter::setCommand(string key, Command* cmd) {
-	this->command_map.insert({key: cmd});
+void CommandCenter::setCommand(std::string key, Command* cmd) {
+	this->command_map.insert(std::pair<std::string, Command*>(key, cmd));
 }
 
-Boolean CommandCenter::executeCommand(string cmd) {
+bool CommandCenter::executeCommand(std::string cmd) {
 	Command* command = this->getCommand(cmd);
 	return this->evaluate(command);
 }

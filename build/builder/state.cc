@@ -1,7 +1,7 @@
-#import "state.h"
+#include "state.h"
 
 
-void State::setMode(State::DEPLOY_STATE mode) {
+void State::setMode(DEPLOY_STATE mode) {
 	this->mode = mode;
 }
 

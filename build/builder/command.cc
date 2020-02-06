@@ -1,13 +1,14 @@
 #include "command.h"
 
 
-Command::Command(std::vector<std::string> commands, State* const state) {
+Command::Command(std::vector<std::string> commands, State* const state) :
+state (state)
+{
 	this->commands = commands;
-	this->state = state;
 	this->buildCommand();
 }
 
-virtual std::string Command::chainCommand() {
+std::string Command::chainCommand() {
 	std::string chained_command = "";
 	if (this->commands.size() == 0) {
 		return chained_command;
@@ -19,17 +20,17 @@ virtual std::string Command::chainCommand() {
 	return chained_command.substr(4);
 }
 
-virtual std::string Command::resolveCommand(std::string cmd) {
-	return cmd
+std::string Command::resolveCommand(std::string cmd) {
+	return cmd;
 }
 
-std::string Command::buildCommand() {
+void Command::buildCommand() {
 	for (auto& command: this->commands) {
 		command = this->resolveCommand(command);
 	}
 	this->command = this->chainCommand();
 }
 
-std::string Command::getCommand() {
+std::string const Command::extractCommand() {
 	return this->command;
 }

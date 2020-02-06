@@ -9,20 +9,22 @@
 #include "command.h"
 
 
-class CommandCenter() {
+class CommandCenter {
 	std::unordered_map<std::string, std::string> file_map;
 	std::unordered_map<std::string, Command*> command_map;
 	State* state;
-	Command* getFile();
+	std::string getFile(std::string file);
 	void setFile(std::string key, std::string val);
-	Command* getCommand();
+	Command* getCommand(std::string cmd);
 	void setCommand(std::string key, Command* cmd);
-	void initializeFileMap(State::DEPLOY_STATE mode);
-	void initializeCommandMap(State::DEPLOY_STATE mode);
-	Boolean evaluate(Command cmd);
+	void initializeFileMap();
+	void initializeCommandMap();
+	bool evaluate(Command* cmd);
 
 public:
 	CommandCenter(State* state);
 	~CommandCenter();
-	Boolean executeCommand(std::string cmd);
+	bool executeCommand(std::string cmd);
 };
+
+#endif

@@ -1,0 +1,1 @@
+enum DEPLOY_STATE { DEV, PROD };

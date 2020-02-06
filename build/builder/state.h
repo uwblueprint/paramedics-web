@@ -1,13 +1,15 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include "enum.h"
 
-class State() {
+
+class State {
 	DEPLOY_STATE mode;
 
 public:
-	enum DEPLOY_STATE { DEV, PROD };
+	void setMode(DEPLOY_STATE mode);
+	DEPLOY_STATE getMode();
+};
 
-	void setMode(State::DEPLOY_STATE mode);
-	State::DEPLOY_STATE getMode();
-}
+#endif
