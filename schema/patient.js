@@ -7,9 +7,9 @@ const patientSchema = `
   type Patient {
     gender: String,
     age: Int,
-    runNumber: Float,
-    barcodeValue: Float,
-    incidentId: Float,
+    runNumber: Int,
+    barcodeValue: Int!,
+    incidentId: Int!,
     status: String,
     triageLevel: Int, 
     notes: String,
@@ -21,4 +21,4 @@ const patientSchema = `
 
 exports.patientSchema = patientSchema;
 
-// TODO: Clarify enum for triage level, set up custom Date type
+// TODO: Clarify enum for triage level
