@@ -5,28 +5,8 @@ CommandCenter::CommandCenter(const std::shared_ptr<State>& state) :
 state(std::move(state))
 {	
 	Logger::log("INFO: Initializing command center");
-	this->initializeFileMap();
 	this->initializeCommandMap();
 }
-
-CommandCenter::~CommandCenter() {}
-
-// Ideally read from a config, and provide a default config
-void CommandCenter::initializeFileMap() {
-	Logger::log("INFO: Initializing file map");
-	auto mode = this->state->getMode();
-	switch (mode) {
-		case DEPLOY_STATE::DEV:
-			this->setFile("dockerfile", "Dockerfile.dev");
-			this->setFile("docker-compose", "docker-compose-dev.yaml");
-			break;
-		case DEPLOY_STATE::PROD:
-			this->setFile("dockerfile", "Dockerfile.prod");
-			this->setFile("docker-compose", "docker-compose-prod.yaml");
-			break;
-	}
-}
-
 
 std::unique_ptr<Command> CommandCenter::makeCommand(const std::vector<std::string>& cmd_vec) {
 	return std::make_unique<Command>(cmd_vec, this->state);
@@ -42,12 +22,15 @@ void CommandCenter::initializeCommandMap() {
 			auto cmd_vec = std::vector<std::string>{"echo 'hi'"};
 			this->setCommand(
 				"build", 
-				this->makeCommand(cmd_vec)
+				this->makeCommand(std::vector<std::string>{
+					"docker build ${RESOLVER file dockerfile}$ ."
+				})
 			);
-			auto cmd_vec2 = std::vector<std::string>{"echo 'hi2'"};
 			this->setCommand(
 				"rebuild", 
-				this->makeCommand(cmd_vec2)
+				this->makeCommand(std::vector<std::string>{
+					"echo hi"
+				})
 			);
 			// this->setMap("rebuild", );
 			// this->setMap("run", );
@@ -81,14 +64,6 @@ bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
 		throw std::system_error();
 	}
 	return true;	
-}
-
-std::string CommandCenter::getFile(std::string file) {
-	return this->file_map.at(file);
-}
-
-void CommandCenter::setFile(std::string key, std::string val) {
-	this->file_map.insert(std::pair<std::string, std::string>(key, val));
 }
 
 const std::unique_ptr<Command>& CommandCenter::getCommand(std::string cmd) {

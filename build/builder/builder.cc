@@ -89,7 +89,7 @@ int main(int argc, char *argv[]){
 		int exit_code = 1;
 		logger.log("An error occured in command center");
 		logger.log("Exiting now with exit code " + exit_code);
-		exit(exit_code);
+		return exit_code;
 	}
 	return 0;
 }
