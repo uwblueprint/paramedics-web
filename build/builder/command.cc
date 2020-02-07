@@ -1,7 +1,7 @@
 #include "command.h"
 
 
-const std::string RESOLVE_VALIDATOR = 'RESOLVER'
+const std::string RESOLVE_VALIDATOR = "RESOLVER";
 
 Command::Command(std::vector<std::string> commands, const std::shared_ptr<State>& state) :
 state (std::move(state))
@@ -70,19 +70,20 @@ std::string Command::resolveCommand(std::string cmd) {
 	// TODO: this only parses for one replace, we can extend it for n replacements
 	Logger::log("INFO: Resolving command");
 	// Find the beginning and end of the text to parse
-	auto begin = cmd.find("{{");
-	auto end = cmd.find("}}", begin);
+	std::size_t begin = cmd.find("{{");
+	std::size_t end = cmd.find("}}");
 	if ((begin == std::string::npos) && (end == std::string::npos)) {
 		// Nothing to replace
+		return cmd;
 	} else if ((begin == std::string::npos) != (end == std::string::npos)) {
 		// Only has {{ or }} inside the string
 		Logger::log("ERROR: Missing the beginning/ending scope for parsing the input string", LOG_LEVEL::SYSTEM);
-		throw std::invalid_argument();
+		throw std::invalid_argument("Parse string has format issues");
 	} else {
 		// Core resolver logic if there is anything to replace
 		begin += 2;
 		auto raw_string = cmd.substr(begin, end - begin);
-		std::vector<std::string> tokens();
+		std::vector<std::string> tokens;
 
 		int result = 0;
 		int cur_idx = 0;
@@ -96,13 +97,14 @@ std::string Command::resolveCommand(std::string cmd) {
 		// Validation
 		if (tokens.at(0) != RESOLVE_VALIDATOR) {
 			Logger::log("Parsed section failed validation check", LOG_LEVEL::SYSTEM);
-			throw std::runtime_error();
+			throw std::runtime_error("Parsed section failed validation check");
 		}
 
 		// Retrieving data from mapping
 		// TODO: Made enum map from string to enum
 		// Determin the type from tokens.at(1)
-		int bucket = 0
+		int bucket = 0;
+		std::string replace_string;
 		switch (bucket) {
 			case 0:
 			{
@@ -110,6 +112,9 @@ std::string Command::resolveCommand(std::string cmd) {
 				break;
 			}
 		}
+		
+		// Replace with final resolved string
+
 	}
 
 	return cmd;
