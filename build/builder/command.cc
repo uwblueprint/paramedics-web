@@ -1,6 +1,8 @@
 #include "command.h"
 
 
+const std::string RESOLVE_VALIDATOR = 'RESOLVER'
+
 Command::Command(std::vector<std::string> commands, const std::shared_ptr<State>& state) :
 state (std::move(state))
 {	
@@ -65,8 +67,51 @@ std::string Command::chainCommand() {
 }
 
 std::string Command::resolveCommand(std::string cmd) {
+	// TODO: this only parses for one replace, we can extend it for n replacements
 	Logger::log("INFO: Resolving command");
-	// Find ${RESOLVER file dockerfile}$ and replace it with file[dockerfile]
+	// Find the beginning and end of the text to parse
+	auto begin = cmd.find("{{");
+	auto end = cmd.find("}}", begin);
+	if ((begin == std::string::npos) && (end == std::string::npos)) {
+		// Nothing to replace
+	} else if ((begin == std::string::npos) != (end == std::string::npos)) {
+		// Only has {{ or }} inside the string
+		Logger::log("ERROR: Missing the beginning/ending scope for parsing the input string", LOG_LEVEL::SYSTEM);
+		throw std::invalid_argument();
+	} else {
+		// Core resolver logic if there is anything to replace
+		begin += 2;
+		auto raw_string = cmd.substr(begin, end - begin);
+		std::vector<std::string> tokens();
+
+		int result = 0;
+		int cur_idx = 0;
+		while (result != std::string::npos) {
+			tokens.push_back(raw_string.substr(cur_idx, result-cur_idx));
+			cur_idx = result;
+			result = raw_string.find(" ", cur_idx);
+		}
+		tokens.push_back(raw_string.substr(cur_idx));
+		
+		// Validation
+		if (tokens.at(0) != RESOLVE_VALIDATOR) {
+			Logger::log("Parsed section failed validation check", LOG_LEVEL::SYSTEM);
+			throw std::runtime_error();
+		}
+
+		// Retrieving data from mapping
+		// TODO: Made enum map from string to enum
+		// Determin the type from tokens.at(1)
+		int bucket = 0
+		switch (bucket) {
+			case 0:
+			{
+				// Get object based on tokens.at(2)
+				break;
+			}
+		}
+	}
+
 	return cmd;
 }
 
