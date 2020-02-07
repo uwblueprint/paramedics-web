@@ -1,22 +1,19 @@
 #include "command_center.h"
 
 
-CommandCenter::CommandCenter(State* state) {
-	this->state = state;
+CommandCenter::CommandCenter(const std::shared_ptr<State>& state) : 
+state(std::move(state))
+{	
+	Logger::log("INFO: Initializing command center");
 	this->initializeFileMap();
 	this->initializeCommandMap();
-	std::cout << "Command Center Initialized" << std::endl;
 }
 
-CommandCenter::~CommandCenter() {
-	for (auto& command: this->command_map) {
-		delete command.second;
-	}
-	delete this->state;
-}
+CommandCenter::~CommandCenter() {}
 
 // Ideally read from a config, and provide a default config
 void CommandCenter::initializeFileMap() {
+	Logger::log("INFO: Initializing file map");
 	auto mode = this->state->getMode();
 	switch (mode) {
 		case DEPLOY_STATE::DEV:
@@ -30,14 +27,27 @@ void CommandCenter::initializeFileMap() {
 	}
 }
 
+
+std::unique_ptr<Command> CommandCenter::makeCommand(const std::vector<std::string>& cmd_vec) {
+	return std::make_unique<Command>(cmd_vec, this->state);
+}
+
 void CommandCenter::initializeCommandMap() {
+	Logger::log("INFO: Initializing command map");
 	auto mode = this->state->getMode();
 	// Initialize Command Map
 	switch (mode) {
 		case DEPLOY_STATE::DEV:
+		{
+			auto cmd_vec = std::vector<std::string>{"echo 'hi'"};
 			this->setCommand(
 				"build", 
-				new Command(std::vector<std::string>(), this->state)
+				this->makeCommand(cmd_vec)
+			);
+			auto cmd_vec2 = std::vector<std::string>{"echo 'hi2'"};
+			this->setCommand(
+				"rebuild", 
+				this->makeCommand(cmd_vec2)
 			);
 			// this->setMap("rebuild", );
 			// this->setMap("run", );
@@ -47,7 +57,9 @@ void CommandCenter::initializeCommandMap() {
 			// this->setMap("shell", );
 			// this->setMap("database", );
 			break;
+		}
 		case DEPLOY_STATE::PROD:
+		{
 			// this->setMap("build", "");
 			// this->setMap("rebuild", );
 			// this->setMap("run", );
@@ -55,15 +67,18 @@ void CommandCenter::initializeCommandMap() {
 			// this->setMap("images", );
 			// this->setMap("status", );
 			break;
+		}
 	}
 	// Core common commands
 }
 
-bool CommandCenter::evaluate(Command* command) {
-	int return_code = system("");
+bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
+	Logger::log("INFO: Evaluating command");
+	auto cmd = command->extractCommand().c_str();;
+	auto return_code = system(cmd);
 	if (return_code != 0) {
-		std::cout << "Something went wrong during command evaluation" << std::endl;
-		return false;
+		Logger::log("Something went wrong during command evaluation in system", LOG_LEVEL::SYSTEM);
+		throw std::system_error();
 	}
 	return true;	
 }
@@ -76,15 +91,21 @@ void CommandCenter::setFile(std::string key, std::string val) {
 	this->file_map.insert(std::pair<std::string, std::string>(key, val));
 }
 
-Command* CommandCenter::getCommand(std::string cmd) {
-	return this->command_map.at(cmd);
+const std::unique_ptr<Command>& CommandCenter::getCommand(std::string cmd) {
+	try {
+		return this->command_map.at(cmd);
+	} catch (const std::out_of_range& oor) {
+		Logger::log("No command exist with name " + cmd, LOG_LEVEL::SYSTEM);
+		throw oor;
+	}
 }
 
-void CommandCenter::setCommand(std::string key, Command* cmd) {
-	this->command_map.insert(std::pair<std::string, Command*>(key, cmd));
+void CommandCenter::setCommand(std::string key, std::unique_ptr<Command> cmd) {
+	this->command_map[key] = std::move(cmd);
 }
 
 bool CommandCenter::executeCommand(std::string cmd) {
-	Command* command = this->getCommand(cmd);
-	return this->evaluate(command);
+	Logger::log("INFO: Executing command");
+	auto success = this->evaluate(this->getCommand(cmd));
+	return success;
 }

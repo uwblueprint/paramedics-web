@@ -3,13 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <iostream>
 #include "state.h"
+#include "logger.h"
 
 
 class Command {
 	std::vector<std::string> commands;
 	std::string command;
-	State* const state;
+	std::shared_ptr<State> state;
 
 protected:
 	virtual std::string chainCommand();
@@ -17,8 +20,9 @@ protected:
 	void buildCommand();
 
 public:
-	Command(std::vector<std::string> commands, State* state);
-	std::string const extractCommand();
+	Command() = delete;
+	Command(std::vector<std::string> commands, const std::shared_ptr<State>& state);
+	const std::string extractCommand();
 };
 
 #endif

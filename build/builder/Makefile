@@ -1,9 +1,9 @@
 PROGRAM_NAME = builder
 
 CXX = g++
-CXXFLAGS = -std=c++17 -O3 -MMD -Werror=vla --verbose
+CXXFLAGS = -std=c++17 -O3 -MMD -Werror=vla 
 EXEC = ${PROGRAM_NAME}
-OBJECTS = ${PROGRAM_NAME}.o state.o command.o command_center.o
+OBJECTS = ${PROGRAM_NAME}.o state.o command.o command_center.o logger.o
 DEPENDS = ${OBJECTS:.o=.d}
 DESTINATION = ../../
 
@@ -14,11 +14,17 @@ DESTINATION = ../../
 clean:
 	rm ${OBJECTS} ${DEPENDS}
 
-compile:
+link:
 	${CXX} ${CXXFLAGS} -c ${PROGRAM_NAME}.cc
+
+compile: ${OBJECTS}
+	@${CXX} ${OBJECTS} -o ${EXEC}
+	@rm ${OBJECTS} ${DEPENDS}
+	@mv ${EXEC} ${DESTINATION}
 
 build: ${OBJECTS}
 	@${CXX} ${CXXFLAGS} -c ${PROGRAM_NAME}.cc
 	@${CXX} ${OBJECTS} -o ${EXEC}
 	@rm ${OBJECTS} ${DEPENDS}
 	@mv ${EXEC} ${DESTINATION}
+
