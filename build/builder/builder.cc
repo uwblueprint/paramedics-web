@@ -38,8 +38,8 @@ auto parseCommand(int argc, char *argv[]){
 		return result;	
 	} catch (const cxxopts::OptionException& e) {
 		std::cout << "There are some errors when parsing command options" << std::endl;
-		// std::cout << e.what() << std::endl;
-		throw e;
+		std::cout << e.what() << std::endl;
+		exit(1);
 	}
 }
 

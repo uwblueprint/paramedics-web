@@ -15,44 +15,79 @@ std::unique_ptr<Command> CommandCenter::makeCommand(const std::vector<std::strin
 void CommandCenter::initializeCommandMap() {
 	Logger::log("INFO: Initializing command map");
 	auto mode = this->state->getMode();
-	// Initialize Command Map
+
 	switch (mode) {
 		case DEPLOY_STATE::DEV:
 		{
-			auto cmd_vec = std::vector<std::string>{"echo 'hi'"};
 			this->setCommand(
-				"build", 
+				"test", 
 				this->makeCommand(std::vector<std::string>{
-					"docker build ${RESOLVER file dockerfile}$ ."
+					"echo hello"
 				})
 			);
 			this->setCommand(
-				"rebuild", 
+				"shell", 
 				this->makeCommand(std::vector<std::string>{
-					"echo hi"
+					"docker-compose -f {{RESOLVER file docker-compose}} bash"
 				})
 			);
-			// this->setMap("rebuild", );
-			// this->setMap("run", );
-			// this->setMap("stop", );
-			// this->setMap("images", );
-			// this->setMap("status", );
-			// this->setMap("shell", );
-			// this->setMap("database", );
+			this->setCommand(
+				"db", 
+				this->makeCommand(std::vector<std::string>{
+					"docker-compose -f {{RESOLVER file docker-compose}} exec paramedics-db psql -U robot -p robotpwd postgres"
+				})
+			);
 			break;
 		}
 		case DEPLOY_STATE::PROD:
 		{
-			// this->setMap("build", "");
-			// this->setMap("rebuild", );
-			// this->setMap("run", );
-			// this->setMap("stop", );
-			// this->setMap("images", );
-			// this->setMap("status", );
+			/*	
+				Add command here like above if there is any specific 
+				production related command that we need
+			*/
 			break;
 		}
 	}
-	// Core common commands
+
+	// Commands that can and should be parsed for both types
+	this->setCommand(
+		"build", 
+		this->makeCommand(std::vector<std::string>{
+			"docker build -f {{RESOLVER file dockerfile}} ."
+		})
+	);
+	this->setCommand(
+		"rebuild", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file docker-compose}} down",
+			"docker build -f {{RESOLVER file dockerfile}} .",
+			"docker-compose -f {{RESOLVER file docker-compose}} up -d --build",
+		})
+	);
+	this->setCommand(
+		"run", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file docker-compose}} up -d --build"
+		})
+	);
+	this->setCommand(
+		"stop", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file docker-compose}} down"
+		})
+	);
+	this->setCommand(
+		"images", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file docker-compose}} images"
+		})
+	);
+	this->setCommand(
+		"status", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file docker-compose}} ps"
+		})
+	);
 }
 
 bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
