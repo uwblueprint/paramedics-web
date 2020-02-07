@@ -2,6 +2,7 @@ PROGRAM_NAME = builder
 
 CXX = g++
 CXXFLAGS = -std=c++17 -O3 -MMD -Werror=vla 
+CXXFLAGSFAST = -std=c++17 
 EXEC = ${PROGRAM_NAME}
 OBJECTS = ${PROGRAM_NAME}.o state.o command.o command_center.o logger.o
 DEPENDS = ${OBJECTS:.o=.d}
@@ -9,7 +10,7 @@ DESTINATION = ../../
 
 -include ${DEPENDS}
 
-.PHONY: clean compile build
+.PHONY: clean link compile build fast
 
 clean:
 	rm ${OBJECTS} ${DEPENDS}
@@ -22,9 +23,14 @@ compile: ${OBJECTS}
 	@rm ${OBJECTS} ${DEPENDS}
 	@mv ${EXEC} ${DESTINATION}
 
-build: ${OBJECTS}
+optimal: ${OBJECTS}
 	@${CXX} ${CXXFLAGS} -c ${PROGRAM_NAME}.cc
 	@${CXX} ${OBJECTS} -o ${EXEC}
 	@rm ${OBJECTS} ${DEPENDS}
 	@mv ${EXEC} ${DESTINATION}
 
+normal: ${OBJECTS}
+	@${CXX} ${CXXFLAGSFAST} -c ${PROGRAM_NAME}.cc
+	@${CXX} ${OBJECTS} -o ${EXEC}
+	@rm ${OBJECTS} ${DEPENDS}
+	@mv ${EXEC} ${DESTINATION}

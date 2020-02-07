@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 
 	// Initializing Logger
 	if (input_verbose) {
-	    Logger & logger = Logger::getLogger(LOG_LEVEL::DEBUG);
+		Logger & logger = Logger::getLogger(LOG_LEVEL::DEBUG);
 	} else {
 		Logger & logger = Logger::getLogger(LOG_LEVEL::DEFAULT);
 	}
@@ -86,6 +86,7 @@ int main(int argc, char *argv[]){
 		auto cmd_center = CommandCenter(state);
 		cmd_center.executeCommand(command);
 	} catch (...) {
+		// TODO: handle exit code or exception better
 		int exit_code = 1;
 		logger.log("An error occured in command center");
 		logger.log("Exiting now with exit code " + exit_code);
