@@ -21,4 +21,4 @@ COPY . ./
 EXPOSE 8080
 
 # Allows override to shell directly
-CMD [ "npm" , "run" , "prod" ]
+CMD [ "npm" , "run" , "dev" ]

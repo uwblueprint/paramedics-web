@@ -28,13 +28,13 @@ void CommandCenter::initializeCommandMap() {
 			this->setCommand(
 				"shell", 
 				this->makeCommand(std::vector<std::string>{
-					"docker-compose -f {{RESOLVER file dockercompose}} bash"
+					"docker-compose -f {{RESOLVER file dockercompose}} exec paramedics-api bash"
 				})
 			);
 			this->setCommand(
 				"db", 
 				this->makeCommand(std::vector<std::string>{
-					"docker-compose -f {{RESOLVER file dockercompose}} exec paramedics-db psql -U robot -p robotpwd postgres"
+					"docker-compose -f {{RESOLVER file dockercompose}} exec paramedics-db psql paramedics-db -U robot"
 				})
 			);
 			break;

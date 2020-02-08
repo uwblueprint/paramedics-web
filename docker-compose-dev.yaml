@@ -6,7 +6,6 @@ services:
     - paramedics-db
     build:
       context: .
-      dockerfile: Dockerfile.dev
     ports:
     - "8080:8080"
     logging:
@@ -19,7 +18,7 @@ services:
     - PARAMEDICS_DB_PASSWORD=robot_pwd
     volumes:
       - type: bind
-        source: ../
+        source: ./
         target: /usr/src/app
       - /usr/src/node_modules
     logging:
