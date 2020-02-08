@@ -18,15 +18,22 @@ class Command {
 	// TODO: figure out how to get static map from boost
 	bool initialized;
 	std::unordered_map<std::string, std::string> file_map;
-	void initialize();
+	std::unordered_map<std::string, COMMAND_CONTEXT> context_map;
 
+	void initialize();
+	bool validate(std::vector<std::string>& parsed_str_vec);
+	
 protected:
 	virtual void initializeContext();
+	virtual void initializeContextMap();
 	virtual void initializeFileMap();
-	virtual std::string chainCommand();
-	virtual std::string resolveCommand(std::string cmd);
+
 	std::string getFile(std::string file);
 	void setFile(std::string key, std::string val);
+
+	virtual bool validateContext(std::vector<std::string>& parsed_str_vec);	
+	virtual std::string chainCommand();
+	virtual std::string resolveCommand(std::string cmd);
 	void buildCommand();
 
 public:

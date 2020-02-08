@@ -4,7 +4,7 @@
 CommandCenter::CommandCenter(const std::shared_ptr<State>& state) : 
 state(std::move(state))
 {	
-	Logger::log("INFO: Initializing command center");
+	Logger::log("Initializing command center");
 	this->initializeCommandMap();
 }
 
@@ -13,7 +13,7 @@ std::unique_ptr<Command> CommandCenter::makeCommand(const std::vector<std::strin
 }
 
 void CommandCenter::initializeCommandMap() {
-	Logger::log("INFO: Initializing command map");
+	Logger::log("Initializing command map");
 	auto mode = this->state->getMode();
 
 	switch (mode) {
@@ -22,19 +22,19 @@ void CommandCenter::initializeCommandMap() {
 			this->setCommand(
 				"test", 
 				this->makeCommand(std::vector<std::string>{
-					"echo hello"
+					"pwd"
 				})
 			);
 			this->setCommand(
 				"shell", 
 				this->makeCommand(std::vector<std::string>{
-					"docker-compose -f {{RESOLVER file docker-compose}} bash"
+					"docker-compose -f {{RESOLVER file dockercompose}} bash"
 				})
 			);
 			this->setCommand(
 				"db", 
 				this->makeCommand(std::vector<std::string>{
-					"docker-compose -f {{RESOLVER file docker-compose}} exec paramedics-db psql -U robot -p robotpwd postgres"
+					"docker-compose -f {{RESOLVER file dockercompose}} exec paramedics-db psql -U robot -p robotpwd postgres"
 				})
 			);
 			break;
@@ -59,40 +59,43 @@ void CommandCenter::initializeCommandMap() {
 	this->setCommand(
 		"rebuild", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file docker-compose}} down",
+			"docker-compose -f {{RESOLVER file dockercompose}} down",
 			"docker build -f {{RESOLVER file dockerfile}} .",
-			"docker-compose -f {{RESOLVER file docker-compose}} up -d --build",
+			"docker-compose -f {{RESOLVER file dockercompose}} up -d",
 		})
 	);
 	this->setCommand(
 		"run", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file docker-compose}} up -d --build"
+			"docker-compose -f {{RESOLVER file dockercompose}} up -d"
 		})
 	);
 	this->setCommand(
 		"stop", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file docker-compose}} down"
+			"docker-compose -f {{RESOLVER file dockercompose}} down"
 		})
 	);
 	this->setCommand(
 		"images", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file docker-compose}} images"
+			"docker-compose -f {{RESOLVER file dockercompose}} images"
 		})
 	);
 	this->setCommand(
 		"status", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file docker-compose}} ps"
+			"docker-compose -f {{RESOLVER file dockercompose}} ps"
 		})
 	);
 }
 
 bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
-	Logger::log("INFO: Evaluating command");
-	auto cmd = command->extractCommand().c_str();;
+	Logger::log("Evaluating command");
+	auto cmd_new = command->extractCommand();
+	const char* cmd = cmd_new.c_str();
+	// Some error here!
+	// auto return_code = system("docker-compose -f docker-compose-dev.yaml up -d --build");
 	auto return_code = system(cmd);
 	if (return_code != 0) {
 		Logger::log("Something went wrong during command evaluation in system", LOG_LEVEL::SYSTEM);
@@ -115,7 +118,7 @@ void CommandCenter::setCommand(std::string key, std::unique_ptr<Command> cmd) {
 }
 
 bool CommandCenter::executeCommand(std::string cmd) {
-	Logger::log("INFO: Executing command");
+	Logger::log("Executing command");
 	auto success = this->evaluate(this->getCommand(cmd));
 	return success;
 }

@@ -32,7 +32,6 @@ auto parseCommand(int argc, char *argv[]){
 		// Display help message and quit
 		if (result["help"].as<bool>()) {
 			std::cout << options.help({""}) << std::endl;
-			exit(0);
 		}
 		
 		return result;	
@@ -57,6 +56,12 @@ int main(int argc, char *argv[]){
 	auto input_mode = input_command["mode"].as<std::string>();
 	auto input_exec = input_command["exec"].as<std::string>();
 	auto input_verbose = input_command["verbose"].as<bool>();
+	auto input_help = input_command["help"].as<bool>();
+
+	// Return 0 exit code if help was called
+	if (input_help) {
+		return 0;
+	}
 
 	// Initializing Logger
 	if (input_verbose) {
@@ -76,12 +81,12 @@ int main(int argc, char *argv[]){
 	command = input_exec;
 
 	// Setting the program state
-	logger.log("INFO: Setting builder state");
+	logger.log("Setting builder state");
 	auto state = std::make_shared<State>();
 	state->setMode(mode);
 
 	// Initialize CommandCenter and execute command
-	logger.log("INFO: Begin core command execution logic");
+	logger.log("Begin core command execution logic");
 	try {
 		auto cmd_center = CommandCenter(state);
 		cmd_center.executeCommand(command);
@@ -89,7 +94,7 @@ int main(int argc, char *argv[]){
 		// TODO: handle exit code or exception better
 		int exit_code = 1;
 		logger.log("An error occured in command center");
-		logger.log("Exiting now with exit code " + exit_code);
+		logger.log("Exiting now with exit code " + std::to_string(exit_code));
 		return exit_code;
 	}
 	return 0;

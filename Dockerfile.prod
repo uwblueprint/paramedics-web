@@ -9,6 +9,8 @@ WORKDIR /usr/src
 # where available (npm@5+)
 COPY package*.json ./
 
+ENV NODE_ENV production
+
 RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
@@ -22,6 +24,5 @@ COPY . ./
 
 EXPOSE 8080
 
-ENTRYPOINT [ "npm" , "run" ]
-
-CMD [ "prod" ]
+# Discourage tampering
+ENTRYPOINT [ "npm" , "run", "prod" ]
