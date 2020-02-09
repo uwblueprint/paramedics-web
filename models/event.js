@@ -6,12 +6,16 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       date: DataTypes.STRING,
-      createdBy: DataTypes.INTEGER,
       isActive: DataTypes.BOOLEAN,
       description: DataTypes.STRING
     },
     {}
   );
-  Event.belongsTo(User);
+  Event.associate = models => {
+    Event.belongsTo(User(sequelize, DataTypes), {
+      foreignKey: "createdBy",
+      targetKey: "id"
+    });
+  };
   return Event;
 };

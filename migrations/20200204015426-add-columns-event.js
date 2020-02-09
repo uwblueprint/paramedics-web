@@ -16,7 +16,7 @@ module.exports = {
           "events",
           "createdBy",
           {
-            type: Sequelize.DataTypes.STRING
+            type: Sequelize.DataTypes.INTEGER
           },
           { transaction: t }
         ),
@@ -46,7 +46,7 @@ module.exports = {
           "events",
           "createdBy",
           {
-            type: Sequelize.DataTypes.STRING
+            type: Sequelize.DataTypes.INTEGER
           },
           { transaction: t }
         ),
