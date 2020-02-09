@@ -1,4 +1,4 @@
-### Location of all the build/infra related tools and frameworks
+### Home for all the build and infrastructure related tools and frameworks
 
 __What we currently have__:
 

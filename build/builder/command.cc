@@ -79,7 +79,6 @@ std::string Command::chainCommand() {
 }
 
 bool Command::unitalResolver(std::string& cmd) {
-	// TODO: this only parses for one replace, we can extend it for n replacements
 	Logger::log("Resolving command");
 	// Find the beginning and end of the text to parse
 	auto begin = cmd.find("{{");
