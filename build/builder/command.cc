@@ -78,7 +78,7 @@ std::string Command::chainCommand() {
 	return chained_command.substr(4);
 }
 
-std::string Command::resolveCommand(std::string cmd) {
+bool Command::unitalResolver(std::string& cmd) {
 	// TODO: this only parses for one replace, we can extend it for n replacements
 	Logger::log("Resolving command");
 	// Find the beginning and end of the text to parse
@@ -87,7 +87,7 @@ std::string Command::resolveCommand(std::string cmd) {
 	if ((begin == std::string::npos) && (end == std::string::npos)) {
 		Logger::log("Performing NOP resolve");
 		// Nothing to replace
-		return cmd;
+		return true;
 	} else if ((begin == std::string::npos) != (end == std::string::npos)) {
 		// Only has {{ or }} inside the string
 		Logger::log("Missing the beginning/ending scope for parsing the input string", LOG_LEVEL::SYSTEM);
@@ -139,8 +139,17 @@ std::string Command::resolveCommand(std::string cmd) {
 		int replace_begin = begin;
 		int replace_end = end + 2;
 		cmd.replace(replace_begin, replace_end-replace_begin, replace_string);
+		return false;
 	}
+}
 
+
+std::string Command::resolveCommand(std::string cmd) {
+	int count = 0;
+	while (!this->unitalResolver(cmd)) {
+		count++;
+		Logger::log("Resolving parse section " + std::to_string(count));
+	}
 	return cmd;
 }
 

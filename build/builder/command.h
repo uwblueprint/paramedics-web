@@ -19,9 +19,10 @@ class Command {
 	bool initialized;
 	std::unordered_map<std::string, std::string> file_map;
 	std::unordered_map<std::string, COMMAND_CONTEXT> context_map;
-
+	
 	void initialize();
 	bool validate(std::vector<std::string>& parsed_str_vec);
+	std::string resolveCommand(std::string cmd);
 	
 protected:
 	virtual void initializeContext();
@@ -33,7 +34,8 @@ protected:
 
 	virtual bool validateContext(std::vector<std::string>& parsed_str_vec);	
 	virtual std::string chainCommand();
-	virtual std::string resolveCommand(std::string cmd);
+	virtual bool unitalResolver(std::string& cmd);
+
 	void buildCommand();
 
 public:

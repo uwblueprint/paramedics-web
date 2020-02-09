@@ -20,12 +20,6 @@ void CommandCenter::initializeCommandMap() {
 		case DEPLOY_STATE::DEV:
 		{
 			this->setCommand(
-				"test", 
-				this->makeCommand(std::vector<std::string>{
-					"pwd"
-				})
-			);
-			this->setCommand(
 				"shell", 
 				this->makeCommand(std::vector<std::string>{
 					"docker-compose -f {{RESOLVER file dockercompose}} exec paramedics-api bash"
