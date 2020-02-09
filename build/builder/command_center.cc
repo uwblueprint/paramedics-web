@@ -88,8 +88,6 @@ bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
 	Logger::log("Evaluating command");
 	auto cmd_new = command->extractCommand();
 	const char* cmd = cmd_new.c_str();
-	// Some error here!
-	// auto return_code = system("docker-compose -f docker-compose-dev.yaml up -d --build");
 	auto return_code = system(cmd);
 	if (return_code != 0) {
 		Logger::log("Something went wrong during command evaluation in system", LOG_LEVEL::SYSTEM);
