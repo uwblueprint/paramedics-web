@@ -8,7 +8,9 @@ module.exports = {
          */
       return queryInterface.bulkInsert('incidents', [{
         name: 'Checkpoint 0',
-        assignedUsers: 0
+        assignedUsers: 0,
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Checkpoint 1',
