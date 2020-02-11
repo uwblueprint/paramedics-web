@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      accessLevel: {
+        type: Sequelize.DataTypes.ENUM('COMMANDER', 'SUPERVISOR', 'ADMIN')
+      },
       firstName: {
         type: Sequelize.STRING
       },
@@ -18,6 +21,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       password: {
+        type: Sequelize.STRING
+      },
+      emergencyContact: {
         type: Sequelize.STRING
       },
       createdAt: {
