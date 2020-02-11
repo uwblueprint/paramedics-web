@@ -91,7 +91,7 @@ bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
 	auto return_code = system(cmd);
 	if (return_code != 0) {
 		Logger::log("Something went wrong during command evaluation in system", LOG_LEVEL::SYSTEM);
-		throw std::system_error();
+		throw std::runtime_error("Something went wrong during eval");
 	}
 	return true;	
 }
