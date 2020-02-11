@@ -10,8 +10,6 @@ WORKDIR /usr/src
 COPY package*.json ./
 
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
 ENV PATH /usr/src/node_modules/.bin:$PATH
 
@@ -22,6 +20,5 @@ COPY . ./
 
 EXPOSE 8080
 
-ENTRYPOINT [ "npm" , "run" ]
-
-CMD [ "prod" ]
+# Allows override to shell directly
+CMD [ "npm" , "run" , "dev" ]
