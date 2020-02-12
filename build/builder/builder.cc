@@ -17,7 +17,7 @@
 const std::string PROGRAM_NAME = "Platform Agnostic Build Process Helper";
 const std::string PROGRAM_VERSION = "v0.1";
 
-const std::string DEFAULT_OPTION_MODE = "prod";
+const std::string DEFAULT_OPTION_MODE = "dev";
 const std::string DEFAULT_OPTION_EXEC = "";
 
 auto parseCommand(int argc, char *argv[]){
