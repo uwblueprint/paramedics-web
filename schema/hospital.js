@@ -3,9 +3,14 @@ const hospitalSchema = `
     hospital(id: Int!): Hospital
     hospitals: [Hospital]
   }
+
+  extend type Mutation {
+    addHospital(name: String!): Hospital!
+  }
   
   type Hospital {
-    name: String
+    id: Int!
+    name: String!
   }
   `;
 exports.hospitalSchema = hospitalSchema;
