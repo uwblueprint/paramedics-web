@@ -7,10 +7,12 @@ const eventSchema = `
   type Event {
     id: ID!
     name: String
-    date: String
+    date: DateTime
     createdBy: User
     isActive: Boolean
     description: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
   `;
 exports.eventSchema = eventSchema;
