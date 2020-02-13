@@ -15,12 +15,14 @@ const scalars = `
   scalar DateTime
 `;
 
+// Base query schema, other queries extend this
 const Query = `
   type Query {
     _empty: String
   }
 `;
 
+// Base mutation schema, other mutations extend this
 const Mutation = `
   type Mutation {
     _empty: String
