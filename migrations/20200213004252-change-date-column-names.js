@@ -12,7 +12,7 @@ module.exports = {
           },
           { transaction: t }
         ),
-        queryInterface.changeColumn("events", "data", {
+        queryInterface.changeColumn("events", "date", {
           type: Sequelize.DATE,
           allowNull: false
         }),
