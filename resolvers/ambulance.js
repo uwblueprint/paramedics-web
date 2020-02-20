@@ -24,6 +24,14 @@ const ambulanceResolvers = {
             }
           }
         );
+    },
+
+    deleteAmbulance: (parent, args) => {
+      db.ambulance.destroy({
+        where: {
+          id: args.id
+        }
+      })
     }
 },
 };

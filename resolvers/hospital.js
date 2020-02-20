@@ -25,8 +25,15 @@ const hospitalResolvers = {
             id: args.id
           }
         });
+    },
+    deleteHospital: (parent, args) => {
+      db.hospital.destroy({
+        where: {
+          id: args.id
+        }
+      })
     }
-  },
+  }
 };
 
 exports.hospitalResolvers = hospitalResolvers;
