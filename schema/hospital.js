@@ -6,6 +6,7 @@ const hospitalSchema = `
 
   extend type Mutation {
     addHospital(name: String!): Hospital!
+    updateHospital(id: Int!, name: String!): Hospital 
   }
   
   type Hospital {

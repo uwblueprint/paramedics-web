@@ -15,6 +15,16 @@ const hospitalResolvers = {
             name: args.name
         });
         return hospital;
+    },
+    updateHospital: (parent, args) => {
+        const hospital = db.hospital.update({
+          name: args.name,
+        },
+        {
+          where: {
+            id: args.id
+          }
+        });
     }
   },
 };

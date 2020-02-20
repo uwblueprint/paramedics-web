@@ -13,6 +13,17 @@ const ambulanceResolvers = {
             vehicleNumber: args.vehicleNumber
         });
         return ambulance;
+    },
+
+    updateAmbulance: (parent, args) => {
+        const ambulance = db.ambulance.update( {
+            vehicleNumber: args.vehicleNumber
+          },
+          { where: {
+            id: args.id
+            }
+          }
+        );
     }
 },
 };
