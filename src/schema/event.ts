@@ -1,4 +1,4 @@
-const eventSchema = `
+export const eventSchema = `
   extend type Query {
     event(id: Int!): Event
     events: [Event]
@@ -13,4 +13,3 @@ const eventSchema = `
     description: String
   }
   `;
-exports.eventSchema = eventSchema;

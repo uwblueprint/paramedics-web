@@ -1,4 +1,4 @@
-const userSchema = `
+export const userSchema = `
   enum accessLevel {
     COMMANDER
     SUPERVISOR
@@ -26,5 +26,3 @@ const userSchema = `
   }
   `
 ;
-
-exports.userSchema = userSchema;

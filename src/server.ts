@@ -1,9 +1,10 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
-const { schema } = require('./graphql');
+import { Request, Response } from 'express';
+import express from 'express';
+import  bodyParser from 'body-parser';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+import  { schema } from './graphql';
 
 // Constants
 const PORT = 8080;
@@ -11,7 +12,7 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Hello World');
 });
 

@@ -1,8 +1,8 @@
 "use strict";
 
-const db = require("../models");
+import db from "../models";
 
-const eventResolvers = {
+export const eventResolvers = {
   Query: {
     events: () => db.event.findAll(),
     event: (obj, args, context, info) => db.event.findByPk(args.id)
@@ -11,5 +11,3 @@ const eventResolvers = {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
   }
 };
-
-exports.eventResolvers = eventResolvers;

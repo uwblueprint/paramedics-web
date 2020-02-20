@@ -1,8 +1,8 @@
 'use strict';
 
-const db = require('../models');
+import  db from '../models';
 
-const userResolvers = {
+export const userResolvers = {
     Query: {
         users: () =>  db.user.findAll(),
         user(obj, args, context, info) {
@@ -21,5 +21,3 @@ const userResolvers = {
         }
     },
 };
-
-exports.userResolvers =  userResolvers;
