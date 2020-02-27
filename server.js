@@ -1,22 +1,10 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server');
 const { schema } = require('./graphql');
 
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+const server = new ApolloServer({ schema, playground: true, introspection: true });
 
-// App
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World');
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
 });
-
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
-
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
