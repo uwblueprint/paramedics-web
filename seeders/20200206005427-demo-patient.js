@@ -5,10 +5,9 @@ module.exports = {
     return queryInterface.bulkInsert('patients', [{
       gender: 'Male',
       age: 19,
-      runNumber: 2636337,
       barcodeValue: 1525242,
       incidentId: 1525243,
-      status: 'In Transportation',
+      status: 'ON_SITE',
       triageLevel: 'YELLOW',
       notes: 'This guy looks super drunk',
       transportTime: new Date(),
@@ -17,11 +16,11 @@ module.exports = {
     },
     {
       gender: 'Female',
-      age: 20,
       runNumber: 65433,
       barcodeValue: 987654,
       incidentId: 3345456,
-      status: 'In Transportation',
+      status: 'RELEASED',
+      triageCategory: 1,
       triageLevel: 'GREEN',
       notes: 'needs a bandaid',
       transportTime: new Date(),
@@ -34,9 +33,8 @@ module.exports = {
       runNumber: 65433,
       barcodeValue: 987654,
       incidentId: 3345456,
-      status: 'deceased',
+      status: 'TRANSPORTED',
       triageLevel: 'BLACK',
-      notes: ':(',
       transportTime: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
@@ -48,3 +46,5 @@ module.exports = {
     return queryInterface.bulkDelete('patients', null, {});
   }
 };
+
+// TODO: incidentId should be a foreign key

@@ -24,7 +24,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.DataTypes.ENUM('ON_SITE', 'RELEASED', 'TRANSPORTED')
+      },
+      triageCategory: {
+        type: Sequelize.INTEGER
       },
       triageLevel: {
         type: Sequelize.DataTypes.ENUM('WHITE', 'GREEN', 'YELLOW', 'RED', 'BLACK')
@@ -49,7 +52,8 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.dropTable('patients'),
-        queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_patients_triageLevel";')
+        queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_patients_triageLevel";'),
+        queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_patients_status";')
       ]);
     });
   }

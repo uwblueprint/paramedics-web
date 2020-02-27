@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
     runNumber: DataTypes.BIGINT,
     barcodeValue: DataTypes.BIGINT,
     incidentId: DataTypes.INTEGER,
-    status: DataTypes.STRING,
+    status: {
+      type: DataTypes.ENUM,
+      values: ['ON_SITE', 'RELEASED', 'TRANSPORTED']
+    },
+    triageCategory: DataTypes.INTEGER,
     triageLevel: {
       type: DataTypes.ENUM,
       values: ['WHITE', 'GREEN', 'YELLOW', 'RED', 'BLACK']
@@ -19,3 +23,5 @@ module.exports = (sequelize, DataTypes) => {
   };
   return patient;
 };
+
+// TODO: incidentId should be a foreign key
