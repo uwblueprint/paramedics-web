@@ -3,6 +3,8 @@ enum triageLevel {
   GREEN
   YELLOW
   RED
+  BLACK
+  WHITE
 }
   extend type Query {
     patient(id: Int!): Patient

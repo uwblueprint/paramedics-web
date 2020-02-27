@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     triageLevel: {
       type: DataTypes.ENUM,
-      values: ['GREEN', 'YELLOW', 'RED', 'BLACK']
+      values: ['WHITE', 'GREEN', 'YELLOW', 'RED', 'BLACK']
     },
     notes: DataTypes.TEXT,
     transportTime: DataTypes.DATE
