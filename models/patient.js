@@ -16,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       values: ['WHITE', 'GREEN', 'YELLOW', 'RED', 'BLACK']
     },
     notes: DataTypes.TEXT,
-    transportTime: DataTypes.DATE
+    transportTime: DataTypes.DATE,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   }, {});
   patient.associate = function (models) {
     // associations can be defined here

@@ -23,7 +23,6 @@ module.exports = {
       triageCategory: 1,
       triageLevel: 'GREEN',
       notes: 'needs a bandaid',
-      transportTime: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -34,6 +33,7 @@ module.exports = {
       barcodeValue: 987654,
       incidentId: 3345456,
       status: 'TRANSPORTED',
+      triageCategory: 3,
       triageLevel: 'BLACK',
       transportTime: new Date(),
       createdAt: new Date(),
