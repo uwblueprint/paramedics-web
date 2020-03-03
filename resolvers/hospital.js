@@ -17,7 +17,7 @@ const hospitalResolvers = {
         return hospital;
     },
     updateHospital: (parent, args) => {
-        const hospital = db.hospital.update({
+        db.hospital.update({
           name: args.name,
         },
         {
@@ -25,6 +25,8 @@ const hospitalResolvers = {
             id: args.id
           }
         });
+
+        return db.hospital.findByPk(args.id);
     },
     deleteHospital: (parent, args) => {
       db.hospital.destroy({

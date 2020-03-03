@@ -24,6 +24,8 @@ const ambulanceResolvers = {
             }
           }
         );
+
+        return ambulance;
     },
 
     deleteAmbulance: (parent, args) => {
