@@ -82,6 +82,12 @@ void CommandCenter::initializeCommandMap() {
 			"docker-compose -f {{RESOLVER file dockercompose}} ps"
 		})
 	);
+	this->setCommand(
+		"logs", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file dockercompose}} logs --follow"
+		})
+	);
 }
 
 bool CommandCenter::evaluate(const std::unique_ptr<Command>& command) {
