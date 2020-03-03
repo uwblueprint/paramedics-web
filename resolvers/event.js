@@ -14,7 +14,7 @@ const eventResolvers = {
     addEvent: (parent, args) => {
       const event = db.event.create({
         name: args.name,
-        eventDate: args.date,
+        eventDate: args.eventDate,
         createdBy: args.createdBy,
         isActive: args.isActive
       });
