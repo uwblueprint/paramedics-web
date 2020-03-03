@@ -16,7 +16,8 @@ module.exports = {
         name: 'Checkpoint 1',
         assignedUsers: 8,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        
       },
     ]);
 

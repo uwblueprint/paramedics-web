@@ -10,6 +10,7 @@ type Incident {
 
     name: String
     assignedUsers: Int
+    eventID: ID
     createdAt: Date
     updatedAt: Date
 

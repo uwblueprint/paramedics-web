@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Incident.associate = function(models) {
     // associations can be defined here
+
+  
   };
   return Incident;
 };
