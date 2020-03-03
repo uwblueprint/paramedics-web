@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     "event",
     {
       name: DataTypes.STRING,
-      eventDate: DataTypes.DATE,
+      eventDate: DataTypes.DATEONLY,
       isActive: DataTypes.BOOLEAN
     },
     {}
