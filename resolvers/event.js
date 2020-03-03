@@ -9,6 +9,17 @@ const eventResolvers = {
   },
   Event: {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
+  },
+  Mutation: {
+    addEvent: (parent, args) => {
+      const event = db.event.create({
+        name: args.name,
+        eventDate: args.date,
+        createdBy: args.createdBy,
+        isActive: args.isActive
+      });
+      return event;
+    }
   }
 };
 
