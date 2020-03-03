@@ -59,6 +59,20 @@ void CommandCenter::initializeCommandMap() {
 		})
 	);
 	this->setCommand(
+		"rebuild-hard", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file dockercompose}} down",
+			"docker build -f {{RESOLVER file dockerfile}} . --no-cache",
+			"docker-compose -f {{RESOLVER file dockercompose}} up -d",
+		})
+	);
+	this->setCommand(
+		"rm-volume", 
+		this->makeCommand(std::vector<std::string>{
+			"docker-compose -f {{RESOLVER file dockercompose}} down -v",
+		})
+	);
+	this->setCommand(
 		"run", 
 		this->makeCommand(std::vector<std::string>{
 			"docker-compose -f {{RESOLVER file dockercompose}} up -d"
