@@ -86,9 +86,9 @@ int main(int argc, char *argv[]){
 	Logger & logger = Logger::getLogger();
 
 	if (input_mode == DEFAULT_OPTION_MODE) {
-		mode = DEPLOY_STATE::PROD;
-	} else {
 		mode = DEPLOY_STATE::DEV;
+	} else {
+		mode = DEPLOY_STATE::PROD;
 	}
 
 	if (input_exec == "") {
