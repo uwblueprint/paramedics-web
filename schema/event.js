@@ -1,11 +1,12 @@
 const eventSchema = `
   extend type Query {
-    event(id: Int!): Event
+    event(id: ID!): Event
     events: [Event]
   }
   
   extend type Mutation {
-    addEvent(name: String!, eventDate: Date!, createdBy: Int!, isActive: Boolean!): Event!
+    addEvent(name: String!, eventDate: Date!, createdBy: ID!, isActive: Boolean!): Event!
+
   }
 
   type Event {
