@@ -6,8 +6,9 @@ services:
     - paramedics-db
     build:
       context: .
+      dockerfile: Dockerfile.dev
     ports:
-    - "8080:8080"
+    - "4000:4000"
     logging:
       driver: "json-file"
       options:

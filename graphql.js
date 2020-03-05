@@ -9,7 +9,7 @@ const { patientSchema } = require('./schema/patient');
 const { patientResolvers } = require('./resolvers/patient');
 
 const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('apollo-server');
 
 const scalars = `
   scalar Date
