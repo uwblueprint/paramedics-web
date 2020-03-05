@@ -17,23 +17,31 @@ const hospitalResolvers = {
         return hospital;
     },
     updateHospital: (parent, args) => {
-        db.hospital.update({
+        db.hospital.update({ // Handle case when id does not exist
           name: args.name,
         },
         {
           where: {
             id: args.id
           }
+        }).then(arg1 => {
+          console.log("then");
+          console.log(arg1);
+        }).catch( errorStatus => {
+          console.log("then");
+          console.log(errorStatus);
         });
 
         return db.hospital.findByPk(args.id);
     },
-    deleteHospital: (parent, args) => {
-      db.hospital.destroy({
+    deleteHospital: async (parent, args) => {
+      const destroyedStatus = await db.hospital.destroy({
         where: {
           id: args.id
         }
       })
+
+      return destroyedStatus
     }
   }
 };
