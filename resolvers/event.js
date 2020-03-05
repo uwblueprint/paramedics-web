@@ -19,6 +19,15 @@ const eventResolvers = {
         isActive: args.isActive
       });
       return event;
+    },
+    deleteEvent: (parent, args) => {
+      // Return status for destroy
+      // 1 for successful deletion, 0 otherwise
+      return db.event.destroy({
+        where: {
+          id: args.id
+        }
+      });
     }
   }
 };
