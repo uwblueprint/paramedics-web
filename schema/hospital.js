@@ -1,17 +1,17 @@
 const hospitalSchema = `
   extend type Query {
-    hospital(id: Int!): Hospital
+    hospital(id: ID!): Hospital
     hospitals: [Hospital]
   }
 
   extend type Mutation {
     addHospital(name: String!): Hospital!
-    updateHospital(id: Int!, name: String!): Hospital!
-    deleteHospital(id: Int!): Int!
+    updateHospital(id: ID!, name: String!): Hospital!
+    deleteHospital(id: ID!): Int!
   }
   
   type Hospital {
-    id: Int
+    id: ID!
     name: String
   }
   `;

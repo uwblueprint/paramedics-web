@@ -1,17 +1,17 @@
 const ambulanceSchema = `
   extend type Query {
-    ambulance(id: Int!): Ambulance
+    ambulance(id: ID!): Ambulance
     ambulances: [Ambulance]
   }
 
   extend type Mutation {
-    addAmbulance(id: Int!, vehicleNumber: Int!): Ambulance!
-    updateAmbulance(id: Int!, vehicleNumber: Int!): Ambulance
-    deleteAmbulance(id: Int!): Ambulance
+    addAmbulance(id: ID!, vehicleNumber: Int!): Ambulance!
+    updateAmbulance(id: ID!, vehicleNumber: Int!): Ambulance
+    deleteAmbulance(id: ID!): Ambulance
   }
   
   type Ambulance {
-    id: Int!
+    id: ID!
     vehicleNumber: Int!
   }
   `;

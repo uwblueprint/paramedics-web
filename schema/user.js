@@ -6,7 +6,7 @@ const userSchema = `
   }  
 
   extend type Query {
-    user(id: Int!): User
+    user(id: ID!): User
     users: [User]
   }
   
