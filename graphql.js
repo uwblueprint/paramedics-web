@@ -7,7 +7,7 @@ const { eventSchema } = require('./schema/event');
 const { eventResolvers } = require('./resolvers/event');
 
 const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('apollo-server');
 
 const scalars = `
   scalar Date
