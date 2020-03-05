@@ -6,7 +6,7 @@ module.exports = {
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
          */
-      return queryInterface.bulkInsert('incidents', [{
+      return queryInterface.bulkInsert('collectionPoints', [{
         name: 'Checkpoint 0',
         assignedUsers: 0,
         createdAt: new Date(),
@@ -28,7 +28,7 @@ module.exports = {
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
     */
-      return queryInterface.bulkDelete('incidents', null, {});
+      return queryInterface.bulkDelete('collectionPoints', null, {});
 
   }
 };

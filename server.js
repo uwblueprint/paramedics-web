@@ -5,8 +5,8 @@ const { userSchema } = require('./schema/user');
 const { userResolvers } = require('./resolvers/user');
 const { eventSchema } = require('./schema/event');
 const { eventResolvers } = require('./resolvers/event');
-const { incidentSchema } = require('./schema/incident');
-const { incidentResolvers } = require('./resolvers/incident');
+const { collectionPointSchema } = require('./schema/collectionPoint');
+const { collectionPointResolvers } = require('./resolvers/collectionPoint');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -50,8 +50,8 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, incidentSchema],
-  resolvers: merge(resolvers, userResolvers, eventResolvers, incidentResolvers),
+  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, collectionPointSchema],
+  resolvers: merge(resolvers, userResolvers, eventResolvers, collectionPointResolvers),
 });
 
 // App
