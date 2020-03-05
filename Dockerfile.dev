@@ -18,7 +18,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . ./
 
-EXPOSE 8080
+EXPOSE 4000
 
 # Allows override to shell directly
 CMD [ "npm" , "run" , "dev" ]

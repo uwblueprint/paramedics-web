@@ -11,7 +11,7 @@ const { ambulanceSchema } = require('./schema/ambulance');
 const { ambulanceResolvers } = require('./resolvers/ambulance');
 
 const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('apollo-server');
 
 const scalars = `
   scalar Date
