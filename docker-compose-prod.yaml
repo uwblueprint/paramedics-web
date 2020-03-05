@@ -2,6 +2,7 @@ version: '3.7'
 services:
   # The primary API endpoint service
   paramedics-api:
+    image: uwblueprint/paramedics-api
     depends_on:
     - paramedics-db
     build:

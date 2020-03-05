@@ -17,7 +17,7 @@
 const std::string PROGRAM_NAME = "Platform Agnostic Build Process Helper";
 const std::string PROGRAM_VERSION = "v0.1";
 
-const std::string DEFAULT_OPTION_MODE = "prod";
+const std::string DEFAULT_OPTION_MODE = "dev";
 const std::string DEFAULT_OPTION_EXEC = "";
 
 auto parseCommand(int argc, char *argv[]){
@@ -86,9 +86,9 @@ int main(int argc, char *argv[]){
 	Logger & logger = Logger::getLogger();
 
 	if (input_mode == DEFAULT_OPTION_MODE) {
-		mode = DEPLOY_STATE::PROD;
-	} else {
 		mode = DEPLOY_STATE::DEV;
+	} else {
+		mode = DEPLOY_STATE::PROD;
 	}
 
 	if (input_exec == "") {

@@ -1,67 +1,10 @@
 'use strict';
 
-const { merge } = require('lodash');
-const { userSchema } = require('./schema/user');
-const { userResolvers } = require('./resolvers/user');
-const { eventSchema } = require('./schema/event');
-const { eventResolvers } = require('./resolvers/event');
-const { collectionPointSchema } = require('./schema/collectionPoint');
-const { collectionPointResolvers } = require('./resolvers/collectionPoint');
+const { ApolloServer } = require('apollo-server');
+const { schema } = require('./graphql');
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
-const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
-const { makeExecutableSchema } = require('graphql-tools');
+const server = new ApolloServer({ schema });
 
-
-const { Sequelize } = require('sequelize');
-
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
-
-// Schema
-
-const scalars = `
-  scalar Date
-  scalar Time
-  scalar DateTime
-`;
-
-const Query = `
-  type Query {
-    _empty: String
-  }
-`;
-
-const Mutation = `
-  type Mutation {
-    _empty: String
-  }
-`;
-
-const resolvers = {
-  // Custom scalars
-  Date: GraphQLDate,
-  Time: GraphQLTime,
-  DateTime: GraphQLDateTime,
-
-};
-
-const schema = makeExecutableSchema({
-  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, collectionPointSchema],
-  resolvers: merge(resolvers, userResolvers, eventResolvers, collectionPointResolvers),
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
 });
-
-// App
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
-
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);

@@ -7,10 +7,10 @@ const eventSchema = `
   type Event {
     id: ID!
     name: String
-    pin: String
+    date: String
+    createdBy: User
+    isActive: Boolean
     description: String
   }
-  `
-;
-
+  `;
 exports.eventSchema = eventSchema;
