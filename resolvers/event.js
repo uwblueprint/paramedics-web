@@ -20,6 +20,19 @@ const eventResolvers = {
       });
       return event;
     },
+    updateEvent: (parent, args) => {
+      return db.event.update(
+        {
+          name: args.name,
+          eventDate: args.eventDate,
+          createdBy: args.createdBy,
+          isActive: args.isActive
+        },
+        {
+          where: { id: args.id }
+        }
+      );
+    },
     deleteEvent: (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
