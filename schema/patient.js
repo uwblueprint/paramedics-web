@@ -14,8 +14,37 @@ const patientSchema = `
   }
 
   extend type Query {
-    patient(id: Int!): Patient
+    patient(id: ID!): Patient
     patients: [Patient]
+  }
+
+  extend type Mutation {
+    addPatient(
+      gender: String,
+      age: Int,
+      runNumber: Int,
+      barcodeValue: Int,
+      status: status,
+      triageCategory: Int,
+      triageLevel: triageLevel, 
+      notes: String,
+      transportTime: DateTime,
+    ): Patient!
+    
+    updatePatient(
+      id: ID!,
+      gender: String,
+      age: Int,
+      runNumber: Int,
+      barcodeValue: Int,
+      status: status,
+      triageCategory: Int,
+      triageLevel: triageLevel, 
+      notes: String,
+      transportTime: DateTime,
+    ): Patient!
+
+    deletePatient(id: ID!): Int!
   }
   
   type Patient {
@@ -23,7 +52,7 @@ const patientSchema = `
     gender: String,
     age: Int,
     runNumber: Int,
-    barcodeValue: Int!,
+    barcodeValue: Int,
     incidentId: Int!,
     status: status,
     triageCategory: Int,
