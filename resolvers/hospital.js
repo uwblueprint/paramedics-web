@@ -24,7 +24,9 @@ const hospitalResolvers = {
             id: args.id
           }
         }).then(rowsAffected => {
-          
+          if (rowsAffected[0] === 0) {
+            throw new Error("Update failed for hospital table");
+          }
         });
         return db.hospital.findByPk(args.id);
     },

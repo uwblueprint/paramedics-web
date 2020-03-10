@@ -5,9 +5,9 @@ const ambulanceSchema = `
   }
 
   extend type Mutation {
-    addAmbulance(id: ID!, vehicleNumber: Int!): Ambulance!
-    updateAmbulance(id: ID!, vehicleNumber: Int!): Ambulance
-    deleteAmbulance(id: ID!): Ambulance
+    addAmbulance(vehicleNumber: Int!): Ambulance!
+    updateAmbulance(id: ID!, vehicleNumber: Int!): Ambulance!
+    deleteAmbulance(id: ID!): Int!
   }
   
   type Ambulance {

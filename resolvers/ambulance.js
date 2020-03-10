@@ -15,21 +15,25 @@ const ambulanceResolvers = {
         return ambulance;
     },
 
-    updateAmbulance: (parent, args) => {
-        const ambulance = db.ambulance.update( {
-            vehicleNumber: args.vehicleNumber
-          },
-          { where: {
-            id: args.id
-            }
-          }
-        );
+    updateAmbulance: async (parent, args) => {
+      await db.ambulance.update({ 
+        vehicleNumber: args.vehicleNumber,
+      },
+      {
+        where: {
+          id: args.id
+        }
+      }).then(rowsAffected => {
+        if (rowsAffected[0] === 0) {
+          throw new Error("Update for ambulance table failed");
+        }
+      });
 
-        return ambulance;
+      return db.ambulance.findByPk(args.id);
     },
 
     deleteAmbulance: (parent, args) => {
-      db.ambulance.destroy({
+      return db.ambulance.destroy({
         where: {
           id: args.id
         }
