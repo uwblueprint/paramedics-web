@@ -5,7 +5,7 @@ const eventSchema = `
   }
   
   extend type Mutation {
-    addEvent(name: String!, eventDate: Date!, createdBy: ID!, isActive: Boolean!): Event!
+    addEvent(name: String!, eventDate: Date!, createdBy: ID!, isActive: Boolean!): Event
     updateEvent(id: ID!, name: String, eventDate: Date, createdBy: ID, isActive: Boolean): Event
     deleteEvent(id: ID!): Int!
   }
