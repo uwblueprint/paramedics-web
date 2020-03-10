@@ -20,8 +20,24 @@ const eventResolvers = {
       });
       return event;
     },
-    updateEvent: (parent, args) => {
-      return db.event.update(
+    updateEvent: async (parent, args) => {
+      const event = await db.event.findByPk(args.id);
+      const user = args.createdBy
+        ? await db.user.findByPk(args.createdBy)
+        : true;
+      if (!(event && user)) {
+        console.log(event);
+        console.log(user);
+        // Throw a sequelize error
+        throw new Error("Update event failed");
+        console.log("returned error");
+      }
+      // check createdby (query user table)
+      // update  event object
+      // perform update
+      // fetch event
+
+      await db.event.update(
         {
           name: args.name,
           eventDate: args.eventDate,
@@ -32,6 +48,7 @@ const eventResolvers = {
           where: { id: args.id }
         }
       );
+      return db.event.findByPk(args.id);
     },
     deleteEvent: (parent, args) => {
       // Return status for destroy
