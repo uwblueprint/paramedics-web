@@ -13,6 +13,8 @@ const hospitalSchema = `
   type Hospital {
     id: ID!
     name: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
   `;
 exports.hospitalSchema = hospitalSchema;

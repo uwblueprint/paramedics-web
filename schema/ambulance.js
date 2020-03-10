@@ -13,6 +13,8 @@ const ambulanceSchema = `
   type Ambulance {
     id: ID!
     vehicleNumber: Int!
+    createdAt: DateTime
+    updatedAt: DateTime
   }
   `;
 exports.ambulanceSchema = ambulanceSchema;
