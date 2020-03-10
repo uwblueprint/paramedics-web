@@ -11,13 +11,38 @@ const userResolvers = {
     },
     Mutation: {
         addUser: (parent, args) => {
-            const user = db.user.create({
+            return db.user.create({
                 firstName: args.firstName,
                 lastName: args.lastName,
                 email: args.email,
                 password: args.password
             });
-            return user;
+        },
+        updateUser: async (parent, args) => {
+            await db.user.update({
+                firstName: args.firstName,
+                lastName: args.lastName,
+                email: args.email,
+                accessLevel: args.accessLevel,
+                emergencyContact: args.emergencyContact
+            }, {
+                where: {
+                    id: args.id
+                }
+            }).then(rowsAffected => {
+                if(rowsAffected === 0) {
+                    throw new Error("Update failed for user table");
+                }
+            });
+
+            return db.user.findByPk(args.id);
+        },
+        deleteUser: (parent, args) => {
+            return db.user.destroy({
+                where: {
+                    id: args.id
+                }
+            })
         }
     },
 };
