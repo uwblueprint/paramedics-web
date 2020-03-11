@@ -30,7 +30,6 @@ const userResolvers = {
                     id: args.id
                 }
             }).then(rowsAffected => {
-                console.log(rowsAffected);
                 if(rowsAffected[0] === 0) {
                     throw new Error("Update failed for user table"); 
                 }
