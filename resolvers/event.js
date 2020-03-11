@@ -11,7 +11,7 @@ const eventResolvers = {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
   },
   Mutation: {
-    addEvent: (parent, args) => {
+    addEvent: async (parent, args) => {
       // Check if createdBy is valid
       const user = await db.user.findByPk(args.createdBy);
       if (!user) {
