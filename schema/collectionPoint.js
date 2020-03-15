@@ -8,11 +8,10 @@ extend type Query {
 }
 type collectionPoint {
 
-    name: String
-    assignedUsers: Int
-    eventID: ID
-    createdAt: Date
-    updatedAt: Date
+    name: String!
+    eventID: Event!
+    createdAt: Date!
+    updatedAt: Date!
 
 }
 `

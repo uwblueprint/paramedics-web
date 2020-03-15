@@ -13,9 +13,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      assignedUsers: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -23,6 +20,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      eventID: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       }
     });
 

@@ -5,6 +5,8 @@ const { userSchema } = require('./schema/user');
 const { userResolvers } = require('./resolvers/user');
 const { eventSchema } = require('./schema/event');
 const { eventResolvers } = require('./resolvers/event');
+const { collectionPointSchema } = require('./schema/collectionPoint');
+const { collectionPointResolvers } = require('./resolvers/collectionPoint');
 
 const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
 const { makeExecutableSchema } = require('apollo-server');
@@ -38,8 +40,8 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-    typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema ],
-    resolvers: merge(resolvers, userResolvers, eventResolvers),
+    typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, collectionPointSchema],
+    resolvers: merge(resolvers, userResolvers, eventResolvers, collectionPointResolvers),
 });
 
 exports.schema = schema;

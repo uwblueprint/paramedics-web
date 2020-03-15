@@ -1,22 +1,28 @@
 'use strict';
 
+const db = require('../models');
+
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-         */
+  up: async (queryInterface, Sequelize) => {
+
+    const event = await db.event.create({
+
+      name: "St. Patricks",
+      pin: "cool",
+      description: "Cool day"
+
+    });
       return queryInterface.bulkInsert('collectionPoints', [{
-        name: 'Checkpoint 0',
-        assignedUsers: 0,
+        name: 'Checkpoint 0',      
+        eventID: event.id,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Checkpoint 1',
-        assignedUsers: 8,
+        eventID: event.id,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
         
       },
     ]);
