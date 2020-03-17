@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     ports:
-    - "8080:8080"
+    - "4000:4000"
     logging:
       driver: "json-file"
       options:
