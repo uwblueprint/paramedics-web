@@ -42,7 +42,7 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, hospitalSchema, ambulanceSchema],
+  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, hospitalSchema, ambulanceSchema ],
   resolvers: merge(resolvers, userResolvers, eventResolvers, hospitalResolvers, ambulanceResolvers),
 });
 
