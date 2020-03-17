@@ -9,10 +9,9 @@ const ambulanceResolvers = {
   },
   Mutation: {
     addAmbulance: (parent, args) => {
-        const ambulance = db.ambulance.create({
+        return db.ambulance.create({
             vehicleNumber: args.vehicleNumber
         });
-        return ambulance;
     },
 
     updateAmbulance: async (parent, args) => {
