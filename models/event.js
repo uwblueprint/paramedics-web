@@ -1,6 +1,7 @@
 "use strict";
+
 const User = require("./user");
-const collectionPoint = require("./collectionPoint");
+
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     "event",
