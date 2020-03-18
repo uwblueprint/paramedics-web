@@ -7,7 +7,7 @@ module.exports = {
         queryInterface.removeColumn("events", "description"),
         queryInterface.removeColumn("events", "date"),
         queryInterface.addColumn("events", "eventDate", {
-          type: Sequelize.DataTypes.DATE,
+          type: Sequelize.DataTypes.DATEONLY,
           allowNull: false
         })
       ]);
