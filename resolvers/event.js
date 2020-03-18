@@ -26,9 +26,12 @@ const eventResolvers = {
     },
     updateEvent: async (parent, args) => {
       const event = await db.event.findByPk(args.id);
-      const user = args.createdBy
-        ? await db.user.findByPk(args.createdBy)
-        : true;
+      if (args.createdBy) {
+        const user = await db.user.findByPk(args.createdBy);
+        if (!user) {
+          throw new Error("Invalid user ID");
+        }
+      }
       if (!event) {
         throw new Error("Invalid event ID");
       } else if (!user) {
