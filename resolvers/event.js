@@ -34,8 +34,6 @@ const eventResolvers = {
       }
       if (!event) {
         throw new Error("Invalid event ID");
-      } else if (!user) {
-        throw new Error("Invalid user ID");
       }
 
       await db.event.update(
