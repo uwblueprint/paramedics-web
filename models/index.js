@@ -25,6 +25,16 @@ fs
     db[model.name] = model;
   });
 
+fs
+    .readdirSync(path.join(__dirname, '/auth'))
+    .filter(file => {
+      return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+    })
+    .forEach(file => {
+      const model = sequelize['import'](path.join(__dirname, '/auth', file));
+      db[model.name] = model;
+    });
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
