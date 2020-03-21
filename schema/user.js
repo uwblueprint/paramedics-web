@@ -6,12 +6,15 @@ const userSchema = `
   }  
 
   extend type Query {
-    user(id: Int!): User
+    user(id: ID!): User
     users: [User]
   }
   
   extend type Mutation {
     addUser(firstName: String!, lastName: String!, email: String!,  password: String!): User!
+    updateUser(id: ID!, accessLevel: accessLevel, firstName: String, lastName: String, email: String,
+      emergencyContact: String): User!
+    deleteUser(id: ID!): Int!
   }
   
   type User {
