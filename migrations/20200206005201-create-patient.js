@@ -20,7 +20,8 @@ module.exports = {
       barcodeValue: {
         type: Sequelize.BIGINT
       },
-      incidentId: {
+      collectionPointId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       status: {

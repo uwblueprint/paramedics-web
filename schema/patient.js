@@ -24,6 +24,7 @@ const patientSchema = `
       age: Int,
       runNumber: Int,
       barcodeValue: Int,
+      collectionPointId: ID!,
       status: status,
       triageCategory: Int,
       triageLevel: triageLevel, 
@@ -37,6 +38,7 @@ const patientSchema = `
       age: Int,
       runNumber: Int,
       barcodeValue: Int,
+      collectionPointId: ID,
       status: status,
       triageCategory: Int,
       triageLevel: triageLevel, 
@@ -53,7 +55,7 @@ const patientSchema = `
     age: Int,
     runNumber: Int,
     barcodeValue: Int,
-    incidentId: Int!,
+    collectionPointId: collectionPoint!,
     status: status,
     triageCategory: Int,
     triageLevel: triageLevel, 
@@ -66,5 +68,3 @@ const patientSchema = `
   ;
 
 exports.patientSchema = patientSchema;
-
-// TODO: incidentId should be a foreign key

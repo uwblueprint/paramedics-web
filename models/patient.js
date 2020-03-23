@@ -1,11 +1,13 @@
 'use strict';
+
+const collectionPoint = require("./collectionPoint");
+
 module.exports = (sequelize, DataTypes) => {
-  const patient = sequelize.define('patient', {
+  const Patient = sequelize.define('patient', {
     gender: DataTypes.STRING,
     age: DataTypes.INTEGER,
     runNumber: DataTypes.BIGINT,
     barcodeValue: DataTypes.BIGINT,
-    incidentId: DataTypes.INTEGER,
     status: {
       type: DataTypes.ENUM,
       values: ['ON_SITE', 'RELEASED', 'TRANSPORTED']
@@ -20,10 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   }, {});
-  patient.associate = function (models) {
-    // associations can be defined here
+  Patient.associate = models => {
+    patient.belongsTo(collectionPoint(sequelize, DataTypes), {
+      foreignKey: "collectionPointId",
+      targetKey: "id"
+    });
   };
-  return patient;
+  return Patient;
 };
-
-// TODO: incidentId should be a foreign key

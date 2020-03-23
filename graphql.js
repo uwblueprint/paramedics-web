@@ -7,7 +7,6 @@ const { eventSchema } = require('./schema/event');
 const { eventResolvers } = require('./resolvers/event');
 const { patientSchema } = require('./schema/patient');
 const { patientResolvers } = require('./resolvers/patient');
-
 const { collectionPointSchema } = require('./schema/collectionPoint');
 const { collectionPointResolvers } = require('./resolvers/collectionPoint');
 const { hospitalSchema } = require('./schema/hospital');
