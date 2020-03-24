@@ -4,12 +4,22 @@ const db = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const user = await db.user.create({
+      firstName: "Firas",
+      lastName: "Mansour",
+      email: "mansour_is_a_cool_guy@gmail.com",
+      password: "asdfgh1234",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
 
     const event = await db.event.create({
       eventDate: new Date(),
       name: "St. Patricks",
-      pin: "cool",
-      description: "Cool day"
+      createdBy: user.id,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
 
     });
       return queryInterface.bulkInsert('collectionPoints', [{
