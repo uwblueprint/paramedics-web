@@ -6,7 +6,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
 
     const event = await db.event.create({
-
+      eventDate: new Date(),
       name: "St. Patricks",
       pin: "cool",
       description: "Cool day"
