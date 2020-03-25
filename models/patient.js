@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   Patient.associate = models => {
-    patient.belongsTo(collectionPoint(sequelize, DataTypes), {
+    Patient.belongsTo(collectionPoint(sequelize, DataTypes), {
       foreignKey: "collectionPointId",
       targetKey: "id"
     });

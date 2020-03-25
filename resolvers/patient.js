@@ -11,9 +11,9 @@ const patientResolvers = {
     },
     Patient: {
         collectionPointId: (obj, args, context, info) => db.collectionPoint.findByPk(obj.collectionPointId)
-    }
+    },
     Mutation: {
-        addPatient: (parent, args) => {
+        addPatient: async (parent, args) => {
             const collectionPoint = await db.collectionPoint.findByPk(args.collectionPointId);
             if (!collectionPoint) {
                 throw new Error("Invalid collection point ID");
