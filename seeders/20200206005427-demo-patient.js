@@ -3,13 +3,23 @@
 const db = require("../models");
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
+    const user = await db.user.create({
+      firstName: "Darth",
+      lastName: "Vader",
+      email: "darthvader@sithlords.com",
+      password: "ga1axyru1er",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
     const event = await db.event.create({
-
+      eventDate: new Date(),
       name: "Death Star Launch Day",
-      pin: "In a galaxy far far away",
-      description: "Planets will be destroyed"
-
+      createdBy: user.id,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
 
     const collectionPoint = await db.collectionPoint.create({
@@ -17,7 +27,8 @@ module.exports = {
       eventID: event.id,
       createdAt: new Date(),
       updatedAt: new Date()
-    })
+    });
+
     return queryInterface.bulkInsert('patients', [{
       gender: 'Male',
       age: 19,
