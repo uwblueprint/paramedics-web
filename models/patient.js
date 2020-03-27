@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Patient.associate = models => {
     Patient.belongsTo(collectionPoint(sequelize, DataTypes), {
-      foreignKey: "collectionPoint",
+      foreignKey: "collectionPointId",
       targetKey: "id"
     });
   };
