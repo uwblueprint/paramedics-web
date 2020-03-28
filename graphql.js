@@ -5,7 +5,8 @@ const { userSchema } = require('./schema/user');
 const { userResolvers } = require('./resolvers/user');
 const { eventSchema } = require('./schema/event');
 const { eventResolvers } = require('./resolvers/event');
-
+const { patientSchema } = require('./schema/patient');
+const { patientResolvers } = require('./resolvers/patient');
 const { collectionPointSchema } = require('./schema/collectionPoint');
 const { collectionPointResolvers } = require('./resolvers/collectionPoint');
 const { hospitalSchema } = require('./schema/hospital');
@@ -38,17 +39,17 @@ const Mutation = `
 `;
 
 const resolvers = {
-    // Custom scalars
-    Date: GraphQLDate,
-    Time: GraphQLTime,
-    DateTime: GraphQLDateTime,
+  // Custom scalars
+  Date: GraphQLDate,
+  Time: GraphQLTime,
+  DateTime: GraphQLDateTime,
 
 };
 
 const schema = makeExecutableSchema({
 
-  typeDefs: [ scalars, Query, Mutation, userSchema, eventSchema, hospitalSchema, ambulanceSchema, collectionPointSchema ],
-  resolvers: merge(resolvers, userResolvers, eventResolvers, hospitalResolvers, ambulanceResolvers, collectionPointResolvers),
+  typeDefs: [scalars, Query, Mutation, userSchema, eventSchema, hospitalSchema, ambulanceSchema, collectionPointSchema, patientSchema],
+  resolvers: merge(resolvers, userResolvers, eventResolvers, hospitalResolvers, ambulanceResolvers, collectionPointResolvers, patientResolvers),
 
 });
 
