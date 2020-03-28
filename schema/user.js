@@ -11,7 +11,7 @@ const userSchema = `
   }
   
   extend type Mutation {
-    addUser(firstName: String!, lastName: String!, email: String!,  password: String!): User!
+    addUser(firstName: String!, lastName: String!, email: String!,  password: String!, accessLevel: accessLevel!, emergencyContact: String!): User!
     updateUser(id: ID!, accessLevel: accessLevel, firstName: String, lastName: String, email: String,
       emergencyContact: String): User!
     deleteUser(id: ID!): Int!
