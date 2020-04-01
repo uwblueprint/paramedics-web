@@ -12,8 +12,8 @@ module.exports = {
                 codename: 'change_event',
             },
             {
-                name: 'Can find event',
-                codename: 'find_event',
+                name: 'Can view event',
+                codename: 'view_event',
             },
             {
                 name: 'Can delete event',
@@ -28,8 +28,8 @@ module.exports = {
                 codename: 'change_incident',
             },
             {
-                name: 'Can find incident',
-                codename: 'find_incident',
+                name: 'Can view incident',
+                codename: 'view_incident',
             },
             {
                 name: 'Can delete incident',
@@ -44,24 +44,8 @@ module.exports = {
                 codename: 'change_patient',
             },
             {
-                name: 'Can find patient',
-                codename: 'find_patient',
-            },
-            {
-                name: 'Can delete patient',
-                codename: 'delete_patient',
-            },
-            {
-                name: 'Can add patient',
-                codename: 'add_patient',
-            },
-            {
-                name: 'Can change patient',
-                codename: 'change_patient',
-            },
-            {
-                name: 'Can find patient',
-                codename: 'find_patient',
+                name: 'Can view patient',
+                codename: 'view_patient',
             },
             {
                 name: 'Can delete patient',

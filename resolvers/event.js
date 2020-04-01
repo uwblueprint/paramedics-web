@@ -1,10 +1,17 @@
 "use strict";
 
 const db = require("../models");
+const { AuthenticationError } = require('apollo-server');
 
 const eventResolvers = {
   Query: {
-    events: () => db.event.findAll(),
+    events: async (obj, args, context) => {
+      let hasPerm = await context.group.hasPerm("view_event");
+      if (!hasPerm) {
+          return null;
+      }
+      return db.event.findAll();
+    },
     event: (obj, args, context, info) => db.event.findByPk(args.id)
   },
   Event: {
