@@ -16,8 +16,8 @@ const collectionPointResolvers = {
     Mutation:  {
         addCollectionPoint: async (parent, args) => {
             //Checks if eventID is valid
-            const event = await db.collectionPoint.findByPk(args.eventID);
-            if (!event) {
+            const event =  await db.collectionPoint.findByPk(args.eventID);
+            if (event) {
                 throw new Error("Invalid event ID");
             }
             return db.collectionPoint.create({
@@ -31,7 +31,7 @@ const collectionPointResolvers = {
             //Checks if eventID is valid
             if (args.eventID) {
                 const event = await db.collectionPoint.findByPk(args.eventID);
-                if (!event) {
+                if (event) {
                     throw new Error("Invalid event ID");
                 }
             }
