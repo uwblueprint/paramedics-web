@@ -7,9 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     "event",
     {
       name: DataTypes.STRING,
-      date: DataTypes.STRING,
-      isActive: DataTypes.BOOLEAN,
-      description: DataTypes.STRING
+      eventDate: DataTypes.DATEONLY,
+      isActive: DataTypes.BOOLEAN
     },
     {}
   );
