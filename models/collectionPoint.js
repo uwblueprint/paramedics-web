@@ -5,7 +5,7 @@ const Event = require("./event");
 module.exports = (sequelize, DataTypes) => {
   const collectionPoint = sequelize.define('collectionPoint', {
     name: DataTypes.STRING,
-    eventID: DataTypes.INTEGER
+    eventId: DataTypes.INTEGER
     //TODO: Add Location (coordinate)
   }, {});
   collectionPoint.associate = function(models) {
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
     collectionPoint.belongsTo(Event(sequelize, DataTypes), {
 
-      foreignKey: "eventID",
+      foreignKey: "eventId",
       targetKey: "id"
 
     });

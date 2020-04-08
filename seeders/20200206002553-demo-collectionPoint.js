@@ -14,13 +14,13 @@ module.exports = {
     });
       return queryInterface.bulkInsert('collectionPoints', [{
         name: 'Checkpoint 0',      
-        eventID: event.id,
+        eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Checkpoint 1',
-        eventID: event.id,
+        eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date()
         

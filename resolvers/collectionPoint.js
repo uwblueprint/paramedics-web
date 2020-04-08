@@ -9,36 +9,37 @@ const collectionPointResolvers = {
     },
 
     collectionPoint: {
-        eventID: (obj, args, context, info) => db.event.findByPk(obj.eventID)
+        eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId)
     },
 
     // CRUD Operations
     Mutation:  {
         addCollectionPoint: async (parent, args) => {
-            //Checks if eventID is valid
-            const event =  await db.collectionPoint.findByPk(args.eventID);
-            if (event) {
+            //Checks if eventId is valid
+            const event =  await db.event.findByPk(args.eventId);
+            console.log(event);
+            if (!event) {
                 throw new Error("Invalid event ID");
             }
             return db.collectionPoint.create({
                 name: args.name,
-                eventID: args.eventID
+                eventId: args.eventId
             });
 
         },
         updateCollectionPoint: async (parent,args) => {
 
-            //Checks if eventID is valid
-            if (args.eventID) {
-                const event = await db.collectionPoint.findByPk(args.eventID);
-                if (event) {
+            //Checks if eventId is valid
+            if (args.eventId) {
+                const event = await db.event.findByPk(args.eventId);
+                if (!event) {
                     throw new Error("Invalid event ID");
                 }
             }
 
             await db.collectionPoint.update({
                 name: args.name,
-                eventID: args.eventID
+                eventId: args.eventId
             },
             {
             where: {
