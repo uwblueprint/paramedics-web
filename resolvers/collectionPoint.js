@@ -17,7 +17,7 @@ const collectionPointResolvers = {
         addCollectionPoint: async (parent, args) => {
             //Checks if eventId is valid
             const event =  await db.event.findByPk(args.eventId);
-            console.log(event);
+            
             if (!event) {
                 throw new Error("Invalid event ID");
             }
