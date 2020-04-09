@@ -16,7 +16,7 @@ const hospitalResolvers = {
         });
     },
     updateHospital: async (parent, args) => {
-        await db.hospital.update({ // Handle case when id does not exist
+        await db.hospital.update({ 
           name: args.name,
         },
         {
@@ -31,7 +31,7 @@ const hospitalResolvers = {
         return db.hospital.findByPk(args.id);
     },
     deleteHospital: (parent, args) => {
-      return db.hospital.destroy({
+      return db.hospital.destroy({ 
         where: {
           id: args.id
         }

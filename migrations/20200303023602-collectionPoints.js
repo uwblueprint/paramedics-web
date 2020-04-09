@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      eventID: {
+      eventId: {
         allowNull: false,
         type: Sequelize.INTEGER
       }
