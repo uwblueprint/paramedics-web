@@ -22,7 +22,7 @@ make optimal
 3. build docker images and run containers
 
 ```
-cd ..
+cd ../..
 ./builder -m dev -e build
 ./builder -m dev -e run
 ```
