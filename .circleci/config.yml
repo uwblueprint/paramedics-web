@@ -26,6 +26,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
+      - run: cd ./build/builder/; make optimal; cd ../../
       - run: ./builder -e rebuild
       - save_cache:
           paths:
