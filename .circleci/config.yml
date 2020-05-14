@@ -17,15 +17,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-  # build-and-test:
-  #   executor:
-  #     name: node/default
-  #   steps:
-  #     - checkout
-  #     - node/with-cache:
-  #         steps:
-  #           - run: npm install
-  #           - run: npm test
   build:
     docker: 
       - image: circleci/node:12.10
@@ -35,7 +26,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: yarn build
+      - run: ./builder -e rebuild
       - save_cache:
           paths:
             - node_modules
