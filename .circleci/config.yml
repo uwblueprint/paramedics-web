@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  docker: circleci/docker@1.0.1
 jobs:
   install:
     docker:
@@ -34,6 +35,7 @@ jobs:
             set -x
             curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
+      - docker/check 
       - run:
           name: Check if docker is installed
           command: docker -v
