@@ -26,12 +26,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run: 
-          name: Building custom C++ builder for docker
-          command: cd ./build/builder/; make optimal; cd ../../
-      - run: 
-          name: Running build script
-          command: ./builder -e rebuild
+          name: Run Docker compose
+          command: docker-compose up -d
       - save_cache:
           paths:
             - node_modules
@@ -52,37 +51,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
   
-  lint:
-    docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.1
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn lint
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-  
-  format:
-    docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.1
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn format
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-  
 workflows:
   version: 2
   dev:
@@ -92,11 +60,5 @@ workflows:
           requires:
             - install
       - test:
-          requires:
-            - install
-      - lint:
-          requires:
-            - install
-      - format:
           requires:
             - install
