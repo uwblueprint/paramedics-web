@@ -26,8 +26,12 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: cd ./build/builder/; make optimal; cd ../../
-      - run: ./builder -e rebuild
+      - run: 
+          name: Building custom C++ builder for docker
+          command: cd ./build/builder/; make optimal; cd ../../
+      - run: 
+          name: Running build script
+          command: ./builder -e rebuild
       - save_cache:
           paths:
             - node_modules
@@ -81,7 +85,7 @@ jobs:
   
 workflows:
   version: 2
-  deploy:
+  dev:
     jobs:
       - install
       - build:
