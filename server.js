@@ -22,7 +22,6 @@ const server = new ApolloServer({
         name: "commander"
       }
     });
-    group.hasPerm(1);
     if (!user) {
       throw new AuthenticationError("invalid user");
     }

@@ -1,20 +1,38 @@
 "use strict";
 
 const db = require("../models");
+const { AuthenticationError } = require('apollo-server');
 
 const ambulanceResolvers = {
   Query: {
-    ambulances: () => db.ambulance.findAll(),
+    ambulances: async (obj, args, context) => {
+
+      let hasPerm = await context.group.hasPerm("read_ambulance");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Ambulance not read.");
+      }
+      return db.ambulance.findAll();
+    },
     ambulance: (obj, args, context, info) => db.ambulance.findByPk(args.id)
   },
   Mutation: {
-    addAmbulance: (parent, args) => {
+    addAmbulance: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm("add_ambulance");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Ambulance not created.");
+      }
         return db.ambulance.create({
             vehicleNumber: args.vehicleNumber
         });
     },
 
-    updateAmbulance: async (parent, args) => {
+    updateAmbulance: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm("update_ambulance");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Ambulance not updated.");
+      }
       await db.ambulance.update({ 
         vehicleNumber: args.vehicleNumber,
       },
@@ -31,7 +49,12 @@ const ambulanceResolvers = {
       return db.ambulance.findByPk(args.id);
     },
 
-    deleteAmbulance: (parent, args) => {
+    deleteAmbulance: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm("delete_ambulance");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Ambulance not deleted.");
+      }
       return db.ambulance.destroy({
         where: {
           id: args.id

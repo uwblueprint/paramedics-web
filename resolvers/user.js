@@ -1,10 +1,15 @@
 'use strict';
 
 const db = require('../models');
+const { AuthenticationError } = require('apollo-server');
 
 const userResolvers = {
     Query: {
-        users: () =>  {
+        users: async (obj, args, context) => {
+            let hasPerms = context.group.hasPerm(context.group.id, "read_user");
+            if (!hasPerms) {
+                throw new AuthenticationError("Unauthorized. User not read.");
+            }
             return db.user.findAll();
         },
         user(obj, args, context, info) {
@@ -12,7 +17,13 @@ const userResolvers = {
         },
     },
     Mutation: {
-        addUser: (parent, args) => {
+        addUser: async (parent, args, context) => {
+
+            let hasPerms = context.group.hasPerm(context.group.id, "create_user");
+            if (!hasPerms) {
+                throw new AuthenticationError("Unauthorized. User not created.");
+            }
+
             return db.user.create({
                 firstName: args.firstName,
                 lastName: args.lastName,
@@ -20,7 +31,14 @@ const userResolvers = {
                 password: args.password
             });
         },
-        updateUser: async (parent, args) => {
+        updateUser: async (parent, args, context) => {
+
+            let hasPerms = context.group.hasPerm(context.group.id, "update_user");
+            if (!hasPerms) {
+                throw new AuthenticationError("Unauthorized. User not updated.");
+            }
+
+
             await db.user.update({
                 firstName: args.firstName,
                 lastName: args.lastName,
@@ -39,7 +57,13 @@ const userResolvers = {
 
             return db.user.findByPk(args.id);
         },
-        deleteUser: (parent, args) => {
+        deleteUser: (parent, args, context) => {
+
+            let hasPerms = context.group.hasPerm(context.group.id, "delete_user");
+            if (!hasPerms) {
+                throw new AuthenticationError("Unauthorized. User not deleted.");
+            }
+
             return db.user.destroy({
                 where: {
                     id: args.id

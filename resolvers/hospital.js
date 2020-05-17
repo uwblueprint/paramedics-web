@@ -1,21 +1,40 @@
 "use strict";
 
 const db = require("../models");
+const { AuthenticationError } = require('apollo-server');
 
 const hospitalResolvers = {
   Query: {
-    hospitals: () => db.hospital.findAll(),
+    hospitals: async (obj, args, context) => {
+
+
+    let hasPerm = await context.group.hasPerm(context.group.id, "read_hospital");
+
+    if (!hasPerm) {
+      throw new AuthenticationError("Unauthorized. Hospital not read.");
+    }
+    return db.event.findAll() },
     hospital(obj, args, context, info) {
       return db.hospital.findByPk(args.id);
     },
   },
   Mutation: {
-    addHospital: (parent, args) => {
-        return db.hospital.create({
+    addHospital: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm(context.group.id,"create_hospital");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Hospital not created.");
+      }
+       return db.hospital.create({
             name: args.name
         });
     },
-    updateHospital: async (parent, args) => {
+    updateHospital: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm(context.group.id, "update_hospital");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Hospital not updated.");
+      }
         await db.hospital.update({ // Handle case when id does not exist
           name: args.name,
         },
@@ -30,7 +49,13 @@ const hospitalResolvers = {
         });
         return db.hospital.findByPk(args.id);
     },
-    deleteHospital: (parent, args) => {
+    deleteHospital: async (parent, args, context) => {
+
+      let hasPerm = await context.group.hasPerm(context.group.id, "delete_hospital");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Hospital not deleted.");
+      }
+      
       return db.hospital.destroy({
         where: {
           id: args.id
