@@ -28,7 +28,9 @@ const userResolvers = {
                 firstName: args.firstName,
                 lastName: args.lastName,
                 email: args.email,
-                password: args.password
+                password: args.password,
+                accessLevel: args.accessLevel,
+                emergencyContact: args.emergencyContact
             });
         },
         updateUser: async (parent, args, context) => {

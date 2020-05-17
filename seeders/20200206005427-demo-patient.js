@@ -24,7 +24,7 @@ module.exports = {
 
     const collectionPoint = await db.collectionPoint.create({
       name: "Checkpoint Tatooine",
-      eventID: event.id,
+      eventId: event.id,
       createdAt: new Date(),
       updatedAt: new Date()
     });
