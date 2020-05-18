@@ -47,7 +47,7 @@ jobs:
           name: Run Docker compose
           command: |
             set -x
-            docker-compose up -f docker-compose-dev.yaml -d
+            docker-compose up -d
       - save_cache:
           paths:
             - node_modules
@@ -76,6 +76,6 @@ workflows:
       - build:
           requires:
             - install
-      - test:
-          requires:
-            - install
+      # - test:
+          # requires:
+            # - install
