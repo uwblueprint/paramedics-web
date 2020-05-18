@@ -38,8 +38,11 @@ jobs:
           name: Check if docker is installed
           command: docker -v
       - run:
+          name: Files on system
+          command: ls -a
+      - run:
           name: Building image
-          command: docker build -t aaronabraham311/paramedics-web-docker:0.0.2 .
+          command: docker build -t aaronabraham311/paramedics-web-docker:0.0.2 -f Dockerfile.dev .
       - run: 
           name: Run Docker compose
           command: |
