@@ -4,7 +4,7 @@ orbs:
 jobs:
   install:
     docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.1
+      - image: aaronabraham311/paramedics-web-docker:0.0.2
     steps:
       - checkout
       - restore_cache:
@@ -19,7 +19,7 @@ jobs:
 
   build:
     docker: 
-      - image: aaronabraham311/paramedics-web-docker:0.0.1
+      - image: aaronabraham311/paramedics-web-docker:0.0.2
     steps:
       - checkout
       - restore_cache:
@@ -34,15 +34,12 @@ jobs:
             set -x
             curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
-      - run: 
-          name: Exposing Docker port
-          command: -v /var/run/docker.sock:/var/run/docker.sock
       - run:
           name: Check if docker is installed
           command: docker -v
       - run:
           name: Building image
-          command: docker build -t aaronabraham311/paramedics-web-docker:0.0.1 .
+          command: docker build -t aaronabraham311/paramedics-web-docker:0.0.2 .
       - run: 
           name: Run Docker compose
           command: |
@@ -55,7 +52,7 @@ jobs:
   
   test:
     docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.1
+      - image: aaronabraham311/paramedics-web-docker:0.0.2
     steps:
       - checkout
       - restore_cache:
