@@ -11,7 +11,9 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
               - v1-dependencies-
-      - run: yarn
+      - node/with-cache:
+          steps:
+            - run: npm install
       - save_cache:
           paths:
             - node_modules
