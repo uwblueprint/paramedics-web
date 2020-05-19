@@ -11,9 +11,6 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
               - v1-dependencies-
-      - node/with-cache:
-          steps:
-            - run: npm install
       - save_cache:
           paths:
             - node_modules
@@ -28,6 +25,9 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
+      - node/with-cache:
+          steps:
+            - run: npm install
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
