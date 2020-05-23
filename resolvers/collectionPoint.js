@@ -4,7 +4,13 @@ const db = require('../models');
 
 const collectionPointResolvers = {
     Query: {
-        collectionPoints: () =>  db.collectionPoint.findAll(),
+        collectionPoints: async (obj, args, context, info) =>  {
+            let hasPerm = await context.group.hasPerm("read_collection_point");
+            if (!hasPerm) {
+              throw new AuthenticationError("Unauthorized. Collection point not read.");
+            }
+            db.collectionPoint.findAll();
+        },
         collectionPoint: (obj, args, context, info) => db.collectionPoint.findByPk(args.id)
     },
 
@@ -15,6 +21,11 @@ const collectionPointResolvers = {
     // CRUD Operations
     Mutation:  {
         addCollectionPoint: async (parent, args) => {
+
+            let hasPerm = await context.group.hasPerm("create_collection_point");
+            if (!hasPerm) {
+              throw new AuthenticationError("Unauthorized. Collection point not created.");
+            }
             //Checks if eventId is valid
             const event =  await db.event.findByPk(args.eventId);
             
@@ -28,6 +39,11 @@ const collectionPointResolvers = {
 
         },
         updateCollectionPoint: async (parent,args) => {
+
+            let hasPerm = await context.group.hasPerm("update_collection_point");
+            if (!hasPerm) {
+              throw new AuthenticationError("Unauthorized. Collection point not updated.");
+            }
 
             //Checks if eventId is valid
             if (args.eventId) {
@@ -55,6 +71,12 @@ const collectionPointResolvers = {
             return db.collectionPoint.findByPk(args.id);
         },
         deleteCollectionPoint: (parent, args) => {
+
+            let hasPerm = await context.group.hasPerm("delete_collection_point");
+            if (!hasPerm) {
+              throw new AuthenticationError("Unauthorized. Collection point not read.");
+            }
+
         // Return status for destroy
         // 1 for successful deletion, 0 otherwise
             return db.collectionPoint.destroy({

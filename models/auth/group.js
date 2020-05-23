@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       include: [{
         model: Permission(sequelize, DataTypes),
-        where: { codename: perm},
+        where: { codename: perm },
         required: true
       }]
     });

@@ -7,7 +7,7 @@ const ambulanceResolvers = {
   Query: {
     ambulances: async (obj, args, context) => {
 
-      let hasPerm = await context.group.hasPerm("read_ambulance");
+      let hasPerm = await context.group.hasPerm(context.group.id, "read_ambulance");
       if (!hasPerm) {
         throw new AuthenticationError("Unauthorized. Ambulance not read.");
       }
@@ -18,7 +18,7 @@ const ambulanceResolvers = {
   Mutation: {
     addAmbulance: async (parent, args, context) => {
 
-      let hasPerm = await context.group.hasPerm("add_ambulance");
+      let hasPerm = await context.group.hasPerm(context.group.id, "add_ambulance");
       if (!hasPerm) {
         throw new AuthenticationError("Unauthorized. Ambulance not created.");
       }
@@ -29,7 +29,7 @@ const ambulanceResolvers = {
 
     updateAmbulance: async (parent, args, context) => {
 
-      let hasPerm = await context.group.hasPerm("update_ambulance");
+      let hasPerm = await context.group.hasPerm(context.group.id, "update_ambulance");
       if (!hasPerm) {
         throw new AuthenticationError("Unauthorized. Ambulance not updated.");
       }
@@ -51,7 +51,7 @@ const ambulanceResolvers = {
 
     deleteAmbulance: async (parent, args, context) => {
 
-      let hasPerm = await context.group.hasPerm("delete_ambulance");
+      let hasPerm = await context.group.hasPerm(context.group.id, "delete_ambulance");
       if (!hasPerm) {
         throw new AuthenticationError("Unauthorized. Ambulance not deleted.");
       }
