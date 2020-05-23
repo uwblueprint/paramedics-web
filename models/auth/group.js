@@ -9,11 +9,20 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false,
   });
-  // TODO: Replace raw query with ORM queries
+  // hasPerm checks if group_id has perm
   Group.prototype.hasPerm = async function(group_id, perm) {
-    let [res, _] = await sequelize.query('SELECT count(*) FROM permissions p INNER JOIN "groupPermissions" gp ON p.id = gp."permissionId" WHERE p.codename=\'' + 
-    perm + '\' AND gp."groupId" = ' + group_id);
-    return res[0].count != 0;
+    let permission = await Group.findOne({
+      where: {
+        id: group_id
+      },
+      include: [{
+        model: Permission(sequelize, DataTypes),
+        where: { codename: perm},
+        required: true
+      }]
+    });
+    console.log(permission);
+    return permission != null;
   };
   Group.associate = function(models) {
     Group.belongsToMany(Permission(sequelize, DataTypes), { through: groupPermission(sequelize, DataTypes) });
