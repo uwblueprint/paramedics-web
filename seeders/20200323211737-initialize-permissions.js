@@ -102,7 +102,27 @@ module.exports = {
                 id: 20,
                 name: "Can only update patients run number",
                 codename: "update_run_number_only",
-            }
+            },
+            {
+                id: 21,
+                name: 'Can create collection point',
+                codename: 'create_collection_point',
+            },
+            {
+                id: 22,
+                name: 'Can read collection point',
+                codename: 'read_collection_point',
+            },
+            {
+                id: 23,
+                name: 'Can update collection point',
+                codename: 'update_collection_point',
+            },
+            {
+                id: 24,
+                name: 'Can delete collection point',
+                codename: 'delete_collection_point',
+            },
             
             ], {});
     },

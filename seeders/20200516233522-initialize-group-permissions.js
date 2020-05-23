@@ -108,6 +108,38 @@ module.exports = {
             groupId: 1,
             permissionId: 19,
           },
+
+          // Collection Points
+          {
+            groupId: 1,
+            permissionId: 21, 
+
+          },
+          {
+            groupId: 2,
+            permissionId: 21, 
+
+          },
+          {
+            groupId: 1,
+            permissionId: 22, 
+
+          },
+          {
+            groupId: 2,
+            permissionId: 22, 
+
+          },
+          {
+            groupId: 3,
+            permissionId: 22, 
+
+          },
+          {
+            groupId: 1,
+            permissionId: 24, 
+
+          },
         ], {});
     },
 
