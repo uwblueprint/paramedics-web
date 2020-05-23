@@ -3,6 +3,8 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.bulkInsert('permissions', [
+
+            // Ambulance
             {
                 id: 1,
                 name: 'Can create ambulance',
@@ -23,6 +25,9 @@ module.exports = {
                 name: 'Can delete ambulance',
                 codename: 'delete_ambulance',
             },
+
+            // Hospital
+
             {
                 id: 5,
                 name: 'Can create hospital',
@@ -43,6 +48,9 @@ module.exports = {
                 name: 'Can delete hospital',
                 codename: 'delete_hospital',
             },
+
+            // User
+
             {
                 id: 9,
                 name: 'Can create user',
@@ -55,71 +63,87 @@ module.exports = {
             },
             {
                 id: 11,
-                name: 'Can delete user',
-                codename: 'delete_user',
+                name: 'Can update user',
+                codename: 'update_user',
             },
             {
                 id: 12,
+                name: 'Can delete user',
+                codename: 'delete_user',
+            },
+            
+
+            // Patient
+
+            {
+                id: 13,
                 name: 'Can create patient',
                 codename: 'create_patient',
             },
             {
-                id: 13,
+                id: 14,
                 name: 'Can read patient',
                 codename: 'read_patient',
             },
             {
-                id: 14,
+                id: 15,
                 name: 'Can update patient',
                 codename: 'update_patient',
             },
             {
-                id: 15,
+                id: 16,
                 name: 'Can delete patient',
                 codename: 'delete_patient',
             },
+
+            // Event
+
             {
-                id: 16,
+                id: 17,
                 name: 'Can create event',
                 codename: 'create_event',
             },
             {
-                id: 17,
+                id: 18,
                 name: 'Can read event',
                 codename: 'read_event',
             },
             {
-                id: 18,
+                id: 19,
                 name: 'Can update event',
                 codename: 'update_event',
             },
             {
-                id: 19,
+                id: 20,
                 name: 'Can delete event',
                 codename: 'delete_event',
             },
+
+            // Run Number
             {
-                id: 20,
+                id: 21,
                 name: "Can only update patients run number",
                 codename: "update_run_number_only",
             },
+
+            // Collection Point
             {
-                id: 21,
+                id: 22,
                 name: 'Can create collection point',
                 codename: 'create_collection_point',
             },
             {
-                id: 22,
+                id: 23,
                 name: 'Can read collection point',
                 codename: 'read_collection_point',
             },
             {
-                id: 23,
+                id: 24,
                 name: 'Can update collection point',
                 codename: 'update_collection_point',
             },
             {
-                id: 24,
+                id: 25,
                 name: 'Can delete collection point',
                 codename: 'delete_collection_point',
             },

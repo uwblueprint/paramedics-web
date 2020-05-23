@@ -67,10 +67,10 @@ const eventResolvers = {
       return db.event.findByPk(args.id);
     },
 
-    deleteEvent: (parent, args, context) => {
+    deleteEvent: async (parent, args, context) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
-      let hasPerm = context.group.hasPerm(context.group.id, "delete_event");
+      let hasPerm = await context.group.hasPerm(context.group.id, "delete_event");
       if (!hasPerm) {
         throw new AuthenticationError("Unauthorized. Event not deleted.");
       

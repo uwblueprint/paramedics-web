@@ -7,13 +7,13 @@ const hospitalResolvers = {
   Query: {
     hospitals: async (obj, args, context) => {
 
-
     let hasPerm = await context.group.hasPerm(context.group.id, "read_hospital");
 
     if (!hasPerm) {
       throw new AuthenticationError("Unauthorized. Hospital not read.");
     }
-    return db.event.findAll() },
+    return db.hospital.findAll() },
+
     hospital(obj, args, context, info) {
       return db.hospital.findByPk(args.id);
     },

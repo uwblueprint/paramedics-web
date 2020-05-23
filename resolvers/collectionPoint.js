@@ -5,11 +5,11 @@ const db = require('../models');
 const collectionPointResolvers = {
     Query: {
         collectionPoints: async (obj, args, context, info) =>  {
-            let hasPerm = await context.group.hasPerm("read_collection_point");
+            let hasPerm = await context.group.hasPerm(context.group.id, "read_collection_point");
             if (!hasPerm) {
               throw new AuthenticationError("Unauthorized. Collection point not read.");
             }
-            db.collectionPoint.findAll();
+            return db.collectionPoint.findAll();
         },
         collectionPoint: (obj, args, context, info) => db.collectionPoint.findByPk(args.id)
     },
@@ -22,7 +22,7 @@ const collectionPointResolvers = {
     Mutation:  {
         addCollectionPoint: async (parent, args) => {
 
-            let hasPerm = await context.group.hasPerm("create_collection_point");
+            let hasPerm = await context.group.hasPerm(context.group.id, "create_collection_point");
             if (!hasPerm) {
               throw new AuthenticationError("Unauthorized. Collection point not created.");
             }
@@ -40,7 +40,7 @@ const collectionPointResolvers = {
         },
         updateCollectionPoint: async (parent,args) => {
 
-            let hasPerm = await context.group.hasPerm("update_collection_point");
+            let hasPerm = await context.group.hasPerm(context.group.id, "update_collection_point");
             if (!hasPerm) {
               throw new AuthenticationError("Unauthorized. Collection point not updated.");
             }
@@ -70,9 +70,9 @@ const collectionPointResolvers = {
             });
             return db.collectionPoint.findByPk(args.id);
         },
-        deleteCollectionPoint: (parent, args) => {
+        deleteCollectionPoint: async (parent, args) => {
 
-            let hasPerm = await context.group.hasPerm("delete_collection_point");
+            let hasPerm = await context.group.hasPerm(context.group.id, "delete_collection_point");
             if (!hasPerm) {
               throw new AuthenticationError("Unauthorized. Collection point not read.");
             }

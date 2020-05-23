@@ -6,7 +6,7 @@ const { AuthenticationError } = require('apollo-server');
 const userResolvers = {
     Query: {
         users: async (obj, args, context) => {
-            let hasPerms = context.group.hasPerm(context.group.id, "read_user");
+            let hasPerms = await context.group.hasPerm(context.group.id, "read_user");
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not read.");
             }
@@ -19,7 +19,7 @@ const userResolvers = {
     Mutation: {
         addUser: async (parent, args, context) => {
 
-            let hasPerms = context.group.hasPerm(context.group.id, "create_user");
+            let hasPerms = await context.group.hasPerm(context.group.id, "create_user");
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not created.");
             }
@@ -35,12 +35,11 @@ const userResolvers = {
         },
         updateUser: async (parent, args, context) => {
 
-            let hasPerms = context.group.hasPerm(context.group.id, "update_user");
+            let hasPerms = await context.group.hasPerm(context.group.id, "update_user");
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not updated.");
             }
-
-
+            console.log("=======")
             await db.user.update({
                 firstName: args.firstName,
                 lastName: args.lastName,
@@ -59,9 +58,9 @@ const userResolvers = {
 
             return db.user.findByPk(args.id);
         },
-        deleteUser: (parent, args, context) => {
+        deleteUser: async (parent, args, context) => {
 
-            let hasPerms = context.group.hasPerm(context.group.id, "delete_user");
+            let hasPerms = await context.group.hasPerm(context.group.id, "delete_user");
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not deleted.");
             }
