@@ -29,7 +29,6 @@ const hospitalResolvers = {
             name: args.name
         });
     },
-<<<<<<< HEAD
     updateHospital: async (parent, args, context) => {
 
       let hasPerm = await context.group.hasPerm(context.group.id, "update_hospital");
@@ -37,10 +36,6 @@ const hospitalResolvers = {
         throw new AuthenticationError("Unauthorized. Hospital not updated.");
       }
         await db.hospital.update({ // Handle case when id does not exist
-=======
-    updateHospital: async (parent, args) => {
-        await db.hospital.update({ 
->>>>>>> 6b6df1bd21b8b52403108818e02550d33562cc9a
           name: args.name,
         },
         {
@@ -54,7 +49,6 @@ const hospitalResolvers = {
         });
         return db.hospital.findByPk(args.id);
     },
-<<<<<<< HEAD
     deleteHospital: async (parent, args, context) => {
 
       let hasPerm = await context.group.hasPerm(context.group.id, "delete_hospital");
@@ -63,10 +57,6 @@ const hospitalResolvers = {
       }
       
       return db.hospital.destroy({
-=======
-    deleteHospital: (parent, args) => {
-      return db.hospital.destroy({ 
->>>>>>> 6b6df1bd21b8b52403108818e02550d33562cc9a
         where: {
           id: args.id
         }
