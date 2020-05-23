@@ -11,7 +11,13 @@ const collectionPointResolvers = {
             }
             return db.collectionPoint.findAll();
         },
-        collectionPoint: (obj, args, context, info) => db.collectionPoint.findByPk(args.id)
+        collectionPoint: async (obj, args, context, info) => {
+            let hasPerm = await context.group.hasPerm("read_collection_point");
+            if (!hasPerm) {
+              throw new AuthenticationError("Unauthorized. Collection point not read.");
+            }
+            db.collectionPoint.findByPk(args.id)
+        }
     },
 
     collectionPoint: {
