@@ -12,7 +12,13 @@ const eventResolvers = {
       }
       return db.event.findAll();
     },
-    event: (obj, args, context, info) => db.event.findByPk(args.id)
+    event: async (obj, args, context, info) => {
+      let hasPerm = await context.group.hasPerm(context.group.id, "read_event");
+      if (!hasPerm) {
+        throw new AuthenticationError("Unauthorized. Event not read.");
+      }
+      return db.event.findByPk(args.id)
+    }
   },
   Event: {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
