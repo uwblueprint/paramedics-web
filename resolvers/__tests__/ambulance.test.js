@@ -1,5 +1,6 @@
 const { ApolloServer } = require('apollo-server');
 const { graphql } = require('graphql');
+const gql = require('graphql-tag')
 const { casual } = require('casual');
 const { createTestClient } = require('apollo-server-testing')
 const { createApolloFetch } = require('apollo-fetch');
@@ -22,6 +23,7 @@ const apolloServer = new ApolloServer({
     mocks: ambulance_mocks,
     mockEntireSchema: false
 });
+
 
 describe('Test ambulance resolvers', () => {
     // const { query } = createTestClient(apolloServer);
@@ -61,7 +63,7 @@ describe('Test ambulance resolvers', () => {
     // })
 
     test('Add ambulance', async () => {
-        const example_query = `
+        const example_query = gql`
             {
                 ambulances {
                     id 
@@ -71,8 +73,11 @@ describe('Test ambulance resolvers', () => {
                 }
             }
         `
-        
-        const { query } = createTestClient(apolloServer);
+    //     const PORT = 8000
+    //     const url = await apolloServer.listen({ port: PORT }).then(({ url }) => {
+    //         console.log(`🚀 Server ready at ${url}`);
+    //    });
+        const { query } = await createTestClient(apolloServer);
         const res = await query({ query: example_query });
         console.log(res);
         expect('this').toEqual('this');
