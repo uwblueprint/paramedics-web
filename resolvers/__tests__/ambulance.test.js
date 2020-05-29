@@ -6,6 +6,8 @@ const { createTestClient } = require('apollo-server-testing')
 const { createApolloFetch } = require('apollo-fetch');
 const { schema } = require('../../graphql');
 
+const { server } = require('../../server')
+
 const ambulance_mocks = {
     ambulance: () => ({
         vehicleNumber:  casual.integer(0, 10),
@@ -14,9 +16,9 @@ const ambulance_mocks = {
     })
 };
 
-const fetch = createApolloFetch({
-    uri: 'http://localhost:4000/graphql',
-});
+// const fetch = createApolloFetch({
+//     uri: 'http://localhost:4000/graphql',
+// });
   
 const apolloServer = new ApolloServer({
     schema,
@@ -24,12 +26,22 @@ const apolloServer = new ApolloServer({
     mockEntireSchema: false
 });
 
+// const constructTestServer = () => {  
+//     const server = new ApolloServer({
+//       schema,
+//       mocks: ambulance_mocks,
+//       mockEntireSchema: false
+//     });
+  
+//     return { server };
+//   };
+
 
 describe('Test ambulance resolvers', () => {
     // const { query } = createTestClient(apolloServer);
     // const res = await query({ query: ambulances });
     // expect('this').toEqual('this');
-    
+
     // let url;
     // let httpServer;
 
@@ -63,6 +75,9 @@ describe('Test ambulance resolvers', () => {
     // })
 
     test('Add ambulance', async () => {
+        
+        // const server = constructTestServer();
+        
         const example_query = gql`
             {
                 ambulances {
@@ -73,21 +88,30 @@ describe('Test ambulance resolvers', () => {
                 }
             }
         `
-    //     const PORT = 8000
-    //     const url = await apolloServer.listen({ port: PORT }).then(({ url }) => {
-    //         console.log(`🚀 Server ready at ${url}`);
-    //    });
+        // const PORT = 3306
+        // const url = await apolloServer.listen({ port: PORT }).then(({ url }) => {
+        //     console.log(`🚀 Server ready at ${url}`);
+        // });
+
+        // if (process.env.NODE_ENV !== 'test') {
+        //     server
+        //       .listen({ port: process.env.PORT || 4000 })
+        //       .then(({ url }) => {
+        //         console.log(`🚀 app running at ${url}`)
+        //       });
+        //   }
+
         const { query } = await createTestClient(apolloServer);
         const res = await query({ query: example_query });
         console.log(res);
         expect('this').toEqual('this');
     })
 
-    test('Delete ambulance', () => {
-        expect('this').toEqual('this')
-    })
+    // test('Delete ambulance', () => {
+    //     expect('this').toEqual('this')
+    // })
 
-    test('Update ambulance', () => {
-        expect('this').toEqual('this')
-    })
+    // test('Update ambulance', () => {
+    //     expect('this').toEqual('this')
+    // })
 })
