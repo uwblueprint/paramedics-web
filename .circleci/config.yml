@@ -4,7 +4,7 @@ orbs:
 jobs:
   install:
     docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.2
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
       - restore_cache:
@@ -18,7 +18,7 @@ jobs:
 
   build:
     docker: 
-      - image: aaronabraham311/paramedics-web-docker:0.0.2
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
       - restore_cache:
@@ -57,7 +57,7 @@ jobs:
   
   test:
     docker:
-      - image: aaronabraham311/paramedics-web-docker:0.0.2
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
       - restore_cache:
