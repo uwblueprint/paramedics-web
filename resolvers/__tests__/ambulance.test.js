@@ -106,12 +106,4 @@ describe('Test ambulance resolvers', () => {
         console.log(res);
         expect('this').toEqual('this');
     })
-
-    // test('Delete ambulance', () => {
-    //     expect('this').toEqual('this')
-    // })
-
-    // test('Update ambulance', () => {
-    //     expect('this').toEqual('this')
-    // })
 })
