@@ -61,6 +61,7 @@ const userResolvers = {
         deleteUser: async (parent, args, context) => {
 
             let hasPerms = await context.group.hasPerm(context.group.id, "delete_user");
+            
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not deleted.");
             }
