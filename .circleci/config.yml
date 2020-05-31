@@ -38,7 +38,7 @@ jobs:
             chmod +x /usr/local/bin/docker-compose
       - run:
           name: Building image
-          command: docker build -t aaronabraham311/paramedics-web-docker:0.0.2 -f Dockerfile.dev .
+          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.dev .
       - run: 
           name: Run Docker compose
           command: |
