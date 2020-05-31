@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         required: true
       }]
     });
-    console.log(permission);
     return permission != null;
   };
   Group.associate = function(models) {

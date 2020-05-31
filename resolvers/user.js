@@ -39,7 +39,6 @@ const userResolvers = {
             if (!hasPerms) {
                 throw new AuthenticationError("Unauthorized. User not updated.");
             }
-            console.log("=======")
             await db.user.update({
                 firstName: args.firstName,
                 lastName: args.lastName,

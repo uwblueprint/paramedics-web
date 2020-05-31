@@ -47,9 +47,7 @@ const patientResolvers = {
         },
         updatePatient: async (parent, args, context) => {
             let run_number_only = await context.group.hasPerm(context.group.id, "update_run_number_only");
-            console.log(run_number_only);
             if (run_number_only) {
-                console.log("======");
                 await db.patient.update({
                     runNumber: args.runNumber
                 },
