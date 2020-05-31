@@ -1,0 +1,59 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  install:
+    docker:
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+              - v1-dependencies-
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+  build:
+    docker: 
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - node/with-cache:
+          steps:
+            - run: npm install
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Install docker-compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+      - run:
+          name: Building image
+          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.dev .
+      - run: 
+          name: Run Docker compose
+          command: |
+            set -x
+            docker-compose -f docker-compose-dev.yaml up -d
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+  
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - install
+      - build:
+          requires:
+            - install
