@@ -9,7 +9,8 @@ const collectionPointResolvers = {
     },
 
     collectionPoint: {
-        eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId)
+        eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId),
+        createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
     },
 
     // CRUD Operations
@@ -17,13 +18,20 @@ const collectionPointResolvers = {
         addCollectionPoint: async (parent, args) => {
             //Checks if eventId is valid
             const event =  await db.event.findByPk(args.eventId);
+
+            // Check if createdBy is valid
+            const user = await db.user.findByPk(args.createdBy);
+            if (!user) {
+                throw new Error("Invalid user ID");
+            }
             
             if (!event) {
                 throw new Error("Invalid event ID");
             }
             return db.collectionPoint.create({
                 name: args.name,
-                eventId: args.eventId
+                eventId: args.eventId,
+                createdBy: args.createdBy
             });
 
         },
@@ -37,9 +45,18 @@ const collectionPointResolvers = {
                 }
             }
 
+            // Checks if createdBy is valid:
+            if (args.createdBy) {
+                const user = await db.user.findByPk(args.createdBy);
+                if (!user) {
+                  throw new Error("Invalid user ID");
+                }
+              }
+
             await db.collectionPoint.update({
                 name: args.name,
-                eventId: args.eventId
+                eventId: args.eventId,
+                createdBy: args.createdBy
             },
             {
             where: {
