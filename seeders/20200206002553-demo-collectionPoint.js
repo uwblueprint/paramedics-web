@@ -25,12 +25,14 @@ module.exports = {
       return queryInterface.bulkInsert('collectionPoints', [{
         name: 'Checkpoint 0',      
         eventId: event.id,
+        createdBy: user.id,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Checkpoint 1',
         eventId: event.id,
+        createdBy: user.id,
         createdAt: new Date(),
         updatedAt: new Date()
         
