@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: "id"
     });
 
+    Event.belongsToMany(models.ambulance, { through: 'EventAmbulances' })
+    Event.belongsToMany(models.hospital, { through: 'EventHospitals' });
+    
   };
   return Event;
 };

@@ -17,23 +17,85 @@ const eventResolvers = {
       if (!user) {
         throw new Error("Invalid user ID");
       }
+      
+      const hasError = false;
+      // Checking if ambulances are valid
+      args.ambulances.forEach(async ambulanceId => {
+        const ambulance = await db.ambulances.findByPk(ambulanceId);
+        if (!ambulance) {
+          hasError = true;
+          return;
+        }
+      });
+      if (hasError) {
+        throw new Error("Invalid vehicle ID");
+      }
+
+      hasError = false
+      // Checking if hospitals are valid
+      args.hospitals.forEach(async hospitalId => {
+        const hospital = await db.hospitals.findByPk(hospitalId);
+        if (!hospital) {
+          hasError = true;
+          return;
+        }
+      });
+      if (hasError) {
+        throw new Error("Invalid hospital ID");
+      }
+
       return db.event.create({
         name: args.name,
         eventDate: args.eventDate,
         createdBy: args.createdBy,
-        isActive: args.isActive
+        isActive: args.isActive,
+        ambulances: args.ambulances,
+        hospitals: args.hospitals
       });
     },
     updateEvent: async (parent, args) => {
       const event = await db.event.findByPk(args.id);
+      if (!event) {
+        throw new Error("Invalid event ID");
+      }
+      
       if (args.createdBy) {
         const user = await db.user.findByPk(args.createdBy);
         if (!user) {
           throw new Error("Invalid user ID");
         }
       }
-      if (!event) {
-        throw new Error("Invalid event ID");
+
+      if (args.ambulances) {
+        const hasError = false;
+        // Checking if ambulances are valid
+        args.ambulances.forEach(async ambulanceId => {
+          const ambulance = await db.ambulances.findByPk(ambulanceId);
+          if (!ambulance) {
+            hasError = true;
+            return;
+          }
+        });
+  
+        if (hasError) {
+          throw new Error("Invalid vehicle ID");
+        }
+      }
+
+      if (args.hospitals) {
+        const hasError = false;
+        // Checking if hospitals are valid
+        args.hospitals.forEach(async hospitalId=> {
+          const hospital = await db.hospitals.findByPk(hospitalId);
+          if (!hospital) {
+            hasError = true;
+            return;
+          }
+        });
+
+        if (hasError) {
+          throw new Error("Invalid hospital ID");
+        }
       }
 
       await db.event.update(
@@ -41,7 +103,9 @@ const eventResolvers = {
           name: args.name,
           eventDate: args.eventDate,
           createdBy: args.createdBy,
-          isActive: args.isActive
+          isActive: args.isActive,
+          ambulances: args.ambulances,
+          hospitals: args.hospitals
         },
         {
           where: { id: args.id }
