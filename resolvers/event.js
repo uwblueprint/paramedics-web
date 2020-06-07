@@ -8,7 +8,9 @@ const eventResolvers = {
     event: (obj, args, context, info) => db.event.findByPk(args.id)
   },
   Event: {
-    createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy)
+    createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),
+    // ambulances: (obj, args, context, info) => db.ambulance.findByPk(obj.ambulances),
+    // hospitals: (obj, args, context, info) => db.hospital.findByPk(obj.hospitals),
   },
   Mutation: {
     addEvent: async (parent, args) => {
