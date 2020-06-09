@@ -4,8 +4,27 @@ const db = require("../models");
 
 const eventResolvers = {
   Query: {
-    events: () => db.event.findAll(),
-    event: (obj, args, context, info) => db.event.findByPk(args.id)
+    events: () => db.event.findAll({ 
+        include: [{
+          model: db.ambulance,
+          attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
+        },
+        {
+          model: db.hospital,
+          attributes: ['id', 'name', 'createdAt', 'updatedAt']
+        }]
+      },
+    ),
+    event: (obj, args, context, info) => db.event.findByPk(args.id, { 
+      include: [{
+        model: db.ambulance,
+        attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
+      },
+      {
+        model: db.hospital,
+        attributes: ['id', 'name', 'createdAt', 'updatedAt']
+      }]
+    })
   },
   Event: {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),

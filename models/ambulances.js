@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     vehicleNumber: DataTypes.INTEGER
   }, {});
   ambulances.associate = function(models) {
-    ambulances.belongsToMany(models.event, { through: 'EventAmbulances' });
+    ambulances.belongsToMany(models.event, { 
+      through: 'eventAmbulances',
+      foreignKey: 'ambulanceId'
+    });
     // ambulances.belongsToMany(Event, { through: 'EventAmbulances' });
   };
 

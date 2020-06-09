@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   hospitals.associate = function(models) {
-    hospitals.belongsToMany(models.event, { through: 'EventHospitals' })
+    hospitals.belongsToMany(models.event, { 
+      through: 'eventHospitals',
+      foreignKey: 'hospitalId' })
     // hospitals.belongsToMany(Event, { through: 'EventHospitals' })
   };
   
