@@ -70,18 +70,14 @@ const eventResolvers = {
         }
       }
 
-      const hasError = false;
-
       const addAmbulances = async () => {
         // Checking if ambulances are valid
         for (const ambulanceId of args.ambulances ) {
-          const ambulance = await db.ambulance.findByPk(ambulanceId);
+          const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
           if (!ambulance) {
-            hasError = true;
-            return;
+            return true;
           }
         }
-
         // Removing all instances of this particular event in the junction table
         await db.eventAmbulances.destroy({
           where: {
@@ -93,16 +89,17 @@ const eventResolvers = {
         for (const ambulanceId of args.ambulances ) {
           await db.eventAmbulances.create({
             eventId: args.id,
-            ambulanceId: ambulanceId
+            ambulanceId: ambulanceId['id']
           })
         }
+
+        return false;
       };
       
       // Calling async function to actually conduct association operations
       if (args.ambulances) {
-        addAmbulances();
-  
-        if (hasError) {
+        const ambulanceHasError = await addAmbulances();
+        if (ambulanceHasError) {
           throw new Error("Invalid vehicle ID");
         }
       }
@@ -110,10 +107,9 @@ const eventResolvers = {
       const addHospitals = async () => {
         // Checking if hospitals are valid
         for (const hospitalId of args.hospitals ) {
-          const hospital = await db.hospital.findByPk(hospitalId);
+          const hospital = await db.hospital.findByPk(hospitalId['id']);
           if (!hospital) {
-            hasError = true;
-            return;
+            return true;
           }
         }
         
@@ -128,16 +124,17 @@ const eventResolvers = {
         for (const hospitalId of args.hospitals) {
           await db.eventHospitals.create({
             eventId: args.id,
-            ambulanceId: hospitalId
+            hospitalId: hospitalId['id']
           })
         }
+
+        return false;
       }
 
       if (args.hospitals) {
         // Checking if hospitals are valid
-        addHospitals();
-        
-        if (hasError) {
+        const hospitalHasError = await addHospitals();
+        if (hospitalHasError) {
           throw new Error("Invalid hospital ID");
         }
 
@@ -167,37 +164,37 @@ const eventResolvers = {
     },
     addAmbulanceToEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.id);
+      const event = await db.event.findByPk(args.eventId);
       if (!event) {
         throw new Error("Invalid event ID");
       }
 
       // Checking if ambulance exists
-      const ambulance = await db.ambulances.findByPk(args.createdBy);
+      const ambulance = await db.ambulance.findByPk(args.ambulanceId['id']);
       if (!ambulance) {
         throw new Error("Invalid ambulance ID");
       }
       
       // Checking if association between ambulance and event already exists
-      const alreadyExists = await db.eventAmbulances.findAll({
+      const alreadyExists = await db.eventAmbulances.count({
         where: {
-          eventId: args.id,
-          hospitalId: args.ambulanceId
+          eventId: args.eventId,
+          ambulanceId: args.ambulanceId['id']
         }
       })
 
-      if (alreadyExists) {
+      if (alreadyExists > 0) {
         throw new Error("This ambulance is already assigned to this event")
       }
 
       // Creating association in eventAmbulances junction table
       await db.eventAmbulances.create({
-        eventId: args.id,
-        ambulanceId: args.ambulanceId
+        eventId: args.eventId,
+        ambulanceId: args.ambulanceId['id']
       })
 
       // Returning new event
-      return db.event.findByPk(args.id, { 
+      return db.event.findByPk(args.eventId, { 
         include: [{
           model: db.ambulance,
           attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
@@ -210,36 +207,36 @@ const eventResolvers = {
     },
     addHospitalToEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.id);
+      const event = await db.event.findByPk(args.eventId);
       if (!event) {
         throw new Error("Invalid event ID");
       }
       
       // Checking if hospital exists
-      const hospital = await db.hospital.findByPk(hospitalId);
+      const hospital = await db.hospital.findByPk(args.hospitalId['id']);
       if (!event) {
         throw new Error("Invalid hospital ID");
       }
 
       // Checking if association between hospital and event already exists
-      const alreadyExists = await db.eventHospitals.findAll({
+      const alreadyExists = await db.eventHospitals.count({
         where: {
-          eventId: args.id,
-          hospitalId: args.hospitalId
+          eventId: args.eventId,
+          hospitalId: args.hospitalId['id']
         }
       })
-      if (alreadyExists) {
+      if (alreadyExists > 0) {
         throw new Error("This hospital is already assigned to this event")
       }
 
       // Creating association in eventHospitals junction table
       await db.eventHospitals.create({
-        eventId: args.id,
-        ambulanceId: hospitalId
+        eventId: args.eventId,
+        hospitalId: args.hospitalId['id']
       })
 
       // Returning new event
-      return db.event.findByPk(args.id, { 
+      return db.event.findByPk(args.eventId, { 
         include: [{
           model: db.ambulance,
           attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
@@ -250,9 +247,21 @@ const eventResolvers = {
         }]
       });   
     },
-    deleteEvent: (parent, args) => {
+    deleteEvent: async (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
+      await db.eventAmbulances.destroy({
+        where: {
+          eventId: args.id
+        }
+      });
+
+      await db.eventHospitals.destroy({
+        where: {
+          eventId: args.id
+        }
+      });
+
       return db.event.destroy({
         where: {
           id: args.id

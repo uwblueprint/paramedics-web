@@ -15,8 +15,8 @@ const eventSchema = `
   extend type Mutation {
     addEvent(name: String!, eventDate: Date!, createdBy: ID!, isActive: Boolean!): Event
     updateEvent(id: ID!, name: String, eventDate: Date, createdBy: ID, isActive: Boolean, ambulances: [AmbulanceInput], hospitals: [HospitalInput]): Event
-    addAmbulanceToEvent(id: ID!, ambulanceId: AmbulanceInput!): Event
-    addHospitalToEvent(id: ID!, hospitalId: HospitalInput!): Event
+    addAmbulanceToEvent(eventId: ID!, ambulanceId: AmbulanceInput!): Event
+    addHospitalToEvent(eventId: ID!, hospitalId: HospitalInput!): Event
     deleteEvent(id: ID!): Int!
   }
 
