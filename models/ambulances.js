@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       through: 'eventAmbulances',
       foreignKey: 'ambulanceId'
     });
-    // ambulances.belongsToMany(Event, { through: 'EventAmbulances' });
   };
 
   return ambulances;

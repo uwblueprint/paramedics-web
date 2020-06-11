@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     hospitals.belongsToMany(models.event, { 
       through: 'eventHospitals',
       foreignKey: 'hospitalId' })
-    // hospitals.belongsToMany(Event, { through: 'EventHospitals' })
   };
   
   return hospitals;

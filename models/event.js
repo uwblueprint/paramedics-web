@@ -28,8 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     Event.belongsToMany(models.hospital, { 
       through: 'eventHospitals',
       foreignKey: 'eventId' });
-    // Event.belongsToMany(Ambulance, { through: 'EventAmbulances' });
-    // Event.belongsToMany(Hospital, { through: 'EventHospitals' });
   };
 
   return Event;
