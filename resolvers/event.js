@@ -28,8 +28,6 @@ const eventResolvers = {
   },
   Event: {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),
-    // ambulances: (obj, args, context, info) => db.ambulance.findByPk(obj.ambulances),
-    // hospitals: (obj, args, context, info) => db.hospital.findByPk(obj.hospitals),
   },
   Mutation: {
     addEvent: async (parent, args) => {
@@ -100,7 +98,7 @@ const eventResolvers = {
       if (args.ambulances) {
         const ambulanceHasError = await addAmbulances();
         if (ambulanceHasError) {
-          throw new Error("Invalid vehicle ID");
+          throw new Error("Invalid ambulance ID");
         }
       }
       
@@ -214,7 +212,7 @@ const eventResolvers = {
       
       // Checking if hospital exists
       const hospital = await db.hospital.findByPk(args.hospitalId['id']);
-      if (!hospital) {
+      if (!event) {
         throw new Error("Invalid hospital ID");
       }
 
