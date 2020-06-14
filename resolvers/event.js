@@ -212,7 +212,7 @@ const eventResolvers = {
       
       // Checking if hospital exists
       const hospital = await db.hospital.findByPk(args.hospitalId['id']);
-      if (!event) {
+      if (!hospital) {
         throw new Error("Invalid hospital ID");
       }
 
