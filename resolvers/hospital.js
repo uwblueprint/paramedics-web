@@ -30,7 +30,13 @@ const hospitalResolvers = {
         });
         return db.hospital.findByPk(args.id);
     },
-    deleteHospital: (parent, args) => {
+    deleteHospital: async (parent, args) => {
+      await db.eventHospitals.destroy({
+        where: {
+          eventId: args.id
+        }
+      });
+      
       return db.hospital.destroy({ 
         where: {
           id: args.id
