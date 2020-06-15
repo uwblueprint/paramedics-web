@@ -9,8 +9,8 @@ extend type Query {
 
 extend type Mutation {
 
-    addCollectionPoint(name: String!, eventId: ID!): collectionPoint!
-    updateCollectionPoint(id: ID!, name: String, eventId: ID): collectionPoint!
+    addCollectionPoint(name: String!, eventId: ID!, createdBy: ID!): collectionPoint!
+    updateCollectionPoint(id: ID!, name: String, eventId: ID, createdBy: ID): collectionPoint!
     deleteCollectionPoint(id: ID!): Int!
 
 }
@@ -21,6 +21,7 @@ type collectionPoint {
     eventId: Event!
     createdAt: DateTime!
     updatedAt: DateTime!
+    createdBy: User!
 
 }
 `

@@ -20,7 +20,7 @@ module.exports = {
         createdBy: user.id,
         isActive: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
         name: "Homecoming",
@@ -28,7 +28,7 @@ module.exports = {
         createdBy: user.id,
         isActive: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
     ]);
   },
