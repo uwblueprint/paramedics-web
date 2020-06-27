@@ -10,8 +10,8 @@
     "url": "https://github.com/uwblueprint/paramedics-web.git"
   },
   "scripts": {
-    "prod": "node server.js",
-    "dev": "nodemon server.js"
+    "prod": "sequelize db:migrate && node server.js",
+    "dev": "sequelize db:migrate && nodemon server.js"
   },
   "dependencies": {
     "apollo-server": "^2.14.2",
