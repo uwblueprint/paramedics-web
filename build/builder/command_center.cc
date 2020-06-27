@@ -53,9 +53,8 @@ void CommandCenter::initializeCommandMap() {
 	this->setCommand(
 		"rebuild", 
 		this->makeCommand(std::vector<std::string>{
-			"docker-compose -f {{RESOLVER file dockercompose}} down",
-			"docker build -f {{RESOLVER file dockerfile}} .",
-			"docker-compose -f {{RESOLVER file dockercompose}} up -d",
+			"docker-compose -f {{RESOLVER file dockercompose}} stop",
+			"docker-compose -f {{RESOLVER file dockercompose}} up -d -V --build",
 		})
 	);
 	this->setCommand(
