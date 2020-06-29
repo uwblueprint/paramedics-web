@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.2'
 services:
   # The primary API endpoint service
   paramedics-api:
@@ -14,10 +14,6 @@ services:
       driver: "json-file"
       options:
         max-size: 100m
-    environment:
-    - PARAMEDICS_DB_HOST=paramedics-db
-    - PARAMEDICS_DB_USER=robot
-    - PARAMEDICS_DB_PASSWORD=robot_pwd
     volumes:
       - type: bind
         source: ./
@@ -35,10 +31,6 @@ services:
       - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data/pg_data
-    environment:
-      POSTGRES_DB: paramedics-db
-      POSTGRES_USER: robot
-      POSTGRES_PASSWORD: robot_pwd
     volumes:
       - type: volume
         source: postgresql
