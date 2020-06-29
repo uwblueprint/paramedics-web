@@ -38,12 +38,12 @@ jobs:
             chmod +x /usr/local/bin/docker-compose
       - run:
           name: Building image
-          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.dev .
+          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.prod .
       - run: 
           name: Run Docker compose
           command: |
             set -x
-            docker-compose -f docker-compose-dev.yaml up -d
+            docker-compose -f docker-compose-prod.yaml up -d
       - save_cache:
           paths:
             - node_modules

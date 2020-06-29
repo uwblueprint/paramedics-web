@@ -14,8 +14,6 @@ services:
       driver: "json-file"
       options:
         max-size: 100m
-    env_file:
-      - paramedics-web.env
     volumes:
       - type: bind
         source: ./
@@ -33,8 +31,6 @@ services:
       - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data/pg_data
-    env_file:
-      - paramedics-web.env
     volumes:
       - type: volume
         source: postgresql
