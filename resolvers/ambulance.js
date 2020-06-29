@@ -31,7 +31,13 @@ const ambulanceResolvers = {
       return db.ambulance.findByPk(args.id);
     },
 
-    deleteAmbulance: (parent, args) => {
+    deleteAmbulance: async (parent, args) => {
+      await db.eventAmbulances.destroy({
+        where: {
+          ambulanceId: args.id
+        }
+      });
+
       return db.ambulance.destroy({
         where: {
           id: args.id
