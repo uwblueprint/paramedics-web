@@ -29,5 +29,8 @@
     "sequelize-cli": "^5.5.1",
     "sequelize-replace-enum-postgres": "^1.5.0"
   },
-  "homepage": "https://github.com/uwblueprint/paramedics-web"
+  "homepage": "https://github.com/uwblueprint/paramedics-web",
+  "devDependencies": {
+    "ngrok": "^3.2.7"
+  }
 }
