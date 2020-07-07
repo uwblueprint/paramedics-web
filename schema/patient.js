@@ -11,6 +11,7 @@ const patientSchema = `
     ON_SITE
     RELEASED
     TRANSPORTED
+    DELETED
   }
 
   extend type Query {
@@ -64,7 +65,5 @@ const patientSchema = `
     createdAt: DateTime,
     updatedAt: DateTime,
   }
-  `
-  ;
-
+  `;
 exports.patientSchema = patientSchema;
