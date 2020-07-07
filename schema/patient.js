@@ -24,11 +24,11 @@ const patientSchema = `
       gender: String,
       age: Int,
       runNumber: Int,
-      barcodeValue: Int,
+      barcodeValue: Int!,
       collectionPointId: ID!,
       status: status,
       triageCategory: Int,
-      triageLevel: triageLevel, 
+      triageLevel: triageLevel!, 
       notes: String,
       transportTime: DateTime,
     ): Patient!
