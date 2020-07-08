@@ -3,7 +3,7 @@ module.exports = {
   "development": {
     "username": process.env.PARAMEDICS_DB_USER,
     "password": process.env.PARAMEDICS_DB_PASSWORD,
-    "database": process.env.PARAMEDICS_DB_HOST,
+    "database": process.env.PARAMEDICS_DB,
     "host": process.env.PARAMEDICS_DB_HOST,
     "port": 5432,
     "dialect": "postgresql"
@@ -19,7 +19,7 @@ module.exports = {
     "username": process.env.POSTGRES_USER,
     "password": process.env.POSTGRES_PASSWORD,
     "database": process.env.POSTGRES_DB,
-    "host": process.env.POSTGRES_DB,
+    "host": process.env.POSTGRES_DB_HOST,
     "port": 5432,
     "dialect": "postgresql"
   }
