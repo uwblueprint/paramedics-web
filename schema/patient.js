@@ -11,6 +11,7 @@ const patientSchema = `
     ON_SITE
     RELEASED
     TRANSPORTED
+    DELETED
   }
 
   extend type Query {
@@ -23,11 +24,11 @@ const patientSchema = `
       gender: String,
       age: Int,
       runNumber: Int,
-      barcodeValue: Int,
+      barcodeValue: Int!,
       collectionPointId: ID!,
       status: status,
       triageCategory: Int,
-      triageLevel: triageLevel, 
+      triageLevel: triageLevel!, 
       notes: String,
       transportTime: DateTime,
     ): Patient!
@@ -64,7 +65,5 @@ const patientSchema = `
     createdAt: DateTime,
     updatedAt: DateTime,
   }
-  `
-  ;
-
+  `;
 exports.patientSchema = patientSchema;
