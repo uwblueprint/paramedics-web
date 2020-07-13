@@ -10,13 +10,20 @@ const patientResolvers = {
         },
     },
     Patient: {
-        collectionPointId: (obj, args, context, info) => db.collectionPoint.findByPk(obj.collectionPointId)
+        collectionPointId: (obj, args, context, info) => db.collectionPoint.findByPk(obj.collectionPointId),
+        hospitalId: (obj, args, context, info) => db.hospital.findByPk(obj.hospitalId)
     },
     Mutation: {
         addPatient: async (parent, args) => {
             const collectionPoint = await db.collectionPoint.findByPk(args.collectionPointId);
             if (!collectionPoint) {
                 throw new Error("Invalid collection point ID");
+            }
+            if (args.hospitalId) {
+                const hospital = await db.hospital.findByPk(args.hospitalId);
+                if (!hospital) {
+                    throw new Error("Invalid hospital ID");
+                }
             }
             return db.patient.create({
                 gender: args.gender,
@@ -29,6 +36,7 @@ const patientResolvers = {
                 triageLevel: args.triageLevel,
                 notes: args.notes,
                 transportTime: args.transportTime,
+                hospitalId: args.hospitalId
             });
         },
         updatePatient: async (parent, args) => {
@@ -42,6 +50,12 @@ const patientResolvers = {
                     throw new Error("Invalid collection point ID");
                 }
             }
+            if (args.hospitalId) {
+                const hospital = await db.hospital.findByPk(args.hospitalId);
+                if (!hospital) {
+                    throw new Error("Invalid hospital ID");
+                }
+            }
             await db.patient.update({
                 gender: args.gender,
                 age: args.age,
@@ -53,6 +67,7 @@ const patientResolvers = {
                 triageLevel: args.triageLevel,
                 notes: args.notes,
                 transportTime: args.transportTime,
+                hospitalId: args.hospitalId
             },
                 {
                     where: {
