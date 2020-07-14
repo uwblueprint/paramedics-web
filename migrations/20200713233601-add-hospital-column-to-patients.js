@@ -6,17 +6,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(t => {
-      return Promise.all([
-        queryInterface.removeColumn(
-          "patients",
-          "hospitalId",
-          {
-            type: Sequelize.DataTypes.INTEGER
-          },
-          { transaction: t }
-        )
-      ]);
-    });
+    return queryInterface.removeColumn("patients", "hospitalId");
   }
 };
