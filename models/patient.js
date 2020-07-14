@@ -1,6 +1,7 @@
 'use strict';
 
 const collectionPoint = require("./collectionPoint");
+const hospitals = require("./hospitals");
 
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define('patient', {
@@ -25,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
   Patient.associate = models => {
     Patient.belongsTo(collectionPoint(sequelize, DataTypes), {
       foreignKey: "collectionPointId",
+      targetKey: "id"
+    });
+    Patient.belongsTo(hospitals(sequelize, DataTypes), {
+      foreignKey: "hospitalId",
       targetKey: "id"
     });
   };
