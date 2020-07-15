@@ -13,10 +13,10 @@ module.exports = {
         type: Sequelize.STRING,
       },
       latitude: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.FLOAT,
       },
       longitude: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.FLOAT,
       },
       address: {
         type: Sequelize.STRING,
