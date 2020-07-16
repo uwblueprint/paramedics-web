@@ -14,6 +14,7 @@ const { hospitalResolvers } = require("./resolvers/hospital");
 const { ambulanceSchema } = require("./schema/ambulance");
 const { ambulanceResolvers } = require("./resolvers/ambulance");
 const { locationPinSchema } = require("./schema/locationPin");
+const { locationPinResolvers } = require("./resolvers/locationPin");
 
 const {
   GraphQLDate,
@@ -69,7 +70,8 @@ const schema = makeExecutableSchema({
     hospitalResolvers,
     ambulanceResolvers,
     collectionPointResolvers,
-    patientResolvers
+    patientResolvers,
+    locationPinResolvers
   ),
 });
 
