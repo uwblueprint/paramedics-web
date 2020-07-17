@@ -4,11 +4,11 @@ const db = require("../models");
 
 const locationPinResolvers = {
   Query: {
-    pins: () => db.locationPin.findAll(),
-    pin: (obj, args, context, info) => db.locationPin.findByPk(args.id),
+    pins: () => db.locationPins.findAll(),
+    pin: (obj, args, context, info) => db.locationPins.findByPk(args.id),
   },
 
-  locationPin: {
+  LocationPin: {
     eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId),
   },
 
@@ -21,7 +21,7 @@ const locationPinResolvers = {
       if (!event) {
         throw new Error("Invalid event ID");
       }
-      return db.locationPin.create({
+      return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
         latitude: args.latitude,
@@ -38,7 +38,7 @@ const locationPinResolvers = {
         }
       }
 
-      await db.collectionPoint
+      await db.locationPins
         .update(
           {
             label: args.label,
@@ -58,12 +58,12 @@ const locationPinResolvers = {
             throw new Error("This location pin does not exist");
           }
         });
-      return db.locationPin.findByPk(args.id);
+      return db.locationPins.findByPk(args.id);
     },
-    deleteCollectionPoint: (parent, args) => {
+    deleteLocationPin: (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
-      return db.locationPin.destroy({
+      return db.locationPins.destroy({
         where: {
           id: args.id,
         },

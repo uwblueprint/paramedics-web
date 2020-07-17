@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       label: DataTypes.STRING,
       eventId: DataTypes.INTEGER,
+      latitude: DataTypes.FLOAT,
+      longitude: DataTypes.FLOAT,
+      address: DataTypes.STRING,
     },
     {}
   );
