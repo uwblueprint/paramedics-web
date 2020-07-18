@@ -2,6 +2,7 @@ const locationPinSchema = `
   extend type Query {
     pin(id: ID!): LocationPin
     pins: [LocationPin]
+    pinsForEvent(eventId: ID!): [LocationPin]
   }
 
   extend type Mutation {

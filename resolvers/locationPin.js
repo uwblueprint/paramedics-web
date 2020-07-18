@@ -6,6 +6,12 @@ const locationPinResolvers = {
   Query: {
     pins: () => db.locationPins.findAll(),
     pin: (obj, args, context, info) => db.locationPins.findByPk(args.id),
+    pinsForEvent: (obj, args, context, info) =>
+      db.locationPins.findAll({
+        where: {
+          eventId: args.eventId,
+        },
+      }),
   },
 
   LocationPin: {
