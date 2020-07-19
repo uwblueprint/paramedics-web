@@ -12,9 +12,13 @@ module.exports = {
         { transaction: t }
       )
       await queryInterface.sequelize.query(
-        `UPDATE users SET "name" = CONCAT("firstName", ' ', "lastName")`,
+        `UPDATE users SET "name" = "firstName" WHERE "lastName"=''`,
         { transaction: t }
-      )
+      );
+      await queryInterface.sequelize.query(
+        `UPDATE users SET "name" = CONCAT("firstName", ' ', "lastName") WHERE "lastName"<>''`,
+        { transaction: t }
+      );
       await queryInterface.removeColumn('users', 'firstName', { transaction: t });
       return queryInterface.removeColumn('users', 'lastName', { transaction: t });
     });
