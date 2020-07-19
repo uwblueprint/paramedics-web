@@ -5,8 +5,7 @@ const db = require("../models");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const user = await db.user.create({
-      firstName: "Darth",
-      lastName: "Vader",
+      name: "Darth Vader",
       email: "darthvader@sithlords.com",
       password: "ga1axyru1er",
       createdAt: new Date(),

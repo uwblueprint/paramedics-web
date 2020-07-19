@@ -5,8 +5,7 @@ const db = require("../models");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const user = await db.user.create({
-      firstName: "Jill",
-      lastName: "Doe",
+      name: "Jill Doe",
       email: "jilldoe@gmail.com",
       password: "asdfgh1234",
       createdAt: new Date(),
@@ -30,7 +29,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    
+
     const hospital1 = await db.hospital.create({
       name: "Waterloo's Best Hospital 1",
       createdAt: new Date(),
@@ -43,7 +42,7 @@ module.exports = {
       updatedAt: new Date()
     });
 
-    return queryInterface.bulkInsert('eventHospitals', [{      
+    return queryInterface.bulkInsert('eventHospitals', [{
       eventId: event1.id,
       hospitalId: hospital1.id,
       createdAt: new Date(),
@@ -67,7 +66,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     },
-  ]);
+    ]);
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete('eventHospitals', null, {});
