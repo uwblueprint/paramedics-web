@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       longitude: DataTypes.FLOAT,
       address: DataTypes.STRING,
     },
-    {}
+    { paranoid: true }
   );
   locationPin.associate = function (models) {
     // associations can be defined here
