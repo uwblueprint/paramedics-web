@@ -11,8 +11,8 @@ const userSchema = `
   }
   
   extend type Mutation {
-    addUser(firstName: String!, lastName: String!, email: String!,  password: String!, accessLevel: accessLevel!, emergencyContact: String!): User!
-    updateUser(id: ID!, accessLevel: accessLevel, firstName: String, lastName: String, email: String,
+    addUser(name: String!, email: String!, password: String!, accessLevel: accessLevel!, emergencyContact: String!): User!
+    updateUser(id: ID!, accessLevel: accessLevel, name: String, email: String,
       emergencyContact: String): User!
     deleteUser(id: ID!): Int!
   }
@@ -20,14 +20,13 @@ const userSchema = `
   type User {
     accessLevel: accessLevel
     id: ID!
-    firstName: String!
-    lastName: String!
+    name: String!
     email: String!
     emergencyContact: String
     createdAt: DateTime
     updatedAt: DateTime
   }
   `
-;
+  ;
 
 exports.userSchema = userSchema;

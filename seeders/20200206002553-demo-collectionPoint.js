@@ -5,8 +5,7 @@ const db = require('../models');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const user = await db.user.create({
-      firstName: "Firas",
-      lastName: "Mansour",
+      name: "Firas Mansour",
       email: "mansour_is_a_cool_guy@gmail.com",
       password: "asdfgh1234",
       createdAt: new Date(),
@@ -22,21 +21,21 @@ module.exports = {
       updatedAt: new Date()
 
     });
-      return queryInterface.bulkInsert('collectionPoints', [{
-        name: 'Checkpoint 0',      
-        eventId: event.id,
-        createdBy: user.id,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        name: 'Checkpoint 1',
-        eventId: event.id,
-        createdBy: user.id,
-        createdAt: new Date(),
-        updatedAt: new Date()
-        
-      },
+    return queryInterface.bulkInsert('collectionPoints', [{
+      name: 'Checkpoint 0',
+      eventId: event.id,
+      createdBy: user.id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      name: 'Checkpoint 1',
+      eventId: event.id,
+      createdBy: user.id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+
+    },
     ]);
 
   },
@@ -46,7 +45,7 @@ module.exports = {
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
     */
-      return queryInterface.bulkDelete('collectionPoints', null, {});
+    return queryInterface.bulkDelete('collectionPoints', null, {});
 
   }
 };
