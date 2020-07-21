@@ -10,24 +10,25 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       eventDate: DataTypes.DATEONLY,
-      isActive: DataTypes.BOOLEAN
+      isActive: DataTypes.BOOLEAN,
     },
-    {}
+    { paranoid: true }
   );
-  Event.associate = models => {
-    
+  Event.associate = (models) => {
     Event.belongsTo(User(sequelize, DataTypes), {
       foreignKey: "createdBy",
-      targetKey: "id"
+      targetKey: "id",
     });
 
-    Event.belongsToMany(models.ambulance, { 
-      through: 'eventAmbulances', 
-      foreignKey: 'eventId'});
-      
-    Event.belongsToMany(models.hospital, { 
-      through: 'eventHospitals',
-      foreignKey: 'eventId' });
+    Event.belongsToMany(models.ambulance, {
+      through: "eventAmbulances",
+      foreignKey: "eventId",
+    });
+
+    Event.belongsToMany(models.hospital, {
+      through: "eventHospitals",
+      foreignKey: "eventId",
+    });
   };
 
   return Event;

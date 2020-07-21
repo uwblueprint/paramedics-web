@@ -1,29 +1,30 @@
-'use strict';
+"use strict";
 
 const Event = require("./event");
-const User = require("./user")
+const User = require("./user");
 
 module.exports = (sequelize, DataTypes) => {
-  const collectionPoint = sequelize.define('collectionPoint', {
-    name: DataTypes.STRING,
-    eventId: DataTypes.INTEGER
-    //TODO: Add Location (coordinate)
-  }, {});
-  collectionPoint.associate = function(models) {
+  const collectionPoint = sequelize.define(
+    "collectionPoint",
+    {
+      name: DataTypes.STRING,
+      eventId: DataTypes.INTEGER,
+      //TODO: Add Location (coordinate)
+    },
+    { paranoid: true }
+  );
+  collectionPoint.associate = function (models) {
     // associations can be defined here
 
     collectionPoint.belongsTo(User(sequelize, DataTypes), {
       foreignKey: "createdBy",
-      targetKey: "id"
+      targetKey: "id",
     });
 
     collectionPoint.belongsTo(Event(sequelize, DataTypes), {
-
       foreignKey: "eventId",
-      targetKey: "id"
-
+      targetKey: "id",
     });
-
   };
   return collectionPoint;
 };
