@@ -14,6 +14,7 @@ const userSchema = `
     addUser(name: String!, email: String!, password: String!, accessLevel: accessLevel!, emergencyContact: String!): User!
     updateUser(id: ID!, accessLevel: accessLevel, name: String, email: String,
       emergencyContact: String): User!
+    restoreUser(id: ID!): User!
     deleteUser(id: ID!): Int!
   }
   
@@ -26,7 +27,5 @@ const userSchema = `
     createdAt: DateTime
     updatedAt: DateTime
   }
-  `
-  ;
-
+  `;
 exports.userSchema = userSchema;
