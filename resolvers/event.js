@@ -30,6 +30,20 @@ const eventResolvers = {
           },
         ],
       }),
+    archivedEvent: (obj, args, context, info) =>
+      db.event.findByPk(args.id, {
+        include: [
+          {
+            model: db.ambulance,
+            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
+          },
+          {
+            model: db.hospital,
+            attributes: ["id", "name", "createdAt", "updatedAt"],
+          },
+        ],
+        paranoid: false,
+      }),
   },
   Event: {
     createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),
