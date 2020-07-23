@@ -35,18 +35,13 @@ const hospitalResolvers = {
       return db.hospital.findByPk(args.id);
     },
     restoreHospital: async (parent, args) => {
-      await db.hospital.update(
-        {
-          deletedAt: NULL,
+      await db.hospital.restore({
+        where: {
+          id: args.id,
         },
-        {
-          where: {
-            id: args.id,
-          },
-        }
-      );
+      });
 
-      return db.hospital.findbyPk(args.id);
+      return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
       await db.eventHospitals.destroy({

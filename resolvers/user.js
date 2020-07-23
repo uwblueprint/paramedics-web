@@ -43,18 +43,13 @@ const userResolvers = {
       return db.user.findByPk(args.id);
     },
     restoreUser: async (parent, args) => {
-      await db.user.update(
-        {
-          deletedAt: NULL,
+      await db.user.restore({
+        where: {
+          id: args.id,
         },
-        {
-          where: {
-            id: args.id,
-          },
-        }
-      );
+      });
 
-      return db.user.findbyPk(args.id);
+      return db.user.findByPk(args.id);
     },
     deleteUser: (parent, args) => {
       return db.user.destroy({

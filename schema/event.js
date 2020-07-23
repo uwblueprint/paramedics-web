@@ -17,7 +17,7 @@ const eventSchema = `
     updateEvent(id: ID!, name: String, eventDate: Date, createdBy: ID, isActive: Boolean, ambulances: [AmbulanceInput], hospitals: [HospitalInput]): Event
     addAmbulanceToEvent(eventId: ID!, ambulanceId: AmbulanceInput!): Event
     addHospitalToEvent(eventId: ID!, hospitalId: HospitalInput!): Event
-    restoreEvent(eventId: ID!): Event!
+    restoreEvent(id: ID!): Event
     deleteEvent(id: ID!): Int!
   }
 

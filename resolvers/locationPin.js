@@ -67,18 +67,13 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     restoreLocationPin: async (parent, args) => {
-      await db.locationPins.update(
-        {
-          deletedAt: NULL,
+      await db.locationPins.restore({
+        where: {
+          id: args.id,
         },
-        {
-          where: {
-            id: args.id,
-          },
-        }
-      );
+      });
 
-      return db.locationPins.findbyPk(args.id);
+      return db.locationPins.findByPk(args.id);
     },
     deleteLocationPin: (parent, args) => {
       // Return status for destroy

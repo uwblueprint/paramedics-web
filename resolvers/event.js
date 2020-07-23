@@ -180,22 +180,38 @@ const eventResolvers = {
       }
 
       // Checking if association between ambulance and event already exists
-      const alreadyExists = await db.eventAmbulances.count({
+      const alreadyExistsNotDeleted = await db.eventAmbulances.count({
         where: {
           eventId: args.eventId,
           ambulanceId: args.ambulanceId["id"],
         },
       });
-
-      if (alreadyExists > 0) {
+      if (alreadyExistsNotDeleted > 0) {
         throw new Error("This ambulance is already assigned to this event");
       }
 
-      // Creating association in eventAmbulances junction table
-      await db.eventAmbulances.create({
-        eventId: args.eventId,
-        ambulanceId: args.ambulanceId["id"],
+      const alreadyExistsDeleted = await db.eventAmbulances.count({
+        where: {
+          eventId: args.eventId,
+          hospitalId: args.hospitalId["id"],
+        },
+        paranoid: false,
       });
+
+      if (alreadyExistsDeleted > 0) {
+        await db.eventAmbulances.restore({
+          where: {
+            eventId: args.eventId,
+            hospitalId: args.ambulanceId["id"],
+          },
+        });
+      } else {
+        // Creating association in eventHospitals junction table if not already created
+        await db.eventAmbulances.create({
+          eventId: args.eventId,
+          hospitalId: args.ambulanceId["id"],
+        });
+      }
 
       // Returning new event
       return db.event.findByPk(args.eventId, {
@@ -224,22 +240,40 @@ const eventResolvers = {
         throw new Error("Invalid hospital ID");
       }
 
-      // Checking if association between hospital and event already exists
-      const alreadyExists = await db.eventHospitals.count({
+      // Checking if association between hospital and event already exists and not deleted
+      const alreadyExistsNotDeleted = await db.eventHospitals.count({
         where: {
           eventId: args.eventId,
           hospitalId: args.hospitalId["id"],
         },
       });
-      if (alreadyExists > 0) {
+      if (alreadyExistsNotDeleted > 0) {
         throw new Error("This hospital is already assigned to this event");
       }
 
-      // Creating association in eventHospitals junction table
-      await db.eventHospitals.create({
-        eventId: args.eventId,
-        hospitalId: args.hospitalId["id"],
+      // Restoring association if previously deleted
+      const alreadyExistsDeleted = await db.eventHospitals.count({
+        where: {
+          eventId: args.eventId,
+          hospitalId: args.hospitalId["id"],
+        },
+        paranoid: false,
       });
+
+      if (alreadyExistsDeleted > 0) {
+        await db.eventHospitals.restore({
+          where: {
+            eventId: args.eventId,
+            hospitalId: args.hospitalId["id"],
+          },
+        });
+      } else {
+        // Creating association in eventHospitals junction table if not already created
+        await db.eventHospitals.create({
+          eventId: args.eventId,
+          hospitalId: args.hospitalId["id"],
+        });
+      }
 
       // Returning new event
       return db.event.findByPk(args.eventId, {
@@ -256,18 +290,13 @@ const eventResolvers = {
       });
     },
     restoreEvent: async (parent, args) => {
-      await db.event.update(
-        {
-          deletedAt: NULL,
+      await db.event.restore({
+        where: {
+          id: args.id,
         },
-        {
-          where: {
-            id: args.id,
-          },
-        }
-      );
+      });
 
-      return db.event.findbyPk(args.id);
+      return db.event.findByPk(args.id);
     },
     deleteEvent: async (parent, args) => {
       // Return status for destroy
