@@ -4,6 +4,7 @@ extend type Query {
 
     collectionPoint(id: ID!): collectionPoint
     collectionPoints: [collectionPoint]
+    collectionPointsByEventId(eventId: ID!): [collectionPoint]
 
 }
 
@@ -24,7 +25,5 @@ type collectionPoint {
     createdBy: User!
 
 }
-`
-;
-
+`;
 exports.collectionPointSchema = collectionPointSchema;
