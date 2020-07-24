@@ -4,16 +4,13 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("patients", "barcodeValue", {
-          transaction: t,
-        }),
-        queryInterface.addColumn(
+        queryInterface.changeColumn(
           "patients",
           "barcodeValue",
+          { type: Sequelize.DataTypes.STRING },
           {
-            type: Sequelize.DataTypes.STRING,
-          },
-          { transaction: t }
+            transaction: t,
+          }
         ),
       ]);
     });
@@ -22,16 +19,13 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("patients", "barcodeValue", {
-          transaction: t,
-        }),
-        queryInterface.addColumn(
+        queryInterface.changeColumn(
           "patients",
           "barcodeValue",
+          { type: 'INTEGER USING CAST("barcodeValue" as INTEGER)' },
           {
-            type: Sequelize.DataTypes.BIGINT,
-          },
-          { transaction: t }
+            transaction: t,
+          }
         ),
       ]);
     });
