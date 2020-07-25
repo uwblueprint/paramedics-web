@@ -308,6 +308,7 @@ const eventResolvers = {
         where: {
           id: args.id,
         },
+        individualHooks: true,
       });
 
       return db.event.findByPk(args.id);
@@ -331,6 +332,7 @@ const eventResolvers = {
         where: {
           id: args.id,
         },
+        individualHooks: true,
       });
     },
   },

@@ -12,9 +12,34 @@ module.exports = (sequelize, DataTypes) => {
       eventDate: DataTypes.DATEONLY,
       isActive: DataTypes.BOOLEAN,
     },
-    { paranoid: true }
+    {
+      paranoid: true,
+      hooks: {
+        afterDestroy: function (instance, options) {
+          instance.getCollectionPoints().then((collectionPoints) =>
+            collectionPoints.map((collectionPoint) => {
+              collectionPoint.destroy();
+            })
+          );
+        },
+        afterRestore: function (instance, options) {
+          instance
+            .getCollectionPoints({ paranoid: false })
+            .then((collectionPoints) =>
+              collectionPoints.map((collectionPoint) =>
+                collectionPoint.restore()
+              )
+            );
+        },
+      },
+    }
   );
   Event.associate = (models) => {
+    Event.hasMany(models.collectionPoint, {
+      hooks: true,
+      onDelete: "CASCADE",
+    });
+
     Event.belongsTo(User(sequelize, DataTypes), {
       foreignKey: "createdBy",
       targetKey: "id",
