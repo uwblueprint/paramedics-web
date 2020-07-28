@@ -41,6 +41,15 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
+          "patients",
+          "deletedAt",
+          {
+            allowNull: true,
+            type: Sequelize.DataTypes.DATE,
+          },
+          { transaction: t }
+        ),
+        queryInterface.addColumn(
           "collectionPoints",
           "deletedAt",
           {
@@ -103,6 +112,15 @@ module.exports = {
         ),
         queryInterface.removeColumn(
           "ambulances",
+          "deletedAt",
+          {
+            allowNull: true,
+            type: Sequelize.DataTypes.DATE,
+          },
+          { transaction: t }
+        ),
+        queryInterface.removeColumn(
+          "patients",
           "deletedAt",
           {
             allowNull: true,

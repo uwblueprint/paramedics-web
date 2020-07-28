@@ -77,6 +77,7 @@ const collectionPointResolvers = {
         where: {
           id: args.id,
         },
+        individualHooks: true,
       });
 
       return db.collectionPoint.findByPk(args.id);
@@ -88,6 +89,7 @@ const collectionPointResolvers = {
         where: {
           id: args.id,
         },
+        individualHooks: true,
       });
     },
   },

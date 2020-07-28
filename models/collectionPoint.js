@@ -11,10 +11,30 @@ module.exports = (sequelize, DataTypes) => {
       eventId: DataTypes.INTEGER,
       //TODO: Add Location (coordinate)
     },
-    { paranoid: true }
+    {
+      paranoid: true,
+      hooks: {
+        afterDestroy: function (instance, options) {
+          instance.getPatients().then((patients) =>
+            patients.map((patient) => {
+              patient.destroy();
+            })
+          );
+        },
+        afterRestore: function (instance, options) {
+          instance
+            .getPatients({ paranoid: false })
+            .then((patients) => patients.map((patient) => patient.restore()));
+        },
+      },
+    }
   );
   collectionPoint.associate = function (models) {
     // associations can be defined here
+    collectionPoint.hasMany(models.patient, {
+      onDelete: "CASCADE",
+      hooks: true,
+    });
 
     collectionPoint.belongsTo(User(sequelize, DataTypes), {
       foreignKey: "createdBy",

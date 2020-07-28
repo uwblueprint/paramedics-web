@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },
-    {}
+    { paranoid: true }
   );
   Patient.associate = (models) => {
     Patient.belongsTo(collectionPoint(sequelize, DataTypes), {
