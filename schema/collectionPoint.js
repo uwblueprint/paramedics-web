@@ -4,7 +4,7 @@ extend type Query {
 
     collectionPoint(id: ID!): collectionPoint
     collectionPoints: [collectionPoint]
-    collectionPointsByEventId(eventId: ID!): [collectionPoint]
+    collectionPointsByEvent(eventId: ID!): [collectionPoint]
 
 }
 

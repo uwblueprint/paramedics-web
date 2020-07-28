@@ -7,7 +7,7 @@ const collectionPointResolvers = {
     collectionPoints: () => db.collectionPoint.findAll(),
     collectionPoint: (obj, args, context, info) =>
       db.collectionPoint.findByPk(args.id),
-    collectionPointsByEventId: (obj, args, context, info) =>
+    collectionPointsByEvent: (obj, args, context, info) =>
       db.collectionPoint.findAll({ where: { eventId: args.eventId } }),
   },
 

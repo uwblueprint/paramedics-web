@@ -17,7 +17,7 @@ const patientSchema = `
   extend type Query {
     patient(id: ID!): Patient
     patients: [Patient]
-    patientsByCCPId(collectionPointId: ID!): [Patient]
+    patientsByCcp(collectionPointId: ID!): [Patient]
   }
 
   extend type Mutation {
