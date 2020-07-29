@@ -311,6 +311,56 @@ const eventResolvers = {
         individualHooks: true,
       });
 
+      // Checking if corresponding ambulances are also restored and restoring associations if true
+      const ambulanceIds = await db.eventAmbulances.findAll({
+        where: {
+          eventId: args.id,
+        },
+        paranoid: false,
+      });
+
+      await ambulanceIds.map(async (ambulanceId) => {
+        if (
+          db.ambulance.has({
+            where: {
+              id: ambulanceId,
+            },
+          })
+        ) {
+          db.eventAmbulances.restore({
+            where: {
+              eventId: args.id,
+              ambulanceId: ambulanceId,
+            },
+          });
+        }
+      });
+
+      // Restoring event-hospital relation if corresponding hospital also restored
+      const hospitalIds = await db.eventHospitals.findAll({
+        where: {
+          eventId: args.id,
+        },
+        paranoid: false,
+      });
+
+      await hospitalIds.map(async (hospitalId) => {
+        if (
+          db.hospital.has({
+            where: {
+              id: hospitalId,
+            },
+          })
+        ) {
+          db.eventHospitals.restore({
+            where: {
+              eventId: args.id,
+              hospitalId: hospitalId,
+            },
+          });
+        }
+      });
+
       return db.event.findByPk(args.id);
     },
     deleteEvent: async (parent, args) => {
