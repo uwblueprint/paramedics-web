@@ -9,15 +9,6 @@ const ambulanceResolvers = {
         include: [
           {
             model: db.event,
-            attributes: [
-              "id",
-              "name",
-              "eventDate",
-              "createdBy",
-              "isActive",
-              "createdAt",
-              "updatedAt",
-            ],
           },
         ],
       }),
@@ -26,15 +17,6 @@ const ambulanceResolvers = {
         include: [
           {
             model: db.event,
-            attributes: [
-              "id",
-              "name",
-              "eventDate",
-              "createdBy",
-              "isActive",
-              "createdAt",
-              "updatedAt",
-            ],
           },
         ],
       }),
