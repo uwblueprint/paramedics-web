@@ -42,6 +42,30 @@ const ambulanceResolvers = {
         },
       });
 
+      const associatedEvents = await db.eventAmbulances.findAll({
+        where: {
+          ambulanceId: args.id,
+        },
+        paranoid: false,
+      });
+
+      await associatedEvents.map(async (associatedEvent) => {
+        if (
+          (await db.event.count({
+            where: {
+              id: associatedEvent.eventId,
+            },
+          })) > 0
+        ) {
+          db.eventAmbulances.restore({
+            where: {
+              eventId: associatedEvent.eventId,
+              ambulanceId: args.id,
+            },
+          });
+        }
+      });
+
       return db.ambulance.findByPk(args.id);
     },
 

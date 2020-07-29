@@ -312,50 +312,50 @@ const eventResolvers = {
       });
 
       // Checking if corresponding ambulances are also restored and restoring associations if true
-      const ambulanceIds = await db.eventAmbulances.findAll({
+      const associatedAmbulances = await db.eventAmbulances.findAll({
         where: {
           eventId: args.id,
         },
         paranoid: false,
       });
 
-      await ambulanceIds.map(async (ambulanceId) => {
+      await associatedAmbulances.map(async (associatedAmbulance) => {
         if (
-          db.ambulance.has({
+          (await db.ambulance.count({
             where: {
-              id: ambulanceId,
+              id: associatedAmbulance.ambulanceId,
             },
-          })
+          })) > 0
         ) {
           db.eventAmbulances.restore({
             where: {
               eventId: args.id,
-              ambulanceId: ambulanceId,
+              ambulanceId: associatedAmbulance.ambulanceId,
             },
           });
         }
       });
 
       // Restoring event-hospital relation if corresponding hospital also restored
-      const hospitalIds = await db.eventHospitals.findAll({
+      const associatedHospitals = await db.eventHospitals.findAll({
         where: {
           eventId: args.id,
         },
         paranoid: false,
       });
 
-      await hospitalIds.map(async (hospitalId) => {
+      await associatedHospitals.map(async (associatedHospital) => {
         if (
-          db.hospital.has({
+          (await db.hospital.count({
             where: {
-              id: hospitalId,
+              id: associatedHospital.hospitalId,
             },
-          })
+          })) > 0
         ) {
           db.eventHospitals.restore({
             where: {
               eventId: args.id,
-              hospitalId: hospitalId,
+              hospitalId: associatedHospital.hospitalId,
             },
           });
         }

@@ -41,12 +41,37 @@ const hospitalResolvers = {
         },
       });
 
+      // Restoring associated event if event is also avaliable
+      const associatedEvents = await db.eventHospitals.findAll({
+        where: {
+          hospitalId: args.id,
+        },
+        paranoid: false,
+      });
+
+      await associatedEvents.map(async (associatedEvent) => {
+        if (
+          (await db.event.count({
+            where: {
+              id: associatedEvent.eventId,
+            },
+          })) > 0
+        ) {
+          db.eventHospitals.restore({
+            where: {
+              eventId: associatedEvent.eventId,
+              hospitalId: args.id,
+            },
+          });
+        }
+      });
+
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
       await db.eventHospitals.destroy({
         where: {
-          eventId: args.id,
+          hospitalId: args.id,
         },
       });
 
