@@ -84,6 +84,13 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
+    restorePatient: async (parent, args) => {
+      await db.patient.restore({
+        where: { id: args.id },
+      });
+
+      return db.patient.findByPk(args.id);
+    },
     deletePatient: async (parent, args) => {
       const isDeleted = await db.patient.update(
         {

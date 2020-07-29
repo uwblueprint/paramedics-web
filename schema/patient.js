@@ -49,6 +49,8 @@ const patientSchema = `
       hospitalId: ID
     ): Patient!
 
+    restorePatient(id: ID!): Patient!
+
     deletePatient(id: ID!): Int!
   }
   
