@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const db = require("../models");
 
@@ -9,7 +9,7 @@ module.exports = {
       email: "darthvader@sithlords.com",
       password: "ga1axyru1er",
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     const event = await db.event.create({
@@ -18,7 +18,7 @@ module.exports = {
       createdBy: user.id,
       isActive: true,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     const collectionPoint = await db.collectionPoint.create({
@@ -26,50 +26,51 @@ module.exports = {
       eventId: event.id,
       createdBy: user.id,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
-    return queryInterface.bulkInsert('patients', [{
-      gender: 'Male',
-      age: 19,
-      barcodeValue: 1525242,
-      collectionPointId: collectionPoint.id,
-      status: 'ON_SITE',
-      triageLevel: 'YELLOW',
-      notes: 'This guy looks super drunk',
-      transportTime: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      gender: 'Female',
-      runNumber: 65433,
-      barcodeValue: 987654,
-      collectionPointId: collectionPoint.id,
-      status: 'RELEASED',
-      triageCategory: 1,
-      triageLevel: 'GREEN',
-      notes: 'needs a bandaid has green lightsaber',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      gender: 'unknown',
-      age: 21,
-      runNumber: 65433,
-      barcodeValue: 987654,
-      collectionPointId: collectionPoint.id,
-      status: 'TRANSPORTED',
-      triageCategory: 3,
-      triageLevel: 'BLACK',
-      transportTime: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
+    return queryInterface.bulkInsert("patients", [
+      {
+        gender: "Male",
+        age: 19,
+        barcodeValue: "1525242sa",
+        collectionPointId: collectionPoint.id,
+        status: "ON_SITE",
+        triageLevel: "YELLOW",
+        notes: "This guy looks super drunk",
+        transportTime: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        gender: "Female",
+        runNumber: 65433,
+        barcodeValue: "9876F5E4",
+        collectionPointId: collectionPoint.id,
+        status: "RELEASED",
+        triageCategory: 1,
+        triageLevel: "GREEN",
+        notes: "needs a bandaid has green lightsaber",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        gender: "unknown",
+        age: 21,
+        runNumber: 65433,
+        barcodeValue: "9876FY54",
+        collectionPointId: collectionPoint.id,
+        status: "TRANSPORTED",
+        triageCategory: 3,
+        triageLevel: "BLACK",
+        transportTime: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('patients', null, {});
-  }
+    return queryInterface.bulkDelete("patients", null, {});
+  },
 };

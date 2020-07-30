@@ -18,6 +18,8 @@ const patientResolvers = {
       db.collectionPoint.findByPk(obj.collectionPointId),
     hospitalId: (obj, args, context, info) =>
       db.hospital.findByPk(obj.hospitalId),
+    ambulanceId: (obj, args, context, info) =>
+      db.ambulance.findByPk(obj.ambulanceId),
   },
   Mutation: {
     addPatient: async (parent, args) => {
@@ -33,6 +35,12 @@ const patientResolvers = {
           throw new Error("Invalid hospital ID");
         }
       }
+      if (args.ambulanceId) {
+        const ambulance = await db.ambulance.findByPk(args.ambulanceId);
+        if (!ambulance) {
+          throw new Error("Invalid ambulance ID");
+        }
+      }
       return db.patient.create({
         gender: args.gender,
         age: args.age,
@@ -45,6 +53,7 @@ const patientResolvers = {
         notes: args.notes,
         transportTime: args.transportTime,
         hospitalId: args.hospitalId,
+        ambulanceId: args.ambulanceId,
       });
     },
     updatePatient: async (parent, args) => {
@@ -66,6 +75,12 @@ const patientResolvers = {
           throw new Error("Invalid hospital ID");
         }
       }
+      if (args.ambulanceId) {
+        const ambulance = await db.ambulance.findByPk(args.ambulanceId);
+        if (!ambulance) {
+          throw new Error("Invalid ambulance ID");
+        }
+      }
       await db.patient.update(
         {
           gender: args.gender,
@@ -79,6 +94,7 @@ const patientResolvers = {
           notes: args.notes,
           transportTime: args.transportTime,
           hospitalId: args.hospitalId,
+          ambulanceId: args.ambulanceId,
         },
         {
           where: {
