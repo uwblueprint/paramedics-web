@@ -2,6 +2,7 @@
 
 const collectionPoint = require("./collectionPoint");
 const hospitals = require("./hospitals");
+const ambulances = require("./ambulances");
 
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define(
@@ -34,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     Patient.belongsTo(hospitals(sequelize, DataTypes), {
       foreignKey: "hospitalId",
+      targetKey: "id",
+    });
+    Patient.belongsTo(ambulances(sequelize, DataTypes), {
+      foreignKey: "ambulanceId",
       targetKey: "id",
     });
   };
