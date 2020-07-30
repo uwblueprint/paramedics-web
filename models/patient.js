@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       gender: DataTypes.STRING,
       age: DataTypes.INTEGER,
       runNumber: DataTypes.BIGINT,
-      barcodeValue: DataTypes.BIGINT,
+      barcodeValue: DataTypes.STRING,
       status: {
         type: DataTypes.ENUM,
-        values: ["ON_SITE", "RELEASED", "TRANSPORTED", "DELETED"],
+        values: ["ON_SITE", "RELEASED", "TRANSPORTED"],
       },
       triageCategory: DataTypes.INTEGER,
       triageLevel: {
