@@ -31,7 +31,8 @@ const patientSchema = `
       triageLevel: triageLevel!, 
       notes: String,
       transportTime: DateTime,
-      hospitalId: ID
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
     
     updatePatient(
@@ -46,7 +47,8 @@ const patientSchema = `
       triageLevel: triageLevel, 
       notes: String,
       transportTime: DateTime,
-      hospitalId: ID
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
 
     deletePatient(id: ID!): Int!
@@ -66,7 +68,8 @@ const patientSchema = `
     transportTime: DateTime,
     createdAt: DateTime,
     updatedAt: DateTime,
-    hospitalId: Hospital
+    hospitalId: Hospital,
+    ambulanceId: Ambulance
   }
   `;
 exports.patientSchema = patientSchema;
