@@ -7,7 +7,6 @@ const patientResolvers = {
     patients: () => db.patient.findAll(),
     patient(obj, args, context, info) {
       return db.patient.findByPk(args.id);
-    },
     patientsByCcp: (obj, args, context, info) =>
       db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
@@ -94,7 +93,7 @@ const patientResolvers = {
           notes: args.notes,
           transportTime: args.transportTime,
           hospitalId: args.hospitalId,
-          ambulanceId: args.ambulanceId,
+          ambulanceId: args.ambulanceId
         },
         {
           where: {
