@@ -1,6 +1,7 @@
 "use strict";
 
 const db = require("../models");
+const { Op } = require("sequelize");
 
 const ambulanceResolvers = {
   Query: {
@@ -42,28 +43,27 @@ const ambulanceResolvers = {
         },
       });
 
+      // Restoring event association if event also availiable
       const associatedEvents = await db.eventAmbulances.findAll({
         where: {
           ambulanceId: args.id,
         },
+        include: [
+          {
+            model: db.event,
+            required: true,
+          },
+        ],
         paranoid: false,
       });
 
       await associatedEvents.map(async (associatedEvent) => {
-        if (
-          (await db.event.count({
-            where: {
-              id: associatedEvent.eventId,
-            },
-          })) > 0
-        ) {
-          db.eventAmbulances.restore({
-            where: {
-              eventId: associatedEvent.eventId,
-              ambulanceId: args.id,
-            },
-          });
-        }
+        db.eventAmbulances.restore({
+          where: {
+            eventId: associatedEvent.eventId,
+            ambulanceId: args.id,
+          },
+        });
       });
 
       return db.ambulance.findByPk(args.id);

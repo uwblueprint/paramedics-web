@@ -308,24 +308,22 @@ const eventResolvers = {
         where: {
           eventId: args.id,
         },
+        include: [
+          {
+            model: db.ambulance,
+            required: true,
+          },
+        ],
         paranoid: false,
       });
 
       await associatedAmbulances.map(async (associatedAmbulance) => {
-        if (
-          (await db.ambulance.count({
-            where: {
-              id: associatedAmbulance.ambulanceId,
-            },
-          })) > 0
-        ) {
-          db.eventAmbulances.restore({
-            where: {
-              eventId: args.id,
-              ambulanceId: associatedAmbulance.ambulanceId,
-            },
-          });
-        }
+        db.eventAmbulances.restore({
+          where: {
+            eventId: args.id,
+            ambulanceId: associatedAmbulance.ambulanceId,
+          },
+        });
       });
 
       // Restoring event-hospital relation if corresponding hospital also restored
@@ -333,24 +331,22 @@ const eventResolvers = {
         where: {
           eventId: args.id,
         },
+        include: [
+          {
+            model: db.hospital,
+            required: true,
+          },
+        ],
         paranoid: false,
       });
 
       await associatedHospitals.map(async (associatedHospital) => {
-        if (
-          (await db.hospital.count({
-            where: {
-              id: associatedHospital.hospitalId,
-            },
-          })) > 0
-        ) {
-          db.eventHospitals.restore({
-            where: {
-              eventId: args.id,
-              hospitalId: associatedHospital.hospitalId,
-            },
-          });
-        }
+        db.eventHospitals.restore({
+          where: {
+            eventId: args.id,
+            hospitalId: associatedHospital.hospitalId,
+          },
+        });
       });
 
       return db.event.findByPk(args.id);

@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     { paranoid: true }
   );
   eventHospitals.associate = function (models) {
-    // define associations here
+    eventHospitals.belongsTo(models.event);
+    eventHospitals.belongsTo(models.hospital);
   };
 
   return eventHospitals;

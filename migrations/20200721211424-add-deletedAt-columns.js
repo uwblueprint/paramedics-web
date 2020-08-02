@@ -83,78 +83,26 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn(
-          "users",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "events",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "hospitals",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "ambulances",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "patients",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "collectionPoints",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "eventHospitals",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
-        queryInterface.removeColumn(
-          "eventAmbulances",
-          "deletedAt",
-          {
-            allowNull: true,
-            type: Sequelize.DataTypes.DATE,
-          },
-          { transaction: t }
-        ),
+        queryInterface.removeColumn("users", "deletedAt", { transaction: t }),
+        queryInterface.removeColumn("events", "deletedAt", { transaction: t }),
+        queryInterface.removeColumn("hospitals", "deletedAt", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("ambulances", "deletedAt", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("patients", "deletedAt", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("collectionPoints", "deletedAt", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("eventHospitals", "deletedAt", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("eventAmbulances", "deletedAt", {
+          transaction: t,
+        }),
       ]);
     });
   },
