@@ -15,6 +15,7 @@ const ambulanceSchema = `
     vehicleNumber: Int!
     createdAt: DateTime
     updatedAt: DateTime
+    events: [Event]
   }
   `;
 exports.ambulanceSchema = ambulanceSchema;
