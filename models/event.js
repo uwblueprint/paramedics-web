@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
   Event.associate = (models) => {
     Event.hasMany(models.collectionPoint, {
       hooks: true,
-      onDelete: "CASCADE",
     });
 
     Event.belongsTo(User(sequelize, DataTypes), {

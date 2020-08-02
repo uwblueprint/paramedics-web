@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
   collectionPoint.associate = function (models) {
     // associations can be defined here
     collectionPoint.hasMany(models.patient, {
-      onDelete: "CASCADE",
       hooks: true,
     });
 
