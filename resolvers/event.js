@@ -228,7 +228,7 @@ const eventResolvers = {
             hospitalId: hospitalId['id']
           }
         })
-        
+
         // Creating association in eventHospitals junction table
         if (alreadyExists === 0) {
           await db.eventHospitals.create({
@@ -249,6 +249,80 @@ const eventResolvers = {
           attributes: ['id', 'name', 'createdAt', 'updatedAt']
         }]
       });   
+    },
+    deleteAmbulancesFromEvent: async (parent, args) => {
+      // Checking if event exists
+      const event = await db.event.findByPk(args.eventId);
+      if (!event) {
+        throw new Error("Invalid event ID");
+      }
+
+      // Checking if all ambulances exist
+      for (const ambulanceId of args.ambulances) {        
+        const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
+        if (!ambulance) {
+          throw new Error("Invalid ambulance ID");
+        }
+      }
+
+      for (const ambulanceId of args.ambulances) {
+        // Removing association in eventAmbulances junction table
+          await db.eventAmbulances.destroy({
+            where: {
+              eventId: args.eventId,
+              ambulanceId: ambulanceId['id']
+            }
+          });
+      }
+      
+      // Returning new event
+      return db.event.findByPk(args.eventId, { 
+        include: [{
+          model: db.ambulance,
+          attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
+        },
+        {
+          model: db.hospital,
+          attributes: ['id', 'name', 'createdAt', 'updatedAt']
+        }]
+      });
+    },
+    deleteHospitalsFromEvent: async (parent, args) => {
+      // Checking if event exists
+      const event = await db.event.findByPk(args.eventId);
+      if (!event) {
+        throw new Error("Invalid event ID");
+      }
+
+      // Checking if all hospitals exist
+      for (const hospitalId of args.hospitals) {        
+        const hospital = await db.hospital.findByPk(hospitalId['id']);
+        if (!hospital) {
+          throw new Error("Invalid hospital ID");
+        }
+      }
+
+      for (const hospitalId of args.hospitals) {
+        // Removing association in eventHospitals junction table
+          await db.eventHospitals.destroy({
+            where: {
+              eventId: args.eventId,
+              hospitalId: hospitalId['id']
+            }
+          });
+      }
+      
+      // Returning new event
+      return db.event.findByPk(args.eventId, { 
+        include: [{
+          model: db.ambulance,
+          attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
+        },
+        {
+          model: db.hospital,
+          attributes: ['id', 'name', 'createdAt', 'updatedAt']
+        }]
+      });
     },
     deleteEvent: async (parent, args) => {
       // Return status for destroy
