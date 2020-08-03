@@ -9,11 +9,9 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
           },
         ],
       }),
@@ -22,11 +20,9 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
           },
         ],
       }),
@@ -172,50 +168,132 @@ const eventResolvers = {
         ],
       });
     },
-    addAmbulanceToEvent: async (parent, args) => {
+    addAmbulancesToEvent: async (parent, args) => {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
         throw new Error("Invalid event ID");
       }
 
-      // Checking if ambulance exists
-      const ambulance = await db.ambulance.findByPk(args.ambulanceId["id"]);
-      if (!ambulance) {
-        throw new Error("Invalid ambulance ID");
+      // Checking if all ambulances exist
+      for (const ambulanceId of args.ambulances) {
+        const ambulance = await db.ambulance.findByPk(ambulanceId["id"]);
+        if (!ambulance) {
+          throw new Error("Invalid ambulance ID");
+        }
       }
 
-      // Checking if association between ambulance and event already exists
-      const alreadyExistsNotDeleted = await db.eventAmbulances.count({
-        where: {
-          eventId: args.eventId,
-          ambulanceId: args.ambulanceId["id"],
-        },
-      });
-      if (alreadyExistsNotDeleted > 0) {
-        throw new Error("This ambulance is already assigned to this event");
-      }
-
-      const alreadyExistsDeleted = await db.eventAmbulances.count({
-        where: {
-          eventId: args.eventId,
-          hospitalId: args.hospitalId["id"],
-        },
-        paranoid: false,
-      });
-
-      if (alreadyExistsDeleted > 0) {
-        await db.eventAmbulances.restore({
+      for (const ambulanceId of args.ambulances) {
+        // Checking if association between ambulance and event already exists
+        const eventAmbulanceAssociations = await db.eventAmbulances.findAll({
           where: {
             eventId: args.eventId,
-            hospitalId: args.ambulanceId["id"],
+            ambulanceId: ambulanceId["id"],
+          },
+          paranoid: false,
+        });
+
+        if (eventAmbulanceAssociations === null) {
+          console.log("ambulance and event were never associated");
+          await db.eventAmbulances.create({
+            eventId: args.eventId,
+            ambulanceId: ambulanceId["id"],
+          });
+        } else if (
+          eventAmbulanceAssociations[0]["dataValues"]["deletedAt"] === null
+        ) {
+          throw new Error("This event and ambulance is already associated");
+        } else {
+          await db.eventAmbulances.restore({
+            where: {
+              eventId: args.eventId,
+              ambulanceId: ambulanceId["id"],
+            },
+          });
+        }
+      }
+
+      // Returning new event
+      return db.event.findByPk(args.eventId, {
+        include: [
+          {
+            model: db.ambulance,
+          },
+          {
+            model: db.hospital,
+          },
+        ],
+      });
+    },
+    addHospitalsToEvent: async (parent, args) => {
+      // Checking if event exists
+      const event = await db.event.findByPk(args.eventId);
+      if (!event) {
+        throw new Error("Invalid event ID");
+      }
+
+      // Checking if all hospitals exist
+      for (const hospitalId of args.hospitals) {
+        const hospital = await db.hospital.findByPk(hospitalId["id"]);
+        if (!hospital) {
+          throw new Error("Invalid hospital ID");
+        }
+      }
+
+      for (const hospitalId of args.hospitals) {
+        // Checking if association between ambulance and event already exists
+        const alreadyExists = await db.eventHospitals.count({
+          where: {
+            eventId: args.eventId,
+            hospitalId: hospitalId["id"],
           },
         });
-      } else {
-        // Creating association in eventHospitals junction table if not already created
-        await db.eventAmbulances.create({
-          eventId: args.eventId,
-          hospitalId: args.ambulanceId["id"],
+
+        // Creating association in eventHospitals junction table
+        if (alreadyExists === 0) {
+          await db.eventHospitals.create({
+            eventId: args.eventId,
+            hospitalId: hospitalId["id"],
+          });
+        }
+      }
+
+      // Returning new event
+      return db.event.findByPk(args.eventId, {
+        include: [
+          {
+            model: db.ambulance,
+            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
+          },
+          {
+            model: db.hospital,
+            attributes: ["id", "name", "createdAt", "updatedAt"],
+          },
+        ],
+      });
+    },
+    deleteAmbulancesFromEvent: async (parent, args) => {
+      // Checking if event exists
+      const event = await db.event.findByPk(args.eventId);
+      if (!event) {
+        throw new Error("Invalid event ID");
+      }
+
+      // Checking if all ambulances exist
+      for (const ambulanceId of args.ambulances) {
+        const ambulance = await db.ambulance.findByPk(ambulanceId["id"]);
+        if (!ambulance) {
+          throw new Error("Invalid ambulance ID");
+        }
+      }
+
+      for (const ambulanceId of args.ambulances) {
+        // Removing association in eventAmbulances junction table
+        await db.eventAmbulances.destroy({
+          where: {
+            eventId: args.eventId,
+            ambulanceId: ambulanceId["id"],
+          },
         });
       }
 
@@ -233,51 +311,28 @@ const eventResolvers = {
         ],
       });
     },
-    addHospitalToEvent: async (parent, args) => {
+    deleteHospitalsFromEvent: async (parent, args) => {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
         throw new Error("Invalid event ID");
       }
 
-      // Checking if hospital exists
-      const hospital = await db.hospital.findByPk(args.hospitalId["id"]);
-      if (!hospital) {
-        throw new Error("Invalid hospital ID");
+      // Checking if all hospitals exist
+      for (const hospitalId of args.hospitals) {
+        const hospital = await db.hospital.findByPk(hospitalId["id"]);
+        if (!hospital) {
+          throw new Error("Invalid hospital ID");
+        }
       }
 
-      // Checking if association between hospital and event already exists and not deleted
-      const alreadyExistsNotDeleted = await db.eventHospitals.count({
-        where: {
-          eventId: args.eventId,
-          hospitalId: args.hospitalId["id"],
-        },
-      });
-      if (alreadyExistsNotDeleted > 0) {
-        throw new Error("This hospital is already assigned to this event");
-      }
-
-      // Restoring association if previously deleted
-      const alreadyExistsDeleted = await db.eventHospitals.count({
-        where: {
-          eventId: args.eventId,
-          hospitalId: args.hospitalId["id"],
-        },
-        paranoid: false,
-      });
-
-      if (alreadyExistsDeleted > 0) {
-        await db.eventHospitals.restore({
+      for (const hospitalId of args.hospitals) {
+        // Removing association in eventHospitals junction table
+        await db.eventHospitals.destroy({
           where: {
             eventId: args.eventId,
-            hospitalId: args.hospitalId["id"],
+            hospitalId: hospitalId["id"],
           },
-        });
-      } else {
-        // Creating association in eventHospitals junction table if not already created
-        await db.eventHospitals.create({
-          eventId: args.eventId,
-          hospitalId: args.hospitalId["id"],
         });
       }
 
@@ -294,62 +349,6 @@ const eventResolvers = {
           },
         ],
       });
-    },
-    restoreEvent: async (parent, args) => {
-      await db.event.restore({
-        where: {
-          id: args.id,
-        },
-        individualHooks: true,
-      });
-
-      // Checking if corresponding ambulances are also restored and restoring associations if true
-      const associatedAmbulances = await db.eventAmbulances.findAll({
-        where: {
-          eventId: args.id,
-        },
-        include: [
-          {
-            model: db.ambulance,
-            required: true,
-          },
-        ],
-        paranoid: false,
-      });
-
-      await associatedAmbulances.map(async (associatedAmbulance) => {
-        db.eventAmbulances.restore({
-          where: {
-            eventId: args.id,
-            ambulanceId: associatedAmbulance.ambulanceId,
-          },
-        });
-      });
-
-      // Restoring event-hospital relation if corresponding hospital also restored
-      const associatedHospitals = await db.eventHospitals.findAll({
-        where: {
-          eventId: args.id,
-        },
-        include: [
-          {
-            model: db.hospital,
-            required: true,
-          },
-        ],
-        paranoid: false,
-      });
-
-      await associatedHospitals.map(async (associatedHospital) => {
-        db.eventHospitals.restore({
-          where: {
-            eventId: args.id,
-            hospitalId: associatedHospital.hospitalId,
-          },
-        });
-      });
-
-      return db.event.findByPk(args.id);
     },
     deleteEvent: async (parent, args) => {
       // Return status for destroy

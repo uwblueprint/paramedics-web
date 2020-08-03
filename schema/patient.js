@@ -17,6 +17,7 @@ const patientSchema = `
   extend type Query {
     patient(id: ID!): Patient
     patients: [Patient]
+    patientsByCcp(collectionPointId: ID!): [Patient]
   }
 
   extend type Mutation {
@@ -31,7 +32,8 @@ const patientSchema = `
       triageLevel: triageLevel!, 
       notes: String,
       transportTime: DateTime,
-      hospitalId: ID
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
     
     updatePatient(
@@ -46,7 +48,8 @@ const patientSchema = `
       triageLevel: triageLevel, 
       notes: String,
       transportTime: DateTime,
-      hospitalId: ID
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
 
     restorePatient(id: ID!): Patient!
@@ -68,7 +71,8 @@ const patientSchema = `
     transportTime: DateTime,
     createdAt: DateTime,
     updatedAt: DateTime,
-    hospitalId: Hospital
+    hospitalId: Hospital,
+    ambulanceId: Ambulance
   }
   `;
 exports.patientSchema = patientSchema;

@@ -16,6 +16,7 @@ const hospitalSchema = `
     name: String
     createdAt: DateTime
     updatedAt: DateTime
+    events: [Event]
   }
   `;
 exports.hospitalSchema = hospitalSchema;

@@ -4,9 +4,22 @@ const db = require("../models");
 
 const hospitalResolvers = {
   Query: {
-    hospitals: () => db.hospital.findAll(),
+    hospitals: () =>
+      db.hospital.findAll({
+        include: [
+          {
+            model: db.event,
+          },
+        ],
+      }),
     hospital(obj, args, context, info) {
-      return db.hospital.findByPk(args.id);
+      return db.hospital.findByPk(args.id, {
+        include: [
+          {
+            model: db.event,
+          },
+        ],
+      });
     },
   },
   Mutation: {
