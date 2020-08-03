@@ -194,7 +194,6 @@ const eventResolvers = {
         });
 
         if (eventAmbulanceAssociations === null) {
-          console.log("ambulance and event were never associated");
           await db.eventAmbulances.create({
             eventId: args.eventId,
             ambulanceId: ambulanceId["id"],
@@ -242,18 +241,29 @@ const eventResolvers = {
 
       for (const hospitalId of args.hospitals) {
         // Checking if association between ambulance and event already exists
-        const alreadyExists = await db.eventHospitals.count({
+        const eventHospitalAssociations = await db.eventHospitals.findAll({
           where: {
             eventId: args.eventId,
             hospitalId: hospitalId["id"],
           },
+          paranoid: false,
         });
 
-        // Creating association in eventHospitals junction table
-        if (alreadyExists === 0) {
+        if (eventHospitalAssociations === null) {
           await db.eventHospitals.create({
             eventId: args.eventId,
             hospitalId: hospitalId["id"],
+          });
+        } else if (
+          eventHospitalAssociations[0]["dataValues"]["deletedAt"] === null
+        ) {
+          throw new Error("This event and hospital is already associated");
+        } else {
+          await db.eventHospitals.restore({
+            where: {
+              eventId: args.eventId,
+              hospitalId: hospitalId["id"],
+            },
           });
         }
       }
@@ -263,11 +273,9 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
           },
         ],
       });
@@ -302,11 +310,9 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
           },
         ],
       });
@@ -341,11 +347,9 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
           },
         ],
       });
