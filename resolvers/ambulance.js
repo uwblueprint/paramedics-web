@@ -4,8 +4,22 @@ const db = require("../models");
 
 const ambulanceResolvers = {
   Query: {
-    ambulances: () => db.ambulance.findAll(),
-    ambulance: (obj, args, context, info) => db.ambulance.findByPk(args.id),
+    ambulances: () =>
+      db.ambulance.findAll({
+        include: [
+          {
+            model: db.event,
+          },
+        ],
+      }),
+    ambulance: (obj, args, context, info) =>
+      db.ambulance.findByPk(args.id, {
+        include: [
+          {
+            model: db.event,
+          },
+        ],
+      }),
   },
   Mutation: {
     addAmbulance: (parent, args) => {
