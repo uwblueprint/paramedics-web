@@ -48,6 +48,20 @@ const hospitalResolvers = {
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
+      await db.patient
+        .count({
+          where: {
+            hospitalId: args.id,
+          },
+        })
+        .then((count) => {
+          if (count > 0) {
+            throw new Error(
+              "Deletion failed; there are associated patients for this hospital"
+            );
+          }
+        });
+
       await db.eventHospitals.destroy({
         where: {
           eventId: args.id,
