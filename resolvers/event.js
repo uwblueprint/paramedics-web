@@ -193,15 +193,11 @@ const eventResolvers = {
           paranoid: false,
         });
 
-        if (eventAmbulanceAssociations === null) {
+        if (eventAmbulanceAssociations.length === 0) {
           await db.eventAmbulances.create({
             eventId: args.eventId,
             ambulanceId: ambulanceId["id"],
           });
-        } else if (
-          eventAmbulanceAssociations[0]["dataValues"]["deletedAt"] === null
-        ) {
-          throw new Error("This event and ambulance is already associated");
         } else {
           await db.eventAmbulances.restore({
             where: {
@@ -249,15 +245,11 @@ const eventResolvers = {
           paranoid: false,
         });
 
-        if (eventHospitalAssociations === null) {
+        if (eventHospitalAssociations.length === 0) {
           await db.eventHospitals.create({
             eventId: args.eventId,
             hospitalId: hospitalId["id"],
           });
-        } else if (
-          eventHospitalAssociations[0]["dataValues"]["deletedAt"] === null
-        ) {
-          throw new Error("This event and hospital is already associated");
         } else {
           await db.eventHospitals.restore({
             where: {
