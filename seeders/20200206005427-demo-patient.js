@@ -7,6 +7,7 @@ module.exports = {
     const user = await db.user.create({
       name: "Darth Vader",
       email: "darthvader@sithlords.com",
+      accessLevel: "COMMANDER",
       password: "ga1axyru1er",
       createdAt: new Date(),
       updatedAt: new Date(),
