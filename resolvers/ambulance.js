@@ -50,6 +50,20 @@ const ambulanceResolvers = {
     },
 
     deleteAmbulance: async (parent, args) => {
+      await db.patient
+        .count({
+          where: {
+            ambulanceId: args.id,
+          },
+        })
+        .then((count) => {
+          if (count > 0) {
+            throw new Error(
+              "Deletion failed; there are associated patients for this ambulance"
+            );
+          }
+        });
+
       await db.eventAmbulances.destroy({
         where: {
           ambulanceId: args.id,
