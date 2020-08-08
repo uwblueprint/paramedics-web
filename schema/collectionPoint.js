@@ -12,6 +12,7 @@ extend type Mutation {
 
     addCollectionPoint(name: String!, eventId: ID!, createdBy: ID!): collectionPoint!
     updateCollectionPoint(id: ID!, name: String, eventId: ID, createdBy: ID): collectionPoint!
+    restoreCollectionPoint(id: ID!): collectionPoint!
     deleteCollectionPoint(id: ID!): Int!
 
 }

@@ -52,6 +52,8 @@ const patientSchema = `
       ambulanceId: ID
     ): Patient!
 
+    restorePatient(id: ID!): Patient!
+
     deletePatient(id: ID!): Int!
   }
   
