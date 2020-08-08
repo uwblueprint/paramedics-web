@@ -15,19 +15,21 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Event.associate = models => {
-    
+
     Event.belongsTo(User(sequelize, DataTypes), {
       foreignKey: "createdBy",
       targetKey: "id"
     });
 
-    Event.belongsToMany(models.ambulance, { 
-      through: 'eventAmbulances', 
-      foreignKey: 'eventId'});
-      
-    Event.belongsToMany(models.hospital, { 
+    Event.belongsToMany(models.ambulance, {
+      through: 'eventAmbulances',
+      foreignKey: 'eventId'
+    });
+
+    Event.belongsToMany(models.hospital, {
       through: 'eventHospitals',
-      foreignKey: 'eventId' });
+      foreignKey: 'eventId'
+    });
   };
 
   return Event;
