@@ -11,7 +11,9 @@
   },
   "scripts": {
     "prod": "sequelize db:migrate && node server.js",
-    "dev": "sequelize db:migrate && nodemon server.js"
+    "dev": "sequelize db:migrate && nodemon server.js",
+    "lint": "eslint --ext .js,.jsx --fix .",
+    "prettier-format": "prettier --config .prettierrc '**/*.js*' --write"
   },
   "dependencies": {
     "apollo-server": "^2.14.2",
@@ -32,6 +34,12 @@
   },
   "homepage": "https://github.com/uwblueprint/paramedics-web",
   "devDependencies": {
-    "ngrok": "^3.2.7"
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "ngrok": "^3.2.7",
+    "prettier": "^2.0.5"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "es6": true
+  },
+  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "airbnb-base/legacy", "prettier"],
+  "rules": {
+    "no-console": "error",
+    "prettier/prettier": "error",
+    "react/jsx-wrap-multilines": "off",
+    "react/require-default-props": "off",
+    "radix": ["error", "as-needed"],
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "no-shadow": "off",
+    "no-plusplus": "off",
+    "react/jsx-curly-newline": "off"
+  }
+}
