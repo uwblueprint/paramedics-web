@@ -94,7 +94,7 @@ const patientResolvers = {
           notes: args.notes,
           transportTime: args.transportTime,
           hospitalId: args.hospitalId,
-          ambulanceId: args.ambulanceId
+          ambulanceId: args.ambulanceId,
         },
         {
           where: {
@@ -104,10 +104,24 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
-    deletePatient: async (parent, args) => {
-      return db.patient.destroy({
+    restorePatient: async (parent, args) => {
+      await db.patient.restore({
         where: { id: args.id },
       });
+
+      return db.patient.findByPk(args.id);
+    },
+    // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
+    deletePatient: async (parent, args) => {
+      const isDeleted = await db.patient.update(
+        {
+          status: "DELETED",
+        },
+        {
+          where: { id: args.id },
+        }
+      );
+      return isDeleted[0];
     },
   },
 };

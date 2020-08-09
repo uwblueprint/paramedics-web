@@ -47,6 +47,38 @@ const hospitalResolvers = {
         });
       return db.hospital.findByPk(args.id);
     },
+    restoreHospital: async (parent, args) => {
+      await db.hospital.restore({
+        where: {
+          id: args.id,
+        },
+      });
+
+      // Restoring event association if event is also avaliable
+      const associatedEvents = await db.eventHospitals.findAll({
+        where: {
+          hospitalId: args.id,
+        },
+        include: [
+          {
+            model: db.event,
+            required: true,
+          },
+        ],
+        paranoid: false,
+      });
+
+      await associatedEvents.map(async (associatedEvent) => {
+        db.eventHospitals.restore({
+          where: {
+            eventId: associatedEvent.eventId,
+            hospitalId: args.id,
+          },
+        });
+      });
+
+      return db.hospital.findByPk(args.id);
+    },
     deleteHospital: async (parent, args) => {
       await db.patient
         .count({
@@ -64,7 +96,7 @@ const hospitalResolvers = {
 
       await db.eventHospitals.destroy({
         where: {
-          eventId: args.id,
+          hospitalId: args.id,
         },
       });
 
