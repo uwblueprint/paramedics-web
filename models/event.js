@@ -1,7 +1,5 @@
 'use strict';
 
-const User = require('./user');
-
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     'event',
@@ -39,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true,
     });
 
-    Event.belongsTo(User(sequelize, DataTypes), {
+    Event.belongsTo(models.user, {
       foreignKey: 'createdBy',
       targetKey: 'id',
     });

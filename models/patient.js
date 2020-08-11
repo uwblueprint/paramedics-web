@@ -1,9 +1,5 @@
 'use strict';
 
-const collectionPoint = require('./collectionPoint');
-const hospitals = require('./hospitals');
-const ambulances = require('./ambulances');
-
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define(
     'patient',
@@ -33,11 +29,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'collectionPointId',
       targetKey: 'id',
     });
-    Patient.belongsTo(hospitals(sequelize, DataTypes), {
+    Patient.belongsTo(models.hospital, {
       foreignKey: 'hospitalId',
       targetKey: 'id',
     });
-    Patient.belongsTo(ambulances(sequelize, DataTypes), {
+    Patient.belongsTo(models.ambulance, {
       foreignKey: 'ambulanceId',
       targetKey: 'id',
     });

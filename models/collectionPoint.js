@@ -1,8 +1,5 @@
 'use strict';
 
-const Event = require('./event');
-const User = require('./user');
-
 module.exports = (sequelize, DataTypes) => {
   const collectionPoint = sequelize.define(
     'collectionPoint',
@@ -32,12 +29,12 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true,
     });
 
-    collectionPoint.belongsTo(User(sequelize, DataTypes), {
+    collectionPoint.belongsTo(models.user, {
       foreignKey: 'createdBy',
       targetKey: 'id',
     });
 
-    collectionPoint.belongsTo(Event(sequelize, DataTypes), {
+    collectionPoint.belongsTo(models.event, {
       foreignKey: 'eventId',
       targetKey: 'id',
     });
