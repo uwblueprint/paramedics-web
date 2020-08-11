@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const hospitalResolvers = {
   Query: {
@@ -12,7 +12,7 @@ const hospitalResolvers = {
           },
         ],
       }),
-    hospital(obj, args, context, info) {
+    hospital(obj, args) {
       return db.hospital.findByPk(args.id, {
         include: [
           {
@@ -42,7 +42,7 @@ const hospitalResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error("Update failed for hospital table");
+            throw new Error('Update failed for hospital table');
           }
         });
       return db.hospital.findByPk(args.id);
@@ -89,7 +89,7 @@ const hospitalResolvers = {
         .then((count) => {
           if (count > 0) {
             throw new Error(
-              "Deletion failed; there are associated patients for this hospital"
+              'Deletion failed; there are associated patients for this hospital'
             );
           }
         });

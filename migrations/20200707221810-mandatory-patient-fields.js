@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.changeColumn(
-          "patients",
-          "barcodeValue",
+          'patients',
+          'barcodeValue',
           {
             type: Sequelize.BIGINT,
             allowNull: false,
@@ -25,8 +25,8 @@ module.exports = {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.changeColumn(
-          "patients",
-          "barcodeValue",
+          'patients',
+          'barcodeValue',
           {
             type: Sequelize.BIGINT,
             allowNull: true,

@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const locationPinResolvers = {
   Query: {
     pins: () => db.locationPins.findAll(),
-    pin: (obj, args, context, info) => db.locationPins.findByPk(args.id),
-    pinsForEvent: (obj, args, context, info) =>
+    pin: (obj, args) => db.locationPins.findByPk(args.id),
+    pinsForEvent: (obj, args) =>
       db.locationPins.findAll({
         where: {
           eventId: args.eventId,
@@ -15,17 +15,17 @@ const locationPinResolvers = {
   },
 
   LocationPin: {
-    eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId),
+    eventId: (obj) => db.event.findByPk(obj.eventId),
   },
 
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
-      //Checks if eventId is valid
+      // Checks if eventId is valid
       const event = await db.event.findByPk(args.eventId);
 
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
       return db.locationPins.create({
         label: args.label,
@@ -36,11 +36,11 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
-      //Checks if eventId is valid
+      // Checks if eventId is valid
       if (args.eventId) {
         const event = await db.event.findByPk(args.eventId);
         if (!event) {
-          throw new Error("Invalid event ID");
+          throw new Error('Invalid event ID');
         }
       }
 
@@ -60,8 +60,8 @@ const locationPinResolvers = {
           }
         )
         .then((rowsAffected) => {
-          if (rowsAffected[0] == 0) {
-            throw new Error("This location pin does not exist");
+          if (rowsAffected[0] === 0) {
+            throw new Error('This location pin does not exist');
           }
         });
       return db.locationPins.findByPk(args.id);

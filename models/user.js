@@ -1,11 +1,12 @@
-"use strict";
+'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "user",
+    'user',
     {
       accessLevel: {
         type: DataTypes.ENUM,
-        values: ["COMMANDER", "SUPERVISOR", "ADMIN"],
+        values: ['COMMANDER', 'SUPERVISOR', 'ADMIN'],
       },
       name: DataTypes.STRING,
       email: DataTypes.STRING,
@@ -14,8 +15,5 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  User.associate = function (models) {
-    // associations can be defined here
-  };
   return User;
 };

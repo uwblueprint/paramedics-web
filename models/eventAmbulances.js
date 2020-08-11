@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   const eventAmbulances = sequelize.define(
-    "eventAmbulances",
+    'eventAmbulances',
     {
       eventId: DataTypes.INTEGER,
       ambulanceId: DataTypes.INTEGER,
     },
     { paranoid: true }
   );
-  eventAmbulances.associate = function (models) {
+  eventAmbulances.associate = (models) => {
     eventAmbulances.belongsTo(models.event);
     eventAmbulances.belongsTo(models.ambulance);
   };
