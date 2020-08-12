@@ -88,9 +88,6 @@ jobs:
             curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
       - run:
-          name: Building image
-          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.dev .
-      - run:
           name: Add mock env file
           command: touch paramedics-web.env
       - run: 
