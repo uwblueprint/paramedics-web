@@ -38,9 +38,6 @@ jobs:
             set -x
             curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
-      - run:
-          name: Building image
-          command: docker build -t uwbpparamedics/uwblueprint-paramedics-web:0.0.1 -f Dockerfile.prod .
       - run: 
           name: Start container via docker-compose
           command: |
@@ -99,7 +96,25 @@ jobs:
           paths:
             - node_modules
           key: dev-dependencies-{{ checksum "package.json" }}
-  
+  dev-lint:
+    docker: 
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dev-dependencies-{{ checksum "package.json" }}
+              - dev-dependencies-
+      - attach_workspace:
+          at: .
+      - run:
+          name: Lint files
+          command: npm run lint
+      - save_cache:
+          paths:
+            - node_modules
+          key: dev-dependencies-{{ checksum "package.json" }}
+
 workflows:
   version: 2
   dev-build:
@@ -108,3 +123,6 @@ workflows:
       - dev-build:
           requires:
             - dev-install
+      - dev-lint:
+          requires:
+            - dev-build
