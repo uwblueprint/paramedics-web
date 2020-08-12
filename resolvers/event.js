@@ -182,42 +182,19 @@ const eventResolvers = {
       );
 
       await Promise.all(
-        args.ambulances.map((ambulanceId) =>
+        args.ambulances.map(async (ambulanceId) =>
           db.eventAmbulances
             .findAll({
               where: {
                 eventId: args.eventId,
                 ambulanceId: ambulanceId.id,
               },
-              paranoid: false,
             })
-            .then((eventAmbulanceAssociations) => {
+            .then(async (eventAmbulanceAssociations) => {
               if (eventAmbulanceAssociations.length === 0) {
-                db.eventAmbulances.create({
+                await db.eventAmbulances.create({
                   eventId: args.eventId,
                   ambulanceId: ambulanceId.id,
-                });
-              } else if (eventAmbulanceAssociations.length > 1) {
-                db.eventAmbulances
-                  .destroy({
-                    where: {
-                      eventId: args.eventId,
-                      ambulanceId: ambulanceId.id,
-                    },
-                    force: true,
-                  })
-                  .then(() =>
-                    db.eventAmbulances.create({
-                      eventId: args.eventId,
-                      ambulanceId: ambulanceId.id,
-                    })
-                  );
-              } else {
-                db.eventAmbulances.restore({
-                  where: {
-                    eventId: args.eventId,
-                    ambulanceId: ambulanceId.id,
-                  },
                 });
               }
             })
@@ -257,42 +234,19 @@ const eventResolvers = {
       );
 
       await Promise.all(
-        args.hospitals.map((hospitalId) =>
+        args.hospitals.map(async (hospitalId) =>
           db.eventHospitals
             .findAll({
               where: {
                 eventId: args.eventId,
                 hospitalId: hospitalId.id,
               },
-              paranoid: false,
             })
-            .then((eventHospitalAssociations) => {
+            .then(async (eventHospitalAssociations) => {
               if (eventHospitalAssociations.length === 0) {
-                db.eventHospitals.create({
+                await db.eventHospitals.create({
                   eventId: args.eventId,
                   hospitalId: hospitalId.id,
-                });
-              } else if (eventHospitalAssociations.length > 1) {
-                db.eventHospitals
-                  .destroy({
-                    where: {
-                      eventId: args.eventId,
-                      hospitalId: hospitalId.id,
-                    },
-                    force: true,
-                  })
-                  .then(() =>
-                    db.eventHospitals.create({
-                      eventId: args.eventId,
-                      hospitalId: hospitalId.id,
-                    })
-                  );
-              } else {
-                db.eventHospitals.restore({
-                  where: {
-                    eventId: args.eventId,
-                    hospitalId: hospitalId.id,
-                  },
                 });
               }
             })
