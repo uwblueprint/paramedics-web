@@ -7,10 +7,6 @@ jobs:
       - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - prod-dependencies-{{ checksum "package.json" }}
-            - prod-dependencies-
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
@@ -24,20 +20,12 @@ jobs:
           command: |
             set -x
             docker-compose -f docker-compose-prod.yaml up -d
-      - save_cache:
-          paths:
-            - node_modules
-          key: prod-dependencies-{{ checksum "package.json" }}
 
   dev-build:
     docker: 
       - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dev-dependencies-{{ checksum "package.json" }}
-            - dev-dependencies-
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
@@ -54,19 +42,11 @@ jobs:
           command: |
             set -x
             docker-compose -f docker-compose-dev.yaml up -d
-      - save_cache:
-          paths:
-            - node_modules
-          key: dev-dependencies-{{ checksum "package.json" }}
   dev-lint:
     docker: 
       - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dev-dependencies-{{ checksum "package.json" }}
-            - dev-dependencies-
       - node/with-cache:
           steps:
             - run: npm install
@@ -75,14 +55,10 @@ jobs:
       - run:
           name: Lint files
           command: npm run lint
-      - save_cache:
-          paths:
-            - node_modules
-          key: dev-dependencies-{{ checksum "package.json" }}
 
 workflows:
   version: 2
-  dev-build:
+  build-and-lint:
     jobs:
       - prod-build
       - dev-build
