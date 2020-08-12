@@ -29,7 +29,6 @@ const scalars = `
   scalar DateTime
 `;
 
-console.log("testing for CI linting");
 // Base query schema, other queries extend this
 const Query = `
   type Query {
