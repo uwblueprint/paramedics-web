@@ -9,8 +9,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-              - v1-dependencies-
+            - prod-dependencies-{{ checksum "package.json" }}
+              - prod-dependencies-
       - setup_remote_docker:
           docker_layer_caching: false
       - node/with-cache:
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: prod-dependencies-{{ checksum "package.json" }}
 
   prod-build:
     docker: 
@@ -28,8 +28,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - prod-dependencies-{{ checksum "package.json" }}
+            - prod-dependencies-
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
@@ -49,7 +49,28 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: prod-dependencies-{{ checksum "package.json" }}
+          
+  prod-install:
+    docker:
+      - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - prod-dependencies-{{ checksum "package.json" }}
+              - prod-dependencies-
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - node/with-cache:
+          steps:
+            - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: prod-dependencies-{{ checksum "package.json" }}
+
+
   
 workflows:
   version: 2
