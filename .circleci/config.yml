@@ -57,5 +57,5 @@ workflows:
     jobs:
       - install
       - prod-build:
-        - requires:
-          - install
+          requires:
+            - install
