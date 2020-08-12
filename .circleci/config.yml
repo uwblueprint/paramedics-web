@@ -104,6 +104,4 @@ workflows:
   dev-build:
     jobs:
       - dev-build
-      - dev-lint:
-          requires:
-            - dev-build
+      - dev-lint
