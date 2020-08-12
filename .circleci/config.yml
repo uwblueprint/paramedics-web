@@ -11,12 +11,17 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
               - v1-dependencies-
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - node/with-cache:
+          steps:
+            - run: npm install
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-  build:
+  prod-build:
     docker: 
       - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
     steps:
@@ -25,9 +30,6 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - node/with-cache:
-          steps:
-            - run: npm install
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
@@ -53,4 +55,7 @@ workflows:
   version: 2
   build-test:
     jobs:
-      - build
+      - install
+      - prod-build:
+        - requires:
+          - install
