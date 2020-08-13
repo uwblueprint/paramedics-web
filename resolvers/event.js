@@ -45,21 +45,22 @@ const eventResolvers = {
         }
       });
 
-      await db.event.create({
-        name: args.name,
-        eventDate: args.eventDate,
-        createdBy: args.createdBy,
-        isActive: args.isActive,
-      });
-
-      return {
-        name: args.name,
-        eventDate: args.eventDate,
-        createdBy: args.createdBy,
-        isActive: args.isActive,
-        ambulances: [],
-        hospitals: [],
-      };
+      return db.event
+        .create({
+          name: args.name,
+          eventDate: args.eventDate,
+          createdBy: args.createdBy,
+          isActive: args.isActive,
+        })
+        .then((newEvent) => ({
+          id: newEvent.id,
+          name: newEvent.name,
+          eventDate: newEvent.eventDate,
+          createdBy: newEvent.createdBy,
+          isActive: newEvent.isActive,
+          ambulances: [],
+          hospitals: [],
+        }));
     },
     updateEvent: async (parent, args) => {
       // Checking if event is valid
