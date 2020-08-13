@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const eventResolvers = {
   Query: {
@@ -41,44 +41,45 @@ const eventResolvers = {
       // Check if createdBy is valid
       const user = await db.user.findByPk(args.createdBy);
       if (!user) {
-        throw new Error("Invalid user ID");
+        throw new Error('Invalid user ID');
       }
 
-      await db.event.create({
-        name: args.name,
-        eventDate: args.eventDate,
-        createdBy: args.createdBy,
-        isActive: args.isActive,
-      });
-
-      return {
-        name: args.name,
-        eventDate: args.eventDate,
-        createdBy: args.createdBy,
-        isActive: args.isActive,
-        ambulances: [],
-        hospitals: [],
-      };
+      return db.event
+        .create({
+          name: args.name,
+          eventDate: args.eventDate,
+          createdBy: args.createdBy,
+          isActive: args.isActive,
+        })
+        .then((newEvent) => ({
+          id: newEvent.id,
+          name: newEvent.name,
+          eventDate: newEvent.eventDate,
+          createdBy: newEvent.createdBy,
+          isActive: newEvent.isActive,
+          ambulances: [],
+          hospitals: [],
+        }));
     },
     updateEvent: async (parent, args) => {
       // Checking if event is valid
       const event = await db.event.findByPk(args.id);
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
 
       // Checking if user is valid
       if (args.createdBy) {
         const user = await db.user.findByPk(args.createdBy);
         if (!user) {
-          throw new Error("Invalid user ID");
+          throw new Error('Invalid user ID');
         }
       }
 
       const addAmbulances = async () => {
         // Checking if ambulances are valid
         for (const ambulanceId of args.ambulances) {
-          const ambulance = await db.ambulance.findByPk(ambulanceId["id"]);
+          const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
           if (!ambulance) {
             return true;
           }
@@ -94,7 +95,7 @@ const eventResolvers = {
         for (const ambulanceId of args.ambulances) {
           await db.eventAmbulances.create({
             eventId: args.id,
-            ambulanceId: ambulanceId["id"],
+            ambulanceId: ambulanceId['id'],
           });
         }
 
@@ -105,14 +106,14 @@ const eventResolvers = {
       if (args.ambulances) {
         const ambulanceHasError = await addAmbulances();
         if (ambulanceHasError) {
-          throw new Error("Invalid ambulance ID");
+          throw new Error('Invalid ambulance ID');
         }
       }
 
       const addHospitals = async () => {
         // Checking if hospitals are valid
         for (const hospitalId of args.hospitals) {
-          const hospital = await db.hospital.findByPk(hospitalId["id"]);
+          const hospital = await db.hospital.findByPk(hospitalId['id']);
           if (!hospital) {
             return true;
           }
@@ -129,7 +130,7 @@ const eventResolvers = {
         for (const hospitalId of args.hospitals) {
           await db.eventHospitals.create({
             eventId: args.id,
-            hospitalId: hospitalId["id"],
+            hospitalId: hospitalId['id'],
           });
         }
 
@@ -140,7 +141,7 @@ const eventResolvers = {
         // Checking if hospitals are valid
         const hospitalHasError = await addHospitals();
         if (hospitalHasError) {
-          throw new Error("Invalid hospital ID");
+          throw new Error('Invalid hospital ID');
         }
       }
 
@@ -159,11 +160,11 @@ const eventResolvers = {
         include: [
           {
             model: db.ambulance,
-            attributes: ["id", "vehicleNumber", "createdAt", "updatedAt"],
+            attributes: ['id', 'vehicleNumber', 'createdAt', 'updatedAt'],
           },
           {
             model: db.hospital,
-            attributes: ["id", "name", "createdAt", "updatedAt"],
+            attributes: ['id', 'name', 'createdAt', 'updatedAt'],
           },
         ],
       });
@@ -172,14 +173,14 @@ const eventResolvers = {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
 
       // Checking if all ambulances exist
       for (const ambulanceId of args.ambulances) {
-        const ambulance = await db.ambulance.findByPk(ambulanceId["id"]);
+        const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
         if (!ambulance) {
-          throw new Error("Invalid ambulance ID");
+          throw new Error('Invalid ambulance ID');
         }
       }
 
@@ -188,7 +189,7 @@ const eventResolvers = {
         const eventAmbulanceAssociations = await db.eventAmbulances.findAll({
           where: {
             eventId: args.eventId,
-            ambulanceId: ambulanceId["id"],
+            ambulanceId: ambulanceId['id'],
           },
           paranoid: false,
         });
@@ -196,13 +197,13 @@ const eventResolvers = {
         if (eventAmbulanceAssociations.length === 0) {
           await db.eventAmbulances.create({
             eventId: args.eventId,
-            ambulanceId: ambulanceId["id"],
+            ambulanceId: ambulanceId['id'],
           });
         } else {
           await db.eventAmbulances.restore({
             where: {
               eventId: args.eventId,
-              ambulanceId: ambulanceId["id"],
+              ambulanceId: ambulanceId['id'],
             },
           });
         }
@@ -224,14 +225,14 @@ const eventResolvers = {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
 
       // Checking if all hospitals exist
       for (const hospitalId of args.hospitals) {
-        const hospital = await db.hospital.findByPk(hospitalId["id"]);
+        const hospital = await db.hospital.findByPk(hospitalId['id']);
         if (!hospital) {
-          throw new Error("Invalid hospital ID");
+          throw new Error('Invalid hospital ID');
         }
       }
 
@@ -240,7 +241,7 @@ const eventResolvers = {
         const eventHospitalAssociations = await db.eventHospitals.findAll({
           where: {
             eventId: args.eventId,
-            hospitalId: hospitalId["id"],
+            hospitalId: hospitalId['id'],
           },
           paranoid: false,
         });
@@ -248,13 +249,13 @@ const eventResolvers = {
         if (eventHospitalAssociations.length === 0) {
           await db.eventHospitals.create({
             eventId: args.eventId,
-            hospitalId: hospitalId["id"],
+            hospitalId: hospitalId['id'],
           });
         } else {
           await db.eventHospitals.restore({
             where: {
               eventId: args.eventId,
-              hospitalId: hospitalId["id"],
+              hospitalId: hospitalId['id'],
             },
           });
         }
@@ -276,14 +277,14 @@ const eventResolvers = {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
 
       // Checking if all ambulances exist
       for (const ambulanceId of args.ambulances) {
-        const ambulance = await db.ambulance.findByPk(ambulanceId["id"]);
+        const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
         if (!ambulance) {
-          throw new Error("Invalid ambulance ID");
+          throw new Error('Invalid ambulance ID');
         }
       }
 
@@ -292,7 +293,7 @@ const eventResolvers = {
         await db.eventAmbulances.destroy({
           where: {
             eventId: args.eventId,
-            ambulanceId: ambulanceId["id"],
+            ambulanceId: ambulanceId['id'],
           },
         });
       }
@@ -313,14 +314,14 @@ const eventResolvers = {
       // Checking if event exists
       const event = await db.event.findByPk(args.eventId);
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
 
       // Checking if all hospitals exist
       for (const hospitalId of args.hospitals) {
-        const hospital = await db.hospital.findByPk(hospitalId["id"]);
+        const hospital = await db.hospital.findByPk(hospitalId['id']);
         if (!hospital) {
-          throw new Error("Invalid hospital ID");
+          throw new Error('Invalid hospital ID');
         }
       }
 
@@ -329,7 +330,7 @@ const eventResolvers = {
         await db.eventHospitals.destroy({
           where: {
             eventId: args.eventId,
-            hospitalId: hospitalId["id"],
+            hospitalId: hospitalId['id'],
           },
         });
       }
