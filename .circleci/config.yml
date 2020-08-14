@@ -42,6 +42,7 @@ jobs:
           command: |
             set -x
             docker-compose -f docker-compose-dev.yaml up -d
+
   dev-lint:
     docker: 
       - image: uwbpparamedics/uwblueprint-paramedics-web:0.0.1
