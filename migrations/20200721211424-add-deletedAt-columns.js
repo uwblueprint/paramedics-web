@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn(
-          "users",
-          "deletedAt",
+          'users',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -14,8 +14,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "events",
-          "deletedAt",
+          'events',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -23,8 +23,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "hospitals",
-          "deletedAt",
+          'hospitals',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -32,8 +32,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "ambulances",
-          "deletedAt",
+          'ambulances',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -41,8 +41,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "patients",
-          "deletedAt",
+          'patients',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -50,8 +50,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "collectionPoints",
-          "deletedAt",
+          'collectionPoints',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -59,8 +59,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "eventHospitals",
-          "deletedAt",
+          'eventHospitals',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -68,8 +68,8 @@ module.exports = {
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "eventAmbulances",
-          "deletedAt",
+          'eventAmbulances',
+          'deletedAt',
           {
             allowNull: true,
             type: Sequelize.DataTypes.DATE,
@@ -80,27 +80,27 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("users", "deletedAt", { transaction: t }),
-        queryInterface.removeColumn("events", "deletedAt", { transaction: t }),
-        queryInterface.removeColumn("hospitals", "deletedAt", {
+        queryInterface.removeColumn('users', 'deletedAt', { transaction: t }),
+        queryInterface.removeColumn('events', 'deletedAt', { transaction: t }),
+        queryInterface.removeColumn('hospitals', 'deletedAt', {
           transaction: t,
         }),
-        queryInterface.removeColumn("ambulances", "deletedAt", {
+        queryInterface.removeColumn('ambulances', 'deletedAt', {
           transaction: t,
         }),
-        queryInterface.removeColumn("patients", "deletedAt", {
+        queryInterface.removeColumn('patients', 'deletedAt', {
           transaction: t,
         }),
-        queryInterface.removeColumn("collectionPoints", "deletedAt", {
+        queryInterface.removeColumn('collectionPoints', 'deletedAt', {
           transaction: t,
         }),
-        queryInterface.removeColumn("eventHospitals", "deletedAt", {
+        queryInterface.removeColumn('eventHospitals', 'deletedAt', {
           transaction: t,
         }),
-        queryInterface.removeColumn("eventAmbulances", "deletedAt", {
+        queryInterface.removeColumn('eventAmbulances', 'deletedAt', {
           transaction: t,
         }),
       ]);

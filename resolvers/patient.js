@@ -1,25 +1,23 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const patientResolvers = {
   Query: {
     patients: () => db.patient.findAll(),
-    patient(obj, args, context, info) {
+    patient(obj, args) {
       return db.patient.findByPk(args.id);
     },
-    patientsByCcp: (obj, args, context, info) =>
+    patientsByCcp: (obj, args) =>
       db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
       }),
   },
   Patient: {
-    collectionPointId: (obj, args, context, info) =>
+    collectionPointId: (obj) =>
       db.collectionPoint.findByPk(obj.collectionPointId),
-    hospitalId: (obj, args, context, info) =>
-      db.hospital.findByPk(obj.hospitalId),
-    ambulanceId: (obj, args, context, info) =>
-      db.ambulance.findByPk(obj.ambulanceId),
+    hospitalId: (obj) => db.hospital.findByPk(obj.hospitalId),
+    ambulanceId: (obj) => db.ambulance.findByPk(obj.ambulanceId),
   },
   Mutation: {
     addPatient: async (parent, args) => {
@@ -27,18 +25,18 @@ const patientResolvers = {
         args.collectionPointId
       );
       if (!collectionPoint) {
-        throw new Error("Invalid collection point ID");
+        throw new Error('Invalid collection point ID');
       }
       if (args.hospitalId) {
         const hospital = await db.hospital.findByPk(args.hospitalId);
         if (!hospital) {
-          throw new Error("Invalid hospital ID");
+          throw new Error('Invalid hospital ID');
         }
       }
       if (args.ambulanceId) {
         const ambulance = await db.ambulance.findByPk(args.ambulanceId);
         if (!ambulance) {
-          throw new Error("Invalid ambulance ID");
+          throw new Error('Invalid ambulance ID');
         }
       }
       return db.patient.create({
@@ -59,26 +57,26 @@ const patientResolvers = {
     updatePatient: async (parent, args) => {
       const patient = await db.patient.findByPk(args.id);
       if (!patient) {
-        throw new Error("Invalid patient ID");
+        throw new Error('Invalid patient ID');
       }
       if (args.collectionPointId) {
         const collectionPoint = await db.collectionPoint.findByPk(
           args.collectionPointId
         );
         if (!collectionPoint) {
-          throw new Error("Invalid collection point ID");
+          throw new Error('Invalid collection point ID');
         }
       }
       if (args.hospitalId) {
         const hospital = await db.hospital.findByPk(args.hospitalId);
         if (!hospital) {
-          throw new Error("Invalid hospital ID");
+          throw new Error('Invalid hospital ID');
         }
       }
       if (args.ambulanceId) {
         const ambulance = await db.ambulance.findByPk(args.ambulanceId);
         if (!ambulance) {
-          throw new Error("Invalid ambulance ID");
+          throw new Error('Invalid ambulance ID');
         }
       }
       await db.patient.update(
@@ -115,7 +113,7 @@ const patientResolvers = {
     deletePatient: async (parent, args) => {
       const isDeleted = await db.patient.update(
         {
-          status: "DELETED",
+          status: 'DELETED',
         },
         {
           where: { id: args.id },

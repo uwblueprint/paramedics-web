@@ -1,12 +1,8 @@
-"use strict";
-
-const User = require("./user");
-const Hospital = require("./hospitals");
-const Ambulance = require("./ambulances");
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
-    "event",
+    'event',
     {
       name: DataTypes.STRING,
       eventDate: DataTypes.DATEONLY,
@@ -15,14 +11,16 @@ module.exports = (sequelize, DataTypes) => {
     {
       paranoid: true,
       hooks: {
-        afterDestroy: function (instance, options) {
-          instance.getCollectionPoints().then((collectionPoints) =>
-            collectionPoints.map((collectionPoint) => {
-              collectionPoint.destroy();
-            })
-          );
+        afterDestroy: (instance) => {
+          instance
+            .getCollectionPoints()
+            .then((collectionPoints) =>
+              collectionPoints.map((collectionPoint) =>
+                collectionPoint.destroy()
+              )
+            );
         },
-        afterRestore: function (instance, options) {
+        afterRestore: (instance) => {
           instance
             .getCollectionPoints({ paranoid: false })
             .then((collectionPoints) =>
@@ -39,19 +37,19 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true,
     });
 
-    Event.belongsTo(User(sequelize, DataTypes), {
-      foreignKey: "createdBy",
-      targetKey: "id",
+    Event.belongsTo(models.user, {
+      foreignKey: 'createdBy',
+      targetKey: 'id',
     });
 
     Event.belongsToMany(models.ambulance, {
-      through: "eventAmbulances",
-      foreignKey: "eventId",
+      through: 'eventAmbulances',
+      foreignKey: 'eventId',
     });
 
     Event.belongsToMany(models.hospital, {
-      through: "eventHospitals",
-      foreignKey: "eventId",
+      through: 'eventHospitals',
+      foreignKey: 'eventId',
     });
   };
 

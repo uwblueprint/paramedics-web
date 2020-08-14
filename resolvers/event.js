@@ -15,7 +15,7 @@ const eventResolvers = {
           },
         ],
       }),
-    event: (obj, args, context, info) =>
+    event: (obj, args) =>
       db.event.findByPk(args.id, {
         include: [
           {
@@ -34,15 +34,16 @@ const eventResolvers = {
       }),
   },
   Event: {
-    createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),
+    createdBy: (obj) => db.user.findByPk(obj.createdBy),
   },
   Mutation: {
     addEvent: async (parent, args) => {
       // Check if createdBy is valid
-      const user = await db.user.findByPk(args.createdBy);
-      if (!user) {
-        throw new Error('Invalid user ID');
-      }
+      await db.user.findByPk(args.createdBy).then((user) => {
+        if (!user) {
+          throw new Error('Invalid user ID: ' + args.createdBy);
+        }
+      });
 
       return db.event
         .create({
@@ -63,27 +64,33 @@ const eventResolvers = {
     },
     updateEvent: async (parent, args) => {
       // Checking if event is valid
-      const event = await db.event.findByPk(args.id);
-      if (!event) {
-        throw new Error('Invalid event ID');
-      }
+      await db.event.findByPk(args.id).then((event) => {
+        if (!event) {
+          throw new Error('Invalid event ID: ' + args.id);
+        }
+      });
 
       // Checking if user is valid
       if (args.createdBy) {
-        const user = await db.user.findByPk(args.createdBy);
-        if (!user) {
-          throw new Error('Invalid user ID');
-        }
+        await db.user.findByPk(args.createdBy).then((user) => {
+          if (!user) {
+            throw new Error('Invalid user ID: ' + args.createdBy);
+          }
+        });
       }
 
-      const addAmbulances = async () => {
-        // Checking if ambulances are valid
-        for (const ambulanceId of args.ambulances) {
-          const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
-          if (!ambulance) {
-            return true;
-          }
-        }
+      if (args.ambulances) {
+        // Checking if all ambulances exist
+        await Promise.all(
+          args.ambulances.map((ambulanceId) =>
+            db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
+              if (!ambulance) {
+                throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
+              }
+            })
+          )
+        );
+
         // Removing all instances of this particular event in the junction table
         await db.eventAmbulances.destroy({
           where: {
@@ -92,57 +99,44 @@ const eventResolvers = {
         });
 
         // Adding in all relations of the given event and the given ambulances
-        for (const ambulanceId of args.ambulances) {
-          await db.eventAmbulances.create({
-            eventId: args.id,
-            ambulanceId: ambulanceId['id'],
-          });
-        }
-
-        return false;
-      };
-
-      // Calling async function to actually conduct association operations
-      if (args.ambulances) {
-        const ambulanceHasError = await addAmbulances();
-        if (ambulanceHasError) {
-          throw new Error('Invalid ambulance ID');
-        }
+        await Promise.all(
+          args.ambulances.map((ambulanceId) =>
+            db.eventAmbulances.create({
+              eventId: args.id,
+              ambulanceId: ambulanceId.id,
+            })
+          )
+        );
       }
 
-      const addHospitals = async () => {
-        // Checking if hospitals are valid
-        for (const hospitalId of args.hospitals) {
-          const hospital = await db.hospital.findByPk(hospitalId['id']);
-          if (!hospital) {
-            return true;
-          }
-        }
+      if (args.hospitals) {
+        // Checking if all hospitals exist
+        await Promise.all(
+          args.hospitals.map((hospitalId) =>
+            db.hospital.findByPk(hospitalId.id).then((hospital) => {
+              if (!hospital) {
+                throw new Error('Invalid hospital ID: ' + hospitalId.id);
+              }
+            })
+          )
+        );
 
-        // Removing all records of event in eventHospital junction table
+        // Removing all instances of this particular event in the junction table
         await db.eventHospitals.destroy({
           where: {
             eventId: args.id,
           },
         });
 
-        // Adding in records of a singular association with the event and the hospital
-        for (const hospitalId of args.hospitals) {
-          await db.eventHospitals.create({
-            eventId: args.id,
-            hospitalId: hospitalId['id'],
-          });
-        }
-
-        return false;
-      };
-
-      if (args.hospitals) {
-        // Checking if hospitals are valid
-        const hospitalHasError = await addHospitals();
-        if (hospitalHasError) {
-          throw new Error('Invalid hospital ID');
-        }
+        // Adding in all relations of the given event and the given hospitals
+        await Promise.all(
+          args.hospitals.map((hospitalId) =>
+            db.eventHospitals.create({
+              eventId: args.id,
+              hospitalId: hospitalId.id,
+            })
+          )
+        );
       }
 
       await db.event.update(
@@ -171,43 +165,42 @@ const eventResolvers = {
     },
     addAmbulancesToEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.eventId);
-      if (!event) {
-        throw new Error('Invalid event ID');
-      }
+      await db.event.findByPk(args.eventId).then(async (event) => {
+        if (!event) {
+          throw new Error('Invalid event ID: ' + args.eventId);
+        }
+      });
 
       // Checking if all ambulances exist
-      for (const ambulanceId of args.ambulances) {
-        const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
-        if (!ambulance) {
-          throw new Error('Invalid ambulance ID');
-        }
-      }
+      await Promise.all(
+        args.ambulances.map((ambulanceId) =>
+          db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
+            if (!ambulance) {
+              throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
+            }
+          })
+        )
+      );
 
-      for (const ambulanceId of args.ambulances) {
-        // Checking if association between ambulance and event already exists
-        const eventAmbulanceAssociations = await db.eventAmbulances.findAll({
-          where: {
-            eventId: args.eventId,
-            ambulanceId: ambulanceId['id'],
-          },
-          paranoid: false,
-        });
-
-        if (eventAmbulanceAssociations.length === 0) {
-          await db.eventAmbulances.create({
-            eventId: args.eventId,
-            ambulanceId: ambulanceId['id'],
-          });
-        } else {
-          await db.eventAmbulances.restore({
-            where: {
-              eventId: args.eventId,
-              ambulanceId: ambulanceId['id'],
-            },
-          });
-        }
-      }
+      await Promise.all(
+        args.ambulances.map(async (ambulanceId) =>
+          db.eventAmbulances
+            .findAll({
+              where: {
+                eventId: args.eventId,
+                ambulanceId: ambulanceId.id,
+              },
+            })
+            .then(async (eventAmbulanceAssociations) => {
+              if (eventAmbulanceAssociations.length === 0) {
+                await db.eventAmbulances.create({
+                  eventId: args.eventId,
+                  ambulanceId: ambulanceId.id,
+                });
+              }
+            })
+        )
+      );
 
       // Returning new event
       return db.event.findByPk(args.eventId, {
@@ -221,47 +214,47 @@ const eventResolvers = {
         ],
       });
     },
+
     addHospitalsToEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.eventId);
-      if (!event) {
-        throw new Error('Invalid event ID');
-      }
+      await db.event.findByPk(args.eventId).then(async (event) => {
+        if (!event) {
+          throw new Error('Invalid event ID: ' + args.eventId);
+        }
+      });
 
       // Checking if all hospitals exist
-      for (const hospitalId of args.hospitals) {
-        const hospital = await db.hospital.findByPk(hospitalId['id']);
-        if (!hospital) {
-          throw new Error('Invalid hospital ID');
-        }
-      }
+      await Promise.all(
+        args.hospitals.map((hospitalId) =>
+          db.hospital.findByPk(hospitalId.id).then((hospital) => {
+            if (!hospital) {
+              throw new Error('Invalid hospital ID: ' + hospitalId.id);
+            }
+          })
+        )
+      );
 
-      for (const hospitalId of args.hospitals) {
-        // Checking if association between ambulance and event already exists
-        const eventHospitalAssociations = await db.eventHospitals.findAll({
-          where: {
-            eventId: args.eventId,
-            hospitalId: hospitalId['id'],
-          },
-          paranoid: false,
-        });
+      await Promise.all(
+        args.hospitals.map(async (hospitalId) =>
+          db.eventHospitals
+            .findAll({
+              where: {
+                eventId: args.eventId,
+                hospitalId: hospitalId.id,
+              },
+            })
+            .then(async (eventHospitalAssociations) => {
+              if (eventHospitalAssociations.length === 0) {
+                await db.eventHospitals.create({
+                  eventId: args.eventId,
+                  hospitalId: hospitalId.id,
+                });
+              }
+            })
+        )
+      );
 
-        if (eventHospitalAssociations.length === 0) {
-          await db.eventHospitals.create({
-            eventId: args.eventId,
-            hospitalId: hospitalId['id'],
-          });
-        } else {
-          await db.eventHospitals.restore({
-            where: {
-              eventId: args.eventId,
-              hospitalId: hospitalId['id'],
-            },
-          });
-        }
-      }
-
-      // Returning new event
+      // Returning updated event
       return db.event.findByPk(args.eventId, {
         include: [
           {
@@ -273,32 +266,39 @@ const eventResolvers = {
         ],
       });
     },
+
     deleteAmbulancesFromEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.eventId);
-      if (!event) {
-        throw new Error('Invalid event ID');
-      }
+      await db.event.findByPk(args.eventId).then(async (event) => {
+        if (!event) {
+          throw new Error('Invalid event ID: ' + args.eventId);
+        }
+      });
 
       // Checking if all ambulances exist
-      for (const ambulanceId of args.ambulances) {
-        const ambulance = await db.ambulance.findByPk(ambulanceId['id']);
-        if (!ambulance) {
-          throw new Error('Invalid ambulance ID');
-        }
-      }
+      await Promise.all(
+        args.ambulances.map((ambulanceId) =>
+          db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
+            if (!ambulance) {
+              throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
+            }
+          })
+        )
+      );
 
-      for (const ambulanceId of args.ambulances) {
-        // Removing association in eventAmbulances junction table
-        await db.eventAmbulances.destroy({
-          where: {
-            eventId: args.eventId,
-            ambulanceId: ambulanceId['id'],
-          },
-        });
-      }
+      // Removing association in eventAmbulance junction table
+      await Promise.all(
+        args.ambulances.map((ambulanceId) =>
+          db.eventAmbulances.destroy({
+            where: {
+              eventId: args.eventId,
+              ambulanceId: ambulanceId.id,
+            },
+          })
+        )
+      );
 
-      // Returning new event
+      // Returning updated event
       return db.event.findByPk(args.eventId, {
         include: [
           {
@@ -310,32 +310,39 @@ const eventResolvers = {
         ],
       });
     },
+
     deleteHospitalsFromEvent: async (parent, args) => {
       // Checking if event exists
-      const event = await db.event.findByPk(args.eventId);
-      if (!event) {
-        throw new Error('Invalid event ID');
-      }
+      await db.event.findByPk(args.eventId).then(async (event) => {
+        if (!event) {
+          throw new Error('Invalid event ID: ' + args.eventId);
+        }
+      });
 
       // Checking if all hospitals exist
-      for (const hospitalId of args.hospitals) {
-        const hospital = await db.hospital.findByPk(hospitalId['id']);
-        if (!hospital) {
-          throw new Error('Invalid hospital ID');
-        }
-      }
+      await Promise.all(
+        args.hospitals.map((hospitalId) =>
+          db.hospital.findByPk(hospitalId.id).then((hospital) => {
+            if (!hospital) {
+              throw new Error('Invalid hospital ID: ' + hospitalId.id);
+            }
+          })
+        )
+      );
 
-      for (const hospitalId of args.hospitals) {
-        // Removing association in eventHospitals junction table
-        await db.eventHospitals.destroy({
-          where: {
-            eventId: args.eventId,
-            hospitalId: hospitalId['id'],
-          },
-        });
-      }
+      // Removing association in eventHospitals junction table
+      await Promise.all(
+        args.hospitals.map((hospitalId) =>
+          db.eventHospitals.destroy({
+            where: {
+              eventId: args.eventId,
+              hospitalId: hospitalId.id,
+            },
+          })
+        )
+      );
 
-      // Returning new event
+      // Returning updated event
       return db.event.findByPk(args.eventId, {
         include: [
           {
@@ -347,6 +354,7 @@ const eventResolvers = {
         ],
       });
     },
+
     deleteEvent: async (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise

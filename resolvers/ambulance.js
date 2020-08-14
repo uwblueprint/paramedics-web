@@ -1,7 +1,6 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
-const { Op } = require("sequelize");
+const db = require('../models');
 
 const ambulanceResolvers = {
   Query: {
@@ -13,7 +12,7 @@ const ambulanceResolvers = {
           },
         ],
       }),
-    ambulance: (obj, args, context, info) =>
+    ambulance: (obj, args) =>
       db.ambulance.findByPk(args.id, {
         include: [
           {
@@ -43,7 +42,7 @@ const ambulanceResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error("Update for ambulance table failed");
+            throw new Error('Update for ambulance table failed');
           }
         });
 
@@ -93,7 +92,7 @@ const ambulanceResolvers = {
         .then((count) => {
           if (count > 0) {
             throw new Error(
-              "Deletion failed; there are associated patients for this ambulance"
+              'Deletion failed; there are associated patients for this ambulance'
             );
           }
         });

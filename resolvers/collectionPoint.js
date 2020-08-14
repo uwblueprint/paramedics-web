@@ -1,35 +1,34 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const collectionPointResolvers = {
   Query: {
     collectionPoints: () => db.collectionPoint.findAll(),
-    collectionPoint: (obj, args, context, info) =>
-      db.collectionPoint.findByPk(args.id),
-    collectionPointsByEvent: (obj, args, context, info) =>
+    collectionPoint: (obj, args) => db.collectionPoint.findByPk(args.id),
+    collectionPointsByEvent: (obj, args) =>
       db.collectionPoint.findAll({ where: { eventId: args.eventId } }),
   },
 
   collectionPoint: {
-    eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId),
-    createdBy: (obj, args, context, info) => db.user.findByPk(obj.createdBy),
+    eventId: (obj) => db.event.findByPk(obj.eventId),
+    createdBy: (obj) => db.user.findByPk(obj.createdBy),
   },
 
   // CRUD Operations
   Mutation: {
     addCollectionPoint: async (parent, args) => {
-      //Checks if eventId is valid
+      // Checks if eventId is valid
       const event = await db.event.findByPk(args.eventId);
 
       // Check if createdBy is valid
       const user = await db.user.findByPk(args.createdBy);
       if (!user) {
-        throw new Error("Invalid user ID");
+        throw new Error('Invalid user ID');
       }
 
       if (!event) {
-        throw new Error("Invalid event ID");
+        throw new Error('Invalid event ID');
       }
       return db.collectionPoint.create({
         name: args.name,
@@ -38,11 +37,11 @@ const collectionPointResolvers = {
       });
     },
     updateCollectionPoint: async (parent, args) => {
-      //Checks if eventId is valid
+      // Checks if eventId is valid
       if (args.eventId) {
         const event = await db.event.findByPk(args.eventId);
         if (!event) {
-          throw new Error("Invalid event ID");
+          throw new Error('Invalid event ID');
         }
       }
 
@@ -50,7 +49,7 @@ const collectionPointResolvers = {
       if (args.createdBy) {
         const user = await db.user.findByPk(args.createdBy);
         if (!user) {
-          throw new Error("Invalid user ID");
+          throw new Error('Invalid user ID');
         }
       }
 
@@ -68,8 +67,8 @@ const collectionPointResolvers = {
           }
         )
         .then((rowsAffected) => {
-          if (rowsAffected[0] == 0) {
-            throw new Error("this Collection Point does not exist");
+          if (rowsAffected[0] === 0) {
+            throw new Error('This Collection Point does not exist');
           }
         });
       return db.collectionPoint.findByPk(args.id);

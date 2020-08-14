@@ -18,6 +18,7 @@
     "import/prefer-default-export": "off",
     "no-shadow": "off",
     "no-plusplus": "off",
-    "react/jsx-curly-newline": "off"
+    "react/jsx-curly-newline": "off",
+    "strict": "off"
   }
 }

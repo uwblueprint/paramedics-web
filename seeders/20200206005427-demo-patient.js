@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface) => {
     const user = await db.user.create({
-      name: "Darth Vader",
-      email: "darthvader@sithlords.com",
-      accessLevel: "COMMANDER",
-      password: "ga1axyru1er",
+      name: 'Darth Vader',
+      email: 'darthvader@sithlords.com',
+      accessLevel: 'COMMANDER',
+      password: 'ga1axyru1er',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     const event = await db.event.create({
       eventDate: new Date(),
-      name: "Death Star Launch Day",
+      name: 'Death Star Launch Day',
       createdBy: user.id,
       isActive: true,
       createdAt: new Date(),
@@ -23,47 +23,47 @@ module.exports = {
     });
 
     const collectionPoint = await db.collectionPoint.create({
-      name: "Checkpoint Tatooine",
+      name: 'Checkpoint Tatooine',
       eventId: event.id,
       createdBy: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    return queryInterface.bulkInsert("patients", [
+    return queryInterface.bulkInsert('patients', [
       {
-        gender: "Male",
+        gender: 'Male',
         age: 19,
-        barcodeValue: "1525242sa",
+        barcodeValue: '1525242sa',
         collectionPointId: collectionPoint.id,
-        status: "ON_SITE",
-        triageLevel: "YELLOW",
-        notes: "This guy looks super drunk",
+        status: 'ON_SITE',
+        triageLevel: 'YELLOW',
+        notes: 'This guy looks super drunk',
         transportTime: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        gender: "Female",
+        gender: 'Female',
         runNumber: 65433,
-        barcodeValue: "9876F5E4",
+        barcodeValue: '9876F5E4',
         collectionPointId: collectionPoint.id,
-        status: "RELEASED",
+        status: 'RELEASED',
         triageCategory: 1,
-        triageLevel: "GREEN",
-        notes: "needs a bandaid has green lightsaber",
+        triageLevel: 'GREEN',
+        notes: 'needs a bandaid has green lightsaber',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        gender: "unknown",
+        gender: 'unknown',
         age: 21,
         runNumber: 65433,
-        barcodeValue: "9876FY54",
+        barcodeValue: '9876FY54',
         collectionPointId: collectionPoint.id,
-        status: "TRANSPORTED",
+        status: 'TRANSPORTED',
         triageCategory: 3,
-        triageLevel: "BLACK",
+        triageLevel: 'BLACK',
         transportTime: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -71,7 +71,7 @@ module.exports = {
     ]);
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("patients", null, {});
+  down: (queryInterface) => {
+    return queryInterface.bulkDelete('patients', null, {});
   },
 };

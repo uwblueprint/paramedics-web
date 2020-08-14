@@ -1,19 +1,17 @@
-"use strict";
-
-const Event = require("./event");
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   const hospitals = sequelize.define(
-    "hospital",
+    'hospital',
     {
       name: DataTypes.STRING,
     },
     { paranoid: true }
   );
-  hospitals.associate = function (models) {
+  hospitals.associate = (models) => {
     hospitals.belongsToMany(models.event, {
-      through: "eventHospitals",
-      foreignKey: "hospitalId",
+      through: 'eventHospitals',
+      foreignKey: 'hospitalId',
     });
   };
 

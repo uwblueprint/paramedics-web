@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 const userResolvers = {
   Query: {
     users: () => db.user.findAll(),
-    user(obj, args, context, info) {
+    user(obj, args) {
       return db.user.findByPk(args.id);
     },
   },
@@ -36,7 +36,7 @@ const userResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error("Update failed for user table");
+            throw new Error('Update failed for user table');
           }
         });
 
