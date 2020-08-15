@@ -7,6 +7,7 @@ const hospitalSchema = `
   extend type Mutation {
     addHospital(name: String!): Hospital!
     updateHospital(id: ID!, name: String!): Hospital!
+    restoreHospital(id: ID!): Hospital!
     deleteHospital(id: ID!): Int!
   }
   
@@ -15,6 +16,7 @@ const hospitalSchema = `
     name: String
     createdAt: DateTime
     updatedAt: DateTime
+    events: [Event]
   }
   `;
 exports.hospitalSchema = hospitalSchema;

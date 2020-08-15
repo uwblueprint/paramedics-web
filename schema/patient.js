@@ -11,11 +11,13 @@ const patientSchema = `
     ON_SITE
     RELEASED
     TRANSPORTED
+    DELETED
   }
 
   extend type Query {
     patient(id: ID!): Patient
     patients: [Patient]
+    patientsByCcp(collectionPointId: ID!): [Patient]
   }
 
   extend type Mutation {
@@ -23,13 +25,15 @@ const patientSchema = `
       gender: String,
       age: Int,
       runNumber: Int,
-      barcodeValue: Int,
+      barcodeValue: String!,
       collectionPointId: ID!,
       status: status,
       triageCategory: Int,
-      triageLevel: triageLevel, 
+      triageLevel: triageLevel!, 
       notes: String,
       transportTime: DateTime,
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
     
     updatePatient(
@@ -37,14 +41,18 @@ const patientSchema = `
       gender: String,
       age: Int,
       runNumber: Int,
-      barcodeValue: Int,
+      barcodeValue: String,
       collectionPointId: ID,
       status: status,
       triageCategory: Int,
       triageLevel: triageLevel, 
       notes: String,
       transportTime: DateTime,
+      hospitalId: ID,
+      ambulanceId: ID
     ): Patient!
+
+    restorePatient(id: ID!): Patient!
 
     deletePatient(id: ID!): Int!
   }
@@ -54,7 +62,7 @@ const patientSchema = `
     gender: String,
     age: Int,
     runNumber: Int,
-    barcodeValue: Int,
+    barcodeValue: String,
     collectionPointId: collectionPoint!,
     status: status,
     triageCategory: Int,
@@ -63,8 +71,8 @@ const patientSchema = `
     transportTime: DateTime,
     createdAt: DateTime,
     updatedAt: DateTime,
+    hospitalId: Hospital,
+    ambulanceId: Ambulance
   }
-  `
-  ;
-
+  `;
 exports.patientSchema = patientSchema;

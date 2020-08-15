@@ -13,9 +13,14 @@ const { hospitalSchema } = require('./schema/hospital');
 const { hospitalResolvers } = require('./resolvers/hospital');
 const { ambulanceSchema } = require('./schema/ambulance');
 const { ambulanceResolvers } = require('./resolvers/ambulance');
+const { locationPinSchema } = require('./schema/locationPin');
+const { locationPinResolvers } = require('./resolvers/locationPin');
 
-
-const { GraphQLDate, GraphQLTime, GraphQLDateTime } = require('graphql-iso-date');
+const {
+  GraphQLDate,
+  GraphQLTime,
+  GraphQLDateTime,
+} = require('graphql-iso-date');
 const { makeExecutableSchema } = require('apollo-server');
 
 const scalars = `
@@ -43,14 +48,31 @@ const resolvers = {
   Date: GraphQLDate,
   Time: GraphQLTime,
   DateTime: GraphQLDateTime,
-
 };
 
 const schema = makeExecutableSchema({
-
-  typeDefs: [scalars, Query, Mutation, userSchema, eventSchema, hospitalSchema, ambulanceSchema, collectionPointSchema, patientSchema],
-  resolvers: merge(resolvers, userResolvers, eventResolvers, hospitalResolvers, ambulanceResolvers, collectionPointResolvers, patientResolvers),
-
+  typeDefs: [
+    scalars,
+    Query,
+    Mutation,
+    userSchema,
+    eventSchema,
+    hospitalSchema,
+    ambulanceSchema,
+    collectionPointSchema,
+    patientSchema,
+    locationPinSchema,
+  ],
+  resolvers: merge(
+    resolvers,
+    userResolvers,
+    eventResolvers,
+    hospitalResolvers,
+    ambulanceResolvers,
+    collectionPointResolvers,
+    patientResolvers,
+    locationPinResolvers
+  ),
 });
 
 exports.schema = schema;

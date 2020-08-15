@@ -13,10 +13,8 @@ services:
       driver: "json-file"
       options:
         max-size: 100m
-    environment:
-    - PARAMEDICS_DB_HOST=paramedics-db
-    - PARAMEDICS_DB_USER=robot
-    - PARAMEDICS_DB_PASSWORD=robot_pwd
+    env_file:
+      - paramedics-web.env
     volumes:
       - type: bind
         source: ./
@@ -34,10 +32,8 @@ services:
       - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data/pg_data
-    environment:
-      POSTGRES_DB: paramedics-db
-      POSTGRES_USER: robot
-      POSTGRES_PASSWORD: robot_pwd
+    env_file:
+      - paramedics-web.env
     volumes:
       - type: volume
         source: postgresql

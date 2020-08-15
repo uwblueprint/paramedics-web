@@ -7,6 +7,7 @@ const ambulanceSchema = `
   extend type Mutation {
     addAmbulance(vehicleNumber: Int!): Ambulance!
     updateAmbulance(id: ID!, vehicleNumber: Int!): Ambulance!
+    restoreAmbulance(id: ID!): Ambulance!
     deleteAmbulance(id: ID!): Int!
   }
   
@@ -15,6 +16,7 @@ const ambulanceSchema = `
     vehicleNumber: Int!
     createdAt: DateTime
     updatedAt: DateTime
+    events: [Event]
   }
   `;
 exports.ambulanceSchema = ambulanceSchema;
