@@ -56,7 +56,7 @@ const eventResolvers = {
   Mutation: {
     addEvent: async (parent, args, context) => {
       await context.group
-        .hasPerm(context.group.id, 'add_event')
+        .hasPerm(context.group.id, 'create_event')
         .then((hasPerm) => {
           if (!hasPerm) {
             throw new AuthenticationError('Unauthorized. Event not created.');
