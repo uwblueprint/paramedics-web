@@ -15,7 +15,7 @@ const eventResolvers = {
           },
         ],
       }),
-    event: (obj, args) =>
+    event: (parent, args) =>
       db.event.findByPk(args.id, {
         include: [
           {
@@ -34,7 +34,7 @@ const eventResolvers = {
       }),
   },
   Event: {
-    createdBy: (obj) => db.user.findByPk(obj.createdBy),
+    createdBy: (parent) => db.user.findByPk(parent.createdBy),
   },
   Mutation: {
     addEvent: async (parent, args) => {
@@ -358,17 +358,18 @@ const eventResolvers = {
     deleteEvent: async (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
-      await db.eventAmbulances.destroy({
-        where: {
-          eventId: args.id,
-        },
-      });
-
-      await db.eventHospitals.destroy({
-        where: {
-          eventId: args.id,
-        },
-      });
+      await Promise.all([
+        db.eventAmbulances.destroy({
+          where: {
+            eventId: args.id,
+          },
+        }),
+        db.eventHospitals.destroy({
+          where: {
+            eventId: args.id,
+          },
+        }),
+      ]);
 
       return db.event.destroy({
         where: {
