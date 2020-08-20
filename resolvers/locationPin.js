@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const locationPinResolvers = {
   Query: {
@@ -21,12 +22,7 @@ const locationPinResolvers = {
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
-      // Checks if eventId is valid
-      await db.event.findByPk(args.eventId).then((event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.eventId);
-        }
-      });
+      await validators.validateEvent(args.eventId);
 
       return db.locationPins.create({
         label: args.label,
@@ -37,13 +33,8 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
-      // Checks if eventId is valid
       if (args.eventId) {
-        await db.event.findByPk(args.eventId).then((event) => {
-          if (!event) {
-            throw new Error('Invalid event ID: ' + args.eventId);
-          }
-        });
+        await validators.validateEvent(args.eventId);
       }
 
       await db.locationPins

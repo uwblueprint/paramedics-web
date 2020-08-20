@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const patientResolvers = {
   Query: {
@@ -19,24 +20,12 @@ const patientResolvers = {
   },
   Mutation: {
     addPatient: async (parent, args) => {
-      await db.collectionPoint.findByPk(args.collectionPointId).then((ccp) => {
-        if (!ccp) {
-          throw new Error('Invalid CCP ID: ' + args.collectionPointId);
-        }
-      });
+      await validators.validateCollectionPoint(args.collectionPointId);
       if (args.hospitalId) {
-        await db.hospital.findByPk(args.hospitalId).then((hospital) => {
-          if (!hospital) {
-            throw new Error('Invalid hospital ID: ' + args.hospitalId);
-          }
-        });
+        await validators.validateHospital(args.hospitalId);
       }
       if (args.ambulanceId) {
-        await db.ambulance.findByPk(args.ambulanceId).then((ambulance) => {
-          if (!ambulance) {
-            throw new Error('Invalid ambulance ID: ' + args.ambulanceId);
-          }
-        });
+        await validators.validateAmbulance(args.ambulanceId);
       }
 
       return db.patient.create({
@@ -61,27 +50,13 @@ const patientResolvers = {
         }
       });
       if (args.collectionPointId) {
-        await db.collectionPoint
-          .findByPk(args.collectionPointId)
-          .then((ccp) => {
-            if (!ccp) {
-              throw new Error('Invalid CCP ID: ' + args.collectionPointId);
-            }
-          });
+        await validators.validateCollectionPoint(args.collectionPointId);
       }
       if (args.hospitalId) {
-        await db.hospital.findByPk(args.hospitalId).then((hospital) => {
-          if (!hospital) {
-            throw new Error('Invalid hospital ID: ' + args.hospitalId);
-          }
-        });
+        await validators.validateHospital(args.hospitalId);
       }
       if (args.ambulanceId) {
-        await db.ambulance.findByPk(args.ambulanceId).then((ambulance) => {
-          if (!ambulance) {
-            throw new Error('Invalid ambulance ID: ' + args.ambulanceId);
-          }
-        });
+        await validators.validateAmbulance(args.ambulanceId);
       }
 
       await db.patient.update(

@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
   Query: {
@@ -20,16 +21,8 @@ const collectionPointResolvers = {
     addCollectionPoint: (parent, args) =>
       // Check if user & event is valid
       Promise.all([
-        db.user.findByPk(args.createdBy).then((user) => {
-          if (!user) {
-            throw new Error('Invalid user ID: ' + args.createdBy);
-          }
-        }),
-        db.event.findByPk(args.eventId).then((event) => {
-          if (!event) {
-            throw new Error('Invalid event ID: ' + args.eventId);
-          }
-        }),
+        validators.validateUser(args.createdBy),
+        validators.validateEvent(args.eventId),
       ]).then(() =>
         db.collectionPoint.create({
           name: args.name,
@@ -40,20 +33,12 @@ const collectionPointResolvers = {
     updateCollectionPoint: async (parent, args) => {
       // Checks if event is valid
       if (args.eventId) {
-        await db.event.findByPk(args.eventId).then((event) => {
-          if (!event) {
-            throw new Error('Invalid event ID: ' + args.eventId);
-          }
-        });
+        await validators.validateEvent(args.eventId);
       }
 
       // Checks if user is valid:
       if (args.createdBy) {
-        await db.user.findByPk(args.createdBy).then((user) => {
-          if (!user) {
-            throw new Error('Invalid user ID: ' + args.createdBy);
-          }
-        });
+        await validators.validateUser(args.createdBy);
       }
 
       await db.collectionPoint
@@ -71,7 +56,7 @@ const collectionPointResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error('This Collection Point does not exist');
+            throw new Error('Failed update for ambulance ID: ' + args.id);
           }
         });
       return db.collectionPoint.findByPk(args.id);

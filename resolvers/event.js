@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const eventResolvers = {
   Query: {
@@ -38,12 +39,7 @@ const eventResolvers = {
   },
   Mutation: {
     addEvent: async (parent, args) => {
-      // Check if createdBy is valid
-      await db.user.findByPk(args.createdBy).then((user) => {
-        if (!user) {
-          throw new Error('Invalid user ID: ' + args.createdBy);
-        }
-      });
+      await validators.validateUser(args.createdBy);
 
       return db.event
         .create({
@@ -63,31 +59,15 @@ const eventResolvers = {
         }));
     },
     updateEvent: async (parent, args) => {
-      // Checking if event is valid
-      await db.event.findByPk(args.id).then((event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.id);
-        }
-      });
-
-      // Checking if user is valid
+      await validators.validateEvent(args.eventId);
       if (args.createdBy) {
-        await db.user.findByPk(args.createdBy).then((user) => {
-          if (!user) {
-            throw new Error('Invalid user ID: ' + args.createdBy);
-          }
-        });
+        await validators.validateUser(args.createdBy);
       }
-
       if (args.ambulances) {
         // Checking if all ambulances exist
         await Promise.all(
-          args.ambulances.map((ambulanceId) =>
-            db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
-              if (!ambulance) {
-                throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
-              }
-            })
+          args.ambulances.map((ambulance) =>
+            validators.validateAmbulance(ambulance.id)
           )
         );
 
@@ -112,12 +92,8 @@ const eventResolvers = {
       if (args.hospitals) {
         // Checking if all hospitals exist
         await Promise.all(
-          args.hospitals.map((hospitalId) =>
-            db.hospital.findByPk(hospitalId.id).then((hospital) => {
-              if (!hospital) {
-                throw new Error('Invalid hospital ID: ' + hospitalId.id);
-              }
-            })
+          args.hospitals.map((hospital) =>
+            validators.validateHospital(hospital.id)
           )
         );
 
@@ -164,21 +140,12 @@ const eventResolvers = {
       });
     },
     addAmbulancesToEvent: async (parent, args) => {
-      // Checking if event exists
-      await db.event.findByPk(args.eventId).then(async (event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.eventId);
-        }
-      });
+      await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
       await Promise.all(
-        args.ambulances.map((ambulanceId) =>
-          db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
-            if (!ambulance) {
-              throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
-            }
-          })
+        args.ambulances.map((ambulance) =>
+          validators.validateAmbulance(ambulance.id)
         )
       );
 
@@ -216,21 +183,12 @@ const eventResolvers = {
     },
 
     addHospitalsToEvent: async (parent, args) => {
-      // Checking if event exists
-      await db.event.findByPk(args.eventId).then(async (event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.eventId);
-        }
-      });
+      await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
       await Promise.all(
-        args.hospitals.map((hospitalId) =>
-          db.hospital.findByPk(hospitalId.id).then((hospital) => {
-            if (!hospital) {
-              throw new Error('Invalid hospital ID: ' + hospitalId.id);
-            }
-          })
+        args.hospitals.map((hospital) =>
+          validators.validateHospital(hospital.id)
         )
       );
 
@@ -268,21 +226,12 @@ const eventResolvers = {
     },
 
     deleteAmbulancesFromEvent: async (parent, args) => {
-      // Checking if event exists
-      await db.event.findByPk(args.eventId).then(async (event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.eventId);
-        }
-      });
+      await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
       await Promise.all(
-        args.ambulances.map((ambulanceId) =>
-          db.ambulance.findByPk(ambulanceId.id).then((ambulance) => {
-            if (!ambulance) {
-              throw new Error('Invalid ambulance ID: ' + ambulanceId.id);
-            }
-          })
+        args.ambulances.map((ambulance) =>
+          validators.validateAmbulance(ambulance.id)
         )
       );
 
@@ -312,21 +261,12 @@ const eventResolvers = {
     },
 
     deleteHospitalsFromEvent: async (parent, args) => {
-      // Checking if event exists
-      await db.event.findByPk(args.eventId).then(async (event) => {
-        if (!event) {
-          throw new Error('Invalid event ID: ' + args.eventId);
-        }
-      });
+      await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
       await Promise.all(
-        args.hospitals.map((hospitalId) =>
-          db.hospital.findByPk(hospitalId.id).then((hospital) => {
-            if (!hospital) {
-              throw new Error('Invalid hospital ID: ' + hospitalId.id);
-            }
-          })
+        args.hospitals.map((hospital) =>
+          validators.validateHospital(hospital.id)
         )
       );
 
