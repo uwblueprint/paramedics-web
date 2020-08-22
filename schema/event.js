@@ -2,6 +2,7 @@ const eventSchema = `
   extend type Query {
     event(id: ID!): Event
     events: [Event]
+    archivedEvents: [Event]
   }
 
   input AmbulanceInput {
