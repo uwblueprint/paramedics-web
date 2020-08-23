@@ -12,24 +12,22 @@ const hospitalResolvers = {
           },
         ],
       }),
-    hospital(obj, args) {
-      return db.hospital.findByPk(args.id, {
+    hospital: (parent, args) =>
+      db.hospital.findByPk(args.id, {
         include: [
           {
             model: db.event,
           },
         ],
-      });
-    },
+      }),
   },
   Mutation: {
-    addHospital: (parent, args) => {
-      return db.hospital.create({
+    addHospital: (parent, args) =>
+      db.hospital.create({
         name: args.name,
-      });
-    },
-    updateHospital: async (parent, args) => {
-      await db.hospital
+      }),
+    updateHospital: (parent, args) =>
+      db.hospital
         .update(
           {
             name: args.name,
@@ -42,63 +40,69 @@ const hospitalResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error('Update failed for hospital table');
+            throw new Error('Failed update for hospital ID: ' + args.id);
           }
-        });
-      return db.hospital.findByPk(args.id);
-    },
+          return db.hospital.findByPk(args.id);
+        }),
     restoreHospital: async (parent, args) => {
-      await db.hospital.restore({
-        where: {
-          id: args.id,
-        },
-      });
-
-      // Restoring event association if event is also avaliable
-      const associatedEvents = await db.eventHospitals.findAll({
-        where: {
-          hospitalId: args.id,
-        },
-        include: [
-          {
-            model: db.event,
-            required: true,
-          },
-        ],
-        paranoid: false,
-      });
-
-      await associatedEvents.map(async (associatedEvent) => {
-        db.eventHospitals.restore({
+      await Promise.all([
+        db.hospital.restore({
           where: {
-            eventId: associatedEvent.eventId,
-            hospitalId: args.id,
+            id: args.id,
           },
-        });
-      });
+        }),
+        // Restoring event association if event is also avaliable
+        db.eventHospitals
+          .findAll({
+            where: {
+              hospitalId: args.id,
+            },
+            include: [
+              {
+                model: db.event,
+                required: true,
+              },
+            ],
+            paranoid: false,
+          })
+          .then((associatedEvents) =>
+            Promise.all(
+              associatedEvents.map((associatedEvent) =>
+                db.eventHospitals.restore({
+                  where: {
+                    eventId: associatedEvent.eventId,
+                    hospitalId: args.id,
+                  },
+                })
+              )
+            )
+          ),
+      ]);
 
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
-      await db.patient
-        .count({
+      await Promise.all([
+        db.patient
+          .count({
+            where: {
+              hospitalId: args.id,
+            },
+          })
+          .then((count) => {
+            if (count > 0) {
+              throw new Error(
+                'Deletion failed; there are associated patients for hospital ID: ' +
+                  args.id
+              );
+            }
+          }),
+        db.eventHospitals.destroy({
           where: {
             hospitalId: args.id,
           },
-        })
-        .then((count) => {
-          if (count > 0) {
-            throw new Error(
-              'Deletion failed; there are associated patients for this hospital'
-            );
-          }
-        });
-
-      await db.eventHospitals.destroy({
-        where: {
-          hospitalId: args.id,
-        },
-      });
+        }),
+      ]);
 
       return db.hospital.destroy({
         where: {

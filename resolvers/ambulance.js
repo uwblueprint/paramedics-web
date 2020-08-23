@@ -12,7 +12,7 @@ const ambulanceResolvers = {
           },
         ],
       }),
-    ambulance: (obj, args) =>
+    ambulance: (parent, args) =>
       db.ambulance.findByPk(args.id, {
         include: [
           {
@@ -22,14 +22,12 @@ const ambulanceResolvers = {
       }),
   },
   Mutation: {
-    addAmbulance: (parent, args) => {
-      return db.ambulance.create({
+    addAmbulance: (parent, args) =>
+      db.ambulance.create({
         vehicleNumber: args.vehicleNumber,
-      });
-    },
-
-    updateAmbulance: async (parent, args) => {
-      await db.ambulance
+      }),
+    updateAmbulance: (parent, args) =>
+      db.ambulance
         .update(
           {
             vehicleNumber: args.vehicleNumber,
@@ -42,66 +40,69 @@ const ambulanceResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error('Update for ambulance table failed');
+            throw new Error('Failed update for ambulance ID: ' + args.id);
           }
-        });
-
-      return db.ambulance.findByPk(args.id);
-    },
-
+          return db.ambulance.findByPk(args.id);
+        }),
     restoreAmbulance: async (parent, args) => {
-      await db.ambulance.restore({
-        where: {
-          id: args.id,
-        },
-      });
-
-      // Restoring event association if event also availiable
-      const associatedEvents = await db.eventAmbulances.findAll({
-        where: {
-          ambulanceId: args.id,
-        },
-        include: [
-          {
-            model: db.event,
-            required: true,
-          },
-        ],
-        paranoid: false,
-      });
-
-      await associatedEvents.map(async (associatedEvent) => {
-        db.eventAmbulances.restore({
+      await Promise.all([
+        db.ambulance.restore({
           where: {
-            eventId: associatedEvent.eventId,
-            ambulanceId: args.id,
+            id: args.id,
           },
-        });
-      });
+        }),
+        // Restoring event association if event also availiable
+        db.eventAmbulances
+          .findAll({
+            where: {
+              ambulanceId: args.id,
+            },
+            include: [
+              {
+                model: db.event,
+                required: true,
+              },
+            ],
+            paranoid: false,
+          })
+          .then((associatedEvents) =>
+            Promise.all(
+              associatedEvents.map((associatedEvent) =>
+                db.eventAmbulances.restore({
+                  where: {
+                    eventId: associatedEvent.eventId,
+                    ambulanceId: args.id,
+                  },
+                })
+              )
+            )
+          ),
+      ]);
 
       return db.ambulance.findByPk(args.id);
     },
-
     deleteAmbulance: async (parent, args) => {
-      await db.patient
-        .count({
+      await Promise.all([
+        db.patient
+          .count({
+            where: {
+              ambulanceId: args.id,
+            },
+          })
+          .then((count) => {
+            if (count > 0) {
+              throw new Error(
+                'Deletion failed; there are associated patients for ambulance ID: ' +
+                  args.id
+              );
+            }
+          }),
+        db.eventAmbulances.destroy({
           where: {
             ambulanceId: args.id,
           },
-        })
-        .then((count) => {
-          if (count > 0) {
-            throw new Error(
-              'Deletion failed; there are associated patients for this ambulance'
-            );
-          }
-        });
-
-      await db.eventAmbulances.destroy({
-        where: {
-          ambulanceId: args.id,
-        },
-      });
+        }),
+      ]);
 
       return db.ambulance.destroy({
         where: {

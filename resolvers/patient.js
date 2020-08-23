@@ -1,44 +1,33 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const patientResolvers = {
   Query: {
     patients: () => db.patient.findAll(),
-    patient(obj, args) {
-      return db.patient.findByPk(args.id);
-    },
-    patientsByCcp: (obj, args) =>
+    patient: (parent, args) => db.patient.findByPk(args.id),
+    patientsByCcp: (parent, args) =>
       db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
       }),
   },
   Patient: {
-    collectionPointId: (obj) =>
-      db.collectionPoint.findByPk(obj.collectionPointId),
-    hospitalId: (obj) => db.hospital.findByPk(obj.hospitalId),
-    ambulanceId: (obj) => db.ambulance.findByPk(obj.ambulanceId),
+    collectionPointId: (parent) =>
+      db.collectionPoint.findByPk(parent.collectionPointId),
+    hospitalId: (parent) => db.hospital.findByPk(parent.hospitalId),
+    ambulanceId: (parent) => db.ambulance.findByPk(parent.ambulanceId),
   },
   Mutation: {
     addPatient: async (parent, args) => {
-      const collectionPoint = await db.collectionPoint.findByPk(
-        args.collectionPointId
-      );
-      if (!collectionPoint) {
-        throw new Error('Invalid collection point ID');
-      }
+      await validators.validateCollectionPoint(args.collectionPointId);
       if (args.hospitalId) {
-        const hospital = await db.hospital.findByPk(args.hospitalId);
-        if (!hospital) {
-          throw new Error('Invalid hospital ID');
-        }
+        await validators.validateHospital(args.hospitalId);
       }
       if (args.ambulanceId) {
-        const ambulance = await db.ambulance.findByPk(args.ambulanceId);
-        if (!ambulance) {
-          throw new Error('Invalid ambulance ID');
-        }
+        await validators.validateAmbulance(args.ambulanceId);
       }
+
       return db.patient.create({
         gender: args.gender,
         age: args.age,
@@ -55,30 +44,21 @@ const patientResolvers = {
       });
     },
     updatePatient: async (parent, args) => {
-      const patient = await db.patient.findByPk(args.id);
-      if (!patient) {
-        throw new Error('Invalid patient ID');
-      }
-      if (args.collectionPointId) {
-        const collectionPoint = await db.collectionPoint.findByPk(
-          args.collectionPointId
-        );
-        if (!collectionPoint) {
-          throw new Error('Invalid collection point ID');
+      await db.patient.findByPk(args.id).then((patient) => {
+        if (!patient) {
+          throw new Error('Invalid patient ID: ' + args.id);
         }
+      });
+      if (args.collectionPointId) {
+        await validators.validateCollectionPoint(args.collectionPointId);
       }
       if (args.hospitalId) {
-        const hospital = await db.hospital.findByPk(args.hospitalId);
-        if (!hospital) {
-          throw new Error('Invalid hospital ID');
-        }
+        await validators.validateHospital(args.hospitalId);
       }
       if (args.ambulanceId) {
-        const ambulance = await db.ambulance.findByPk(args.ambulanceId);
-        if (!ambulance) {
-          throw new Error('Invalid ambulance ID');
-        }
+        await validators.validateAmbulance(args.ambulanceId);
       }
+
       await db.patient.update(
         {
           gender: args.gender,
@@ -102,25 +82,24 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
-    restorePatient: async (parent, args) => {
-      await db.patient.restore({
-        where: { id: args.id },
-      });
-
-      return db.patient.findByPk(args.id);
-    },
-    // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
-    deletePatient: async (parent, args) => {
-      const isDeleted = await db.patient.update(
-        {
-          status: 'DELETED',
-        },
-        {
+    restorePatient: (parent, args) =>
+      db.patient
+        .restore({
           where: { id: args.id },
-        }
-      );
-      return isDeleted[0];
-    },
+        })
+        .then(() => db.patient.findByPk(args.id)),
+    // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
+    deletePatient: (parent, args) =>
+      db.patient
+        .update(
+          {
+            status: 'DELETED',
+          },
+          {
+            where: { id: args.id },
+          }
+        )
+        .then((isDeleted) => isDeleted[0]),
   },
 };
 
