@@ -56,7 +56,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        gender: 'unknown',
+        gender: 'Male',
         age: 21,
         runNumber: 65433,
         barcodeValue: '9876FY54',
