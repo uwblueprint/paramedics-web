@@ -16,6 +16,7 @@ module.exports = {
           { gender: 'Female' },
           { transaction: t }
         ),
+      ]).then(() =>
         queryInterface.changeColumn(
           'patients',
           'gender',
@@ -25,8 +26,8 @@ module.exports = {
           {
             transaction: t,
           }
-        ),
-      ]);
+        )
+      );
     });
   },
 

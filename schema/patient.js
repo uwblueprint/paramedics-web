@@ -14,7 +14,7 @@ const patientSchema = `
     DELETED
   }
 
-  enum gender {
+  enum Gender {
     M
     F
   }
@@ -27,7 +27,7 @@ const patientSchema = `
 
   extend type Mutation {
     addPatient(
-      gender: gender,
+      gender: Gender,
       age: Int,
       runNumber: Int,
       barcodeValue: String!,
@@ -43,7 +43,7 @@ const patientSchema = `
     
     updatePatient(
       id: ID!,
-      gender: gender,
+      gender: Gender,
       age: Int,
       runNumber: Int,
       barcodeValue: String,
@@ -64,7 +64,7 @@ const patientSchema = `
   
   type Patient {
     id: ID!,
-    gender: gender,
+    gender: Gender,
     age: Int,
     runNumber: Int,
     barcodeValue: String,
