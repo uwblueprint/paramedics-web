@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "apollo-server": "^2.14.2",
-    "apollo-server-express": "^1.4.0",
+    "apollo-server-express": "^2.16.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "dot-prop": "^5.2.0",
