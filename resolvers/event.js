@@ -59,7 +59,7 @@ const eventResolvers = {
         }));
     },
     updateEvent: async (parent, args) => {
-      await validators.validateEvent(args.eventId);
+      await validators.validateEvent(args.id);
       if (args.createdBy) {
         await validators.validateUser(args.createdBy);
       }
