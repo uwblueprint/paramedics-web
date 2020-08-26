@@ -32,7 +32,7 @@ module.exports = {
 
     return queryInterface.bulkInsert('patients', [
       {
-        gender: 'Male',
+        gender: 'M',
         age: 19,
         barcodeValue: '1525242sa',
         collectionPointId: collectionPoint.id,
@@ -44,7 +44,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        gender: 'Female',
+        gender: 'F',
         runNumber: 65433,
         barcodeValue: '9876F5E4',
         collectionPointId: collectionPoint.id,
@@ -56,7 +56,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        gender: 'Male',
+        gender: 'M',
         age: 21,
         runNumber: 65433,
         barcodeValue: '9876FY54',

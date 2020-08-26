@@ -6,14 +6,8 @@ module.exports = {
       return Promise.all([
         queryInterface.bulkUpdate(
           'patients',
-          { gender: 'M' },
-          { gender: 'Male' },
-          { transaction: t }
-        ),
-        queryInterface.bulkUpdate(
-          'patients',
           { gender: 'F' },
-          { gender: 'Female' },
+          { gender: { [Sequelize.Op.regexp]: '.*' } },
           { transaction: t }
         ),
       ]).then(() =>
@@ -44,22 +38,26 @@ module.exports = {
             transaction: t,
           }
         ),
-        queryInterface.sequelize.query('DROP TYPE enum_patients_gender;', {
-          transaction: t,
-        }),
-        queryInterface.bulkUpdate(
-          'patients',
-          { gender: 'Male' },
-          { gender: 'M' },
-          { transaction: t }
-        ),
-        queryInterface.bulkUpdate(
-          'patients',
-          { gender: 'Female' },
-          { gender: 'F' },
-          { transaction: t }
-        ),
-      ]);
+      ])
+        .then(
+          queryInterface.sequelize.query('DROP TYPE enum_patients_gender;', {
+            transaction: t,
+          })
+        )
+        .then(
+          queryInterface.bulkUpdate(
+            'patients',
+            { gender: 'Male' },
+            { gender: 'M' },
+            { transaction: t }
+          ),
+          queryInterface.bulkUpdate(
+            'patients',
+            { gender: 'Female' },
+            { gender: 'F' },
+            { transaction: t }
+          )
+        );
     });
   },
 };
