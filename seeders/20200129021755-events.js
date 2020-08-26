@@ -1,18 +1,19 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface) => {
     const user = await db.user.create({
-      name: "Capt Holt",
-      email: "capt.holt@asd.com",
-      password: "asdfgh1234",
+      name: 'Capt Holt',
+      email: 'capt.holt@asd.com',
+      accessLevel: 'COMMANDER',
+      password: 'asdfgh1234',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
-    return queryInterface.bulkInsert("events", [
+    return queryInterface.bulkInsert('events', [
       {
         name: "St Patrick's Day",
         eventDate: new Date(),
@@ -22,16 +23,16 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        name: "Homecoming",
+        name: 'Homecoming',
         eventDate: new Date(),
         createdBy: user.id,
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
     ]);
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("events", null, {});
-  }
+  down: (queryInterface) => {
+    return queryInterface.bulkDelete('events', null, {});
+  },
 };

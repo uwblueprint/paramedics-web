@@ -1,12 +1,13 @@
-"use strict";
+'use strict';
 
-const db = require("../models");
+const db = require('../models');
+const validators = require('../utils/validators');
 
 const locationPinResolvers = {
   Query: {
     pins: () => db.locationPins.findAll(),
-    pin: (obj, args, context, info) => db.locationPins.findByPk(args.id),
-    pinsForEvent: (obj, args, context, info) =>
+    pin: (parent, args) => db.locationPins.findByPk(args.id),
+    pinsForEvent: (parent, args) =>
       db.locationPins.findAll({
         where: {
           eventId: args.eventId,
@@ -15,18 +16,14 @@ const locationPinResolvers = {
   },
 
   LocationPin: {
-    eventId: (obj, args, context, info) => db.event.findByPk(obj.eventId),
+    eventId: (parent) => db.event.findByPk(parent.eventId),
   },
 
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
-      //Checks if eventId is valid
-      const event = await db.event.findByPk(args.eventId);
+      await validators.validateEvent(args.eventId);
 
-      if (!event) {
-        throw new Error("Invalid event ID");
-      }
       return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
@@ -36,12 +33,8 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
-      //Checks if eventId is valid
       if (args.eventId) {
-        const event = await db.event.findByPk(args.eventId);
-        if (!event) {
-          throw new Error("Invalid event ID");
-        }
+        await validators.validateEvent(args.eventId);
       }
 
       await db.locationPins
@@ -60,21 +53,29 @@ const locationPinResolvers = {
           }
         )
         .then((rowsAffected) => {
-          if (rowsAffected[0] == 0) {
-            throw new Error("This location pin does not exist");
+          if (rowsAffected[0] === 0) {
+            throw new Error('Failed update for location pin ID: ' + args.id);
           }
         });
       return db.locationPins.findByPk(args.id);
     },
-    deleteLocationPin: (parent, args) => {
+    restoreLocationPin: (parent, args) => {
+      db.locationPins
+        .restore({
+          where: {
+            id: args.id,
+          },
+        })
+        .then(() => db.locationPins.findByPk(args.id));
+    },
+    deleteLocationPin: (parent, args) =>
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
-      return db.locationPins.destroy({
+      db.locationPins.destroy({
         where: {
           id: args.id,
         },
-      });
-    },
+      }),
   },
 };
 

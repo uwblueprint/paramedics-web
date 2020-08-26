@@ -1,64 +1,64 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(t => {
+    return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn(
-          "events",
-          "date",
+          'events',
+          'date',
           {
-            type: Sequelize.DataTypes.STRING
+            type: Sequelize.DataTypes.STRING,
           },
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "events",
-          "createdBy",
+          'events',
+          'createdBy',
           {
-            type: Sequelize.DataTypes.INTEGER
+            type: Sequelize.DataTypes.INTEGER,
           },
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "events",
-          "isActive",
+          'events',
+          'isActive',
           {
-            type: Sequelize.DataTypes.BOOLEAN
+            type: Sequelize.DataTypes.BOOLEAN,
           },
           { transaction: t }
-        )
+        ),
       ]);
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(t => {
+    return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.removeColumn(
-          "events",
-          "date",
+          'events',
+          'date',
           {
-            type: Sequelize.DataTypes.STRING
+            type: Sequelize.DataTypes.STRING,
           },
           { transaction: t }
         ),
         queryInterface.removeColumn(
-          "events",
-          "createdBy",
+          'events',
+          'createdBy',
           {
-            type: Sequelize.DataTypes.INTEGER
+            type: Sequelize.DataTypes.INTEGER,
           },
           { transaction: t }
         ),
         queryInterface.removeColumn(
-          "events",
-          "isActive",
+          'events',
+          'isActive',
           {
-            type: Sequelize.DataTypes.Bool
+            type: Sequelize.DataTypes.Bool,
           },
           { transaction: t }
-        )
+        ),
       ]);
     });
-  }
+  },
 };

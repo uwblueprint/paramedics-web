@@ -1,88 +1,106 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const patientResolvers = {
-    Query: {
-        patients: () => db.patient.findAll(),
-        patient(obj, args, context, info) {
-            return db.patient.findByPk(args.id);
-        },
+  Query: {
+    patients: () => db.patient.findAll(),
+    patient: (parent, args) => db.patient.findByPk(args.id),
+    patientsByCcp: (parent, args) =>
+      db.patient.findAll({
+        where: { collectionPointId: args.collectionPointId },
+      }),
+  },
+  Patient: {
+    collectionPointId: (parent) =>
+      db.collectionPoint.findByPk(parent.collectionPointId),
+    hospitalId: (parent) => db.hospital.findByPk(parent.hospitalId),
+    ambulanceId: (parent) => db.ambulance.findByPk(parent.ambulanceId),
+  },
+  Mutation: {
+    addPatient: async (parent, args) => {
+      await validators.validateCollectionPoint(args.collectionPointId);
+      if (args.hospitalId) {
+        await validators.validateHospital(args.hospitalId);
+      }
+      if (args.ambulanceId) {
+        await validators.validateAmbulance(args.ambulanceId);
+      }
+
+      return db.patient.create({
+        gender: args.gender,
+        age: args.age,
+        runNumber: args.runNumber,
+        barcodeValue: args.barcodeValue,
+        collectionPointId: args.collectionPointId,
+        status: args.status,
+        triageCategory: args.triageCategory,
+        triageLevel: args.triageLevel,
+        notes: args.notes,
+        transportTime: args.transportTime,
+        hospitalId: args.hospitalId,
+        ambulanceId: args.ambulanceId,
+      });
     },
-    Patient: {
-        collectionPointId: (obj, args, context, info) => db.collectionPoint.findByPk(obj.collectionPointId),
-        hospitalId: (obj, args, context, info) => db.hospital.findByPk(obj.hospitalId)
+    updatePatient: async (parent, args) => {
+      await db.patient.findByPk(args.id).then((patient) => {
+        if (!patient) {
+          throw new Error('Invalid patient ID: ' + args.id);
+        }
+      });
+      if (args.collectionPointId) {
+        await validators.validateCollectionPoint(args.collectionPointId);
+      }
+      if (args.hospitalId) {
+        await validators.validateHospital(args.hospitalId);
+      }
+      if (args.ambulanceId) {
+        await validators.validateAmbulance(args.ambulanceId);
+      }
+
+      await db.patient.update(
+        {
+          gender: args.gender,
+          age: args.age,
+          runNumber: args.runNumber,
+          barcodeValue: args.barcodeValue,
+          collectionPointId: args.collectionPointId,
+          status: args.status,
+          triageCategory: args.triageCategory,
+          triageLevel: args.triageLevel,
+          notes: args.notes,
+          transportTime: args.transportTime,
+          hospitalId: args.hospitalId,
+          ambulanceId: args.ambulanceId,
+        },
+        {
+          where: {
+            id: args.id,
+          },
+        }
+      );
+      return db.patient.findByPk(args.id);
     },
-    Mutation: {
-        addPatient: async (parent, args) => {
-            const collectionPoint = await db.collectionPoint.findByPk(args.collectionPointId);
-            if (!collectionPoint) {
-                throw new Error("Invalid collection point ID");
-            }
-            if (args.hospitalId) {
-                const hospital = await db.hospital.findByPk(args.hospitalId);
-                if (!hospital) {
-                    throw new Error("Invalid hospital ID");
-                }
-            }
-            return db.patient.create({
-                gender: args.gender,
-                age: args.age,
-                runNumber: args.runNumber,
-                barcodeValue: args.barcodeValue,
-                collectionPointId: args.collectionPointId,
-                status: args.status,
-                triageCategory: args.triageCategory,
-                triageLevel: args.triageLevel,
-                notes: args.notes,
-                transportTime: args.transportTime,
-                hospitalId: args.hospitalId
-            });
-        },
-        updatePatient: async (parent, args) => {
-            const patient = await db.patient.findByPk(args.id);
-            if (!patient) {
-                throw new Error("Invalid patient ID");
-            }
-            if (args.collectionPointId) {
-                const collectionPoint = await db.collectionPoint.findByPk(args.collectionPointId);
-                if (!collectionPoint) {
-                    throw new Error("Invalid collection point ID");
-                }
-            }
-            if (args.hospitalId) {
-                const hospital = await db.hospital.findByPk(args.hospitalId);
-                if (!hospital) {
-                    throw new Error("Invalid hospital ID");
-                }
-            }
-            await db.patient.update({
-                gender: args.gender,
-                age: args.age,
-                runNumber: args.runNumber,
-                barcodeValue: args.barcodeValue,
-                collectionPointId: args.collectionPointId,
-                status: args.status,
-                triageCategory: args.triageCategory,
-                triageLevel: args.triageLevel,
-                notes: args.notes,
-                transportTime: args.transportTime,
-                hospitalId: args.hospitalId
-            },
-                {
-                    where: {
-                        id: args.id
-                    }
-                }
-            );
-            return db.patient.findByPk(args.id);
-        },
-        deletePatient: async (parent, args) => {
-            return db.patient.destroy({
-                where: { id: args.id }
-            });
-        },
-    },
+    restorePatient: (parent, args) =>
+      db.patient
+        .restore({
+          where: { id: args.id },
+        })
+        .then(() => db.patient.findByPk(args.id)),
+    // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
+    deletePatient: (parent, args) =>
+      db.patient
+        .update(
+          {
+            status: 'DELETED',
+          },
+          {
+            where: { id: args.id },
+          }
+        )
+        .then((isDeleted) => isDeleted[0]),
+  },
 };
 
 exports.patientResolvers = patientResolvers;

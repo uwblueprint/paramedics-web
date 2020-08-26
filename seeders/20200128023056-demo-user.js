@@ -1,35 +1,35 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.bulkInsert('users', [
       {
         name: 'John Doe',
         email: 'example@example.com',
-        accessLevel: "COMMANDER",
+        accessLevel: 'COMMANDER',
         emergencyContact: '1234567890',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
         name: 'Clark Kent',
         email: 'clark.kent@example.com',
-        accessLevel: "SUPERVISOR",
+        accessLevel: 'SUPERVISOR',
         emergencyContact: '1234567890',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
         name: 'Chris Paul',
         email: 'chris.paul@example.com',
-        accessLevel: "ADMIN",
+        accessLevel: 'ADMIN',
         emergencyContact: '1234567890',
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     ]);
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.bulkDelete('users', null, {});
-  }
+  },
 };

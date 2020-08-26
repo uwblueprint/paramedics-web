@@ -1,10 +1,8 @@
-"use strict";
-
-const Event = require("./event");
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   const locationPin = sequelize.define(
-    "locationPins",
+    'locationPins',
     {
       label: DataTypes.STRING,
       eventId: DataTypes.INTEGER,
@@ -14,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     { paranoid: true }
   );
-  locationPin.associate = function (models) {
+  locationPin.associate = (models) => {
     // associations can be defined here
 
-    locationPin.belongsTo(Event(sequelize, DataTypes), {
-      foreignKey: "eventId",
-      targetKey: "id",
+    locationPin.belongsTo(models.event, {
+      foreignKey: 'eventId',
+      targetKey: 'id',
     });
   };
   return locationPin;
