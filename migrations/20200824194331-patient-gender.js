@@ -11,7 +11,8 @@ module.exports = {
             gender: {
               [Sequelize.Op.notIn]: ['F', 'Female', 'Male', 'M'],
             },
-          }
+          },
+          { transaction: t }
         ),
       ])
         .then(
