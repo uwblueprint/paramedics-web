@@ -7,21 +7,39 @@ module.exports = {
         queryInterface.bulkUpdate(
           'patients',
           { gender: 'F' },
-          { gender: { [Sequelize.Op.regexp]: '.*' } },
-          { transaction: t }
-        ),
-      ]).then(() =>
-        queryInterface.changeColumn(
-          'patients',
-          'gender',
           {
-            type: Sequelize.DataTypes.ENUM('M', 'F'),
-          },
-          {
-            transaction: t,
+            gender: {
+              [Sequelize.Op.notIn]: ['F', 'Female', 'Male', 'M'],
+            },
           }
-        )
-      );
+        ),
+      ])
+        .then(() => {
+          queryInterface.bulkUpdate(
+            'patients',
+            { gender: 'F' },
+            { gender: 'Female' },
+            { transaction: t }
+          ),
+            queryInterface.bulkUpdate(
+              'patients',
+              { gender: 'M' },
+              { gender: 'Male' },
+              { transacton: t }
+            );
+        })
+        .then(() =>
+          queryInterface.changeColumn(
+            'patients',
+            'gender',
+            {
+              type: Sequelize.DataTypes.ENUM('M', 'F'),
+            },
+            {
+              transaction: t,
+            }
+          )
+        );
     });
   },
 
