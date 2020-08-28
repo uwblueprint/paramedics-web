@@ -14,33 +14,30 @@ module.exports = {
           },
           { transaction: t }
         ),
-      ])
-        .then(
-          queryInterface.bulkUpdate(
-            'patients',
-            { gender: 'F' },
-            { gender: 'Female' },
-            { transaction: t }
-          ),
-          queryInterface.bulkUpdate(
-            'patients',
-            { gender: 'M' },
-            { gender: 'Male' },
-            { transacton: t }
-          )
+        queryInterface.bulkUpdate(
+          'patients',
+          { gender: 'F' },
+          { gender: 'Female' },
+          { transaction: t }
+        ),
+        queryInterface.bulkUpdate(
+          'patients',
+          { gender: 'M' },
+          { gender: 'Male' },
+          { transacton: t }
+        ),
+      ]).then(() =>
+        queryInterface.changeColumn(
+          'patients',
+          'gender',
+          {
+            type: Sequelize.DataTypes.ENUM('M', 'F'),
+          },
+          {
+            transaction: t,
+          }
         )
-        .then(() =>
-          queryInterface.changeColumn(
-            'patients',
-            'gender',
-            {
-              type: Sequelize.DataTypes.ENUM('M', 'F'),
-            },
-            {
-              transaction: t,
-            }
-          )
-        );
+      );
     });
   },
 
