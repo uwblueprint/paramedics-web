@@ -21,7 +21,7 @@ const {
   GraphQLTime,
   GraphQLDateTime,
 } = require('graphql-iso-date');
-const { makeExecutableSchema } = require('graphql-tools');
+const { makeExecutableSchema } = require('apollo-server-express');
 
 const scalars = `
   scalar Date
