@@ -43,8 +43,8 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
-      return Promise.all([
-        queryInterface.changeColumn(
+      return queryInterface
+        .changeColumn(
           'patients',
           'gender',
           {
@@ -53,26 +53,27 @@ module.exports = {
           {
             transaction: t,
           }
-        ),
-      ])
-        .then(
+        )
+        .then(() =>
           queryInterface.sequelize.query('DROP TYPE enum_patients_gender;', {
             transaction: t,
           })
         )
-        .then(
-          queryInterface.bulkUpdate(
-            'patients',
-            { gender: 'Male' },
-            { gender: 'M' },
-            { transaction: t }
-          ),
-          queryInterface.bulkUpdate(
-            'patients',
-            { gender: 'Female' },
-            { gender: 'F' },
-            { transaction: t }
-          )
+        .then(() =>
+          Promise.all([
+            queryInterface.bulkUpdate(
+              'patients',
+              { gender: 'Male' },
+              { gender: 'M' },
+              { transaction: t }
+            ),
+            queryInterface.bulkUpdate(
+              'patients',
+              { gender: 'Female' },
+              { gender: 'F' },
+              { transaction: t }
+            ),
+          ])
         );
     });
   },
