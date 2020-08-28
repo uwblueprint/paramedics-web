@@ -20,8 +20,8 @@ const {
   GraphQLDate,
   GraphQLTime,
   GraphQLDateTime,
-} = require("graphql-iso-date");
-const { makeExecutableSchema } = require("graphql-tools");
+} = require('graphql-iso-date');
+const { makeExecutableSchema } = require('graphql-tools');
 
 const scalars = `
   scalar Date
