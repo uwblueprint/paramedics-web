@@ -294,7 +294,16 @@ const eventResolvers = {
         ],
       });
     },
+    restoreEvent: async (parent, args) => {
+      await db.event.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
 
+      return db.event.findByPk(args.id);
+    },
     deleteEvent: async (parent, args) => {
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
