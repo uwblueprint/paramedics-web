@@ -45,39 +45,11 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
-      await Promise.all([
-        db.hospital.restore({
-          where: {
-            id: args.id,
-          },
-        }),
-        // Restoring event association if event is also avaliable
-        db.eventHospitals
-          .findAll({
-            where: {
-              hospitalId: args.id,
-            },
-            include: [
-              {
-                model: db.event,
-                required: true,
-              },
-            ],
-            paranoid: false,
-          })
-          .then((associatedEvents) =>
-            Promise.all(
-              associatedEvents.map((associatedEvent) =>
-                db.eventHospitals.restore({
-                  where: {
-                    eventId: associatedEvent.eventId,
-                    hospitalId: args.id,
-                  },
-                })
-              )
-            )
-          ),
-      ]);
+      await db.hospital.restore({
+        where: {
+          id: args.id,
+        },
+      });
 
       return db.hospital.findByPk(args.id);
     },

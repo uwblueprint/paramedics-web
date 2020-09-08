@@ -45,39 +45,11 @@ const ambulanceResolvers = {
           return db.ambulance.findByPk(args.id);
         }),
     restoreAmbulance: async (parent, args) => {
-      await Promise.all([
-        db.ambulance.restore({
-          where: {
-            id: args.id,
-          },
-        }),
-        // Restoring event association if event also availiable
-        db.eventAmbulances
-          .findAll({
-            where: {
-              ambulanceId: args.id,
-            },
-            include: [
-              {
-                model: db.event,
-                required: true,
-              },
-            ],
-            paranoid: false,
-          })
-          .then((associatedEvents) =>
-            Promise.all(
-              associatedEvents.map((associatedEvent) =>
-                db.eventAmbulances.restore({
-                  where: {
-                    eventId: associatedEvent.eventId,
-                    ambulanceId: args.id,
-                  },
-                })
-              )
-            )
-          ),
-      ]);
+      await db.ambulance.restore({
+        where: {
+          id: args.id,
+        },
+      });
 
       return db.ambulance.findByPk(args.id);
     },
