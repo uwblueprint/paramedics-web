@@ -45,13 +45,13 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
-      await db.hospital.restore({
-        where: {
-          id: args.id,
-        },
-      });
-
-      return db.hospital.findByPk(args.id);
+      return db.hospital
+        .restore({
+          where: {
+            id: args.id,
+          },
+        })
+        .then(() => db.hospital.findByPk(args.id));
     },
     deleteHospital: async (parent, args) => {
       await Promise.all([

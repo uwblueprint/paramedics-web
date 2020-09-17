@@ -45,13 +45,13 @@ const ambulanceResolvers = {
           return db.ambulance.findByPk(args.id);
         }),
     restoreAmbulance: async (parent, args) => {
-      await db.ambulance.restore({
-        where: {
-          id: args.id,
-        },
-      });
-
-      return db.ambulance.findByPk(args.id);
+      return db.ambulance
+        .restore({
+          where: {
+            id: args.id,
+          },
+        })
+        .then(() => db.ambulance.findByPk(args.id));
     },
     deleteAmbulance: async (parent, args) => {
       await Promise.all([

@@ -295,14 +295,14 @@ const eventResolvers = {
       });
     },
     restoreEvent: async (parent, args) => {
-      await db.event.restore({
-        where: {
-          id: args.id,
-        },
-        individualHooks: true,
-      });
-
-      return db.event.findByPk(args.id);
+      return db.event
+        .restore({
+          where: {
+            id: args.id,
+          },
+          individualHooks: true,
+        })
+        .then(() => db.event.findByPk(args.id));
     },
     deleteEvent: async (parent, args) => {
       // Return status for destroy
