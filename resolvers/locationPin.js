@@ -59,7 +59,15 @@ const locationPinResolvers = {
         });
       return db.locationPins.findByPk(args.id);
     },
-    restoreLocationPin: (parent, args) => {
+    restoreLocationPin: async (parent, args) => {
+      await db.locationPins
+        .findByPk(args.id, { paranoid: false })
+        .then((locationPin) => {
+          if (!locationPin) {
+            throw new Error('Invalid location pin: ' + args.id);
+          }
+        });
+
       db.locationPins
         .restore({
           where: {

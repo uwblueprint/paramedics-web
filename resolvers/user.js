@@ -37,14 +37,21 @@ const userResolvers = {
           }
           return db.user.findByPk(args.id);
         }),
-    restoreUser: (parent, args) =>
-      db.user
+    restoreUser: async (parent, args) => {
+      await db.user.findByPk(args.id, { paranoid: false }).then((user) => {
+        if (!user) {
+          throw new Error('Invalid user: ' + args.id);
+        }
+      });
+
+      return db.user
         .restore({
           where: {
             id: args.id,
           },
         })
-        .then(() => db.user.findByPk(args.id)),
+        .then(() => db.user.findByPk(args.id));
+    },
     deleteUser: (parent, args) =>
       db.user.destroy({
         where: {

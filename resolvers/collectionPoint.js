@@ -61,15 +61,24 @@ const collectionPointResolvers = {
         });
       return db.collectionPoint.findByPk(args.id);
     },
-    restoreCollectionPoint: (parent, args) =>
-      db.collectionPoint
+    restoreCollectionPoint: async (parent, args) => {
+      await db.collectionPoint
+        .findByPk(args.id, { paranoid: false })
+        .then((ccp) => {
+          if (!ccp) {
+            throw new Error('Invalid collection point: ' + args.id);
+          }
+        });
+
+      return db.collectionPoint
         .restore({
           where: {
             id: args.id,
           },
           individualHooks: true,
         })
-        .then(() => db.collectionPoint.findByPk(args.id)),
+        .then(() => db.collectionPoint.findByPk(args.id));
+    },
     deleteCollectionPoint: (parent, args) =>
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise

@@ -45,6 +45,14 @@ const ambulanceResolvers = {
           return db.ambulance.findByPk(args.id);
         }),
     restoreAmbulance: async (parent, args) => {
+      await db.ambulance
+        .findByPk(args.id, { paranoid: false })
+        .then((ambulance) => {
+          if (!ambulance) {
+            throw new Error('Invalid ambulance: ' + args.id);
+          }
+        });
+
       return db.ambulance
         .restore({
           where: {

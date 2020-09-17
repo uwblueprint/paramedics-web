@@ -295,6 +295,12 @@ const eventResolvers = {
       });
     },
     restoreEvent: async (parent, args) => {
+      await db.event.findByPk(args.id, { paranoid: false }).then((event) => {
+        if (!event) {
+          throw new Error('Invalid event: ' + args.id);
+        }
+      });
+
       return db.event
         .restore({
           where: {

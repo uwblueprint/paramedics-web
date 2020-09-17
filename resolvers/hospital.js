@@ -45,6 +45,13 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
+      await db.hospital
+        .findByPk(args.id, { paranoid: false })
+        .then((hospital) => {
+          if (!hospital) {
+            throw new Error('Invalid hospital: ' + args.id);
+          }
+        });
       return db.hospital
         .restore({
           where: {
