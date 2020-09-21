@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const ambulanceResolvers = {
   Query: {
@@ -26,7 +27,7 @@ const ambulanceResolvers = {
       db.ambulance.create({
         vehicleNumber: args.vehicleNumber,
       }),
-    updateAmbulance: (parent, args) =>
+    updateAmbulance: (parent, args) => {
       db.ambulance
         .update(
           {
@@ -43,23 +44,18 @@ const ambulanceResolvers = {
             throw new Error('Failed update for ambulance ID: ' + args.id);
           }
           return db.ambulance.findByPk(args.id);
-        }),
-    restoreAmbulance: async (parent, args) => {
-      await db.ambulance
-        .findByPk(args.id, { paranoid: false })
-        .then((ambulance) => {
-          if (!ambulance) {
-            throw new Error('Invalid ambulance: ' + args.id);
-          }
         });
-
-      return db.ambulance
-        .restore({
-          where: {
-            id: args.id,
-          },
-        })
-        .then(() => db.ambulance.findByPk(args.id));
+    },
+    restoreAmbulance: async (parent, args) => {
+      await validators.validateAmbulance(args.id, true).catch((error) => {
+        throw error;
+      });
+      await db.ambulance.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.ambulance.findByPk(args.id);
     },
     deleteAmbulance: async (parent, args) => {
       await Promise.all([

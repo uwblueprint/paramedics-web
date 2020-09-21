@@ -60,21 +60,16 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     restoreLocationPin: async (parent, args) => {
-      await db.locationPins
-        .findByPk(args.id, { paranoid: false })
-        .then((locationPin) => {
-          if (!locationPin) {
-            throw new Error('Invalid location pin: ' + args.id);
-          }
-        });
+      await validators.validateLocationPin(args.id, true).catch((error) => {
+        throw error;
+      });
 
-      db.locationPins
-        .restore({
-          where: {
-            id: args.id,
-          },
-        })
-        .then(() => db.locationPins.findByPk(args.id));
+      await db.locationPins.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.locationPins.findByPk(args.id);
     },
     deleteLocationPin: (parent, args) =>
       // Return status for destroy

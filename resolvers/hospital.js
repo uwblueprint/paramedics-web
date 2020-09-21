@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const hospitalResolvers = {
   Query: {
@@ -45,20 +46,15 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
-      await db.hospital
-        .findByPk(args.id, { paranoid: false })
-        .then((hospital) => {
-          if (!hospital) {
-            throw new Error('Invalid hospital: ' + args.id);
-          }
-        });
-      return db.hospital
-        .restore({
-          where: {
-            id: args.id,
-          },
-        })
-        .then(() => db.hospital.findByPk(args.id));
+      await validators.validateHospital(args.id, true).catch((error) => {
+        throw error;
+      });
+      await db.hospital.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
       await Promise.all([

@@ -295,20 +295,16 @@ const eventResolvers = {
       });
     },
     restoreEvent: async (parent, args) => {
-      await db.event.findByPk(args.id, { paranoid: false }).then((event) => {
-        if (!event) {
-          throw new Error('Invalid event: ' + args.id);
-        }
+      await validators.validateEvent(args.id, true).catch((error) => {
+        throw error;
       });
-
-      return db.event
-        .restore({
-          where: {
-            id: args.id,
-          },
-          individualHooks: true,
-        })
-        .then(() => db.event.findByPk(args.id));
+      await db.event.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
+      return db.event.findByPk(args.id);
     },
     deleteEvent: async (parent, args) => {
       // Return status for destroy

@@ -62,22 +62,17 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     restoreCollectionPoint: async (parent, args) => {
-      await db.collectionPoint
-        .findByPk(args.id, { paranoid: false })
-        .then((ccp) => {
-          if (!ccp) {
-            throw new Error('Invalid collection point: ' + args.id);
-          }
-        });
+      await validators.validateCollectionPoint(args.id, true).catch((error) => {
+        throw error;
+      });
 
-      return db.collectionPoint
-        .restore({
-          where: {
-            id: args.id,
-          },
-          individualHooks: true,
-        })
-        .then(() => db.collectionPoint.findByPk(args.id));
+      await db.collectionPoint.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
+      return db.collectionPoint.findByPk(args.id);
     },
     deleteCollectionPoint: (parent, args) =>
       // Return status for destroy
