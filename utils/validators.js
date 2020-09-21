@@ -97,7 +97,7 @@ module.exports = {
   validateLocationPin: (
     locationPinId,
     checkParanoid = false,
-    errorMessage = 'Invalid location pin ID: ' + locaionPinId
+    errorMessage = 'Invalid location pin ID: ' + locationPinId
   ) => {
     const options = { paranoid: true };
     if (checkParanoid) {
