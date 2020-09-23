@@ -13,16 +13,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.user
-      .findByPk(userId, options)
-      .then((user) => {
-        if (!user) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.user.findByPk(userId, options).then((user) => {
+      if (!user) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validateEvent: (
     eventId,
@@ -33,16 +28,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.event
-      .findByPk(eventId, options)
-      .then((event) => {
-        if (!event) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.event.findByPk(eventId, options).then((event) => {
+      if (!event) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validateCollectionPoint: (
     ccpId,
@@ -53,16 +43,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.collectionPoint
-      .findByPk(ccpId, options)
-      .then((ccp) => {
-        if (!ccp) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.collectionPoint.findByPk(ccpId, options).then((ccp) => {
+      if (!ccp) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validateAmbulance: (
     ambulanceId,
@@ -73,16 +58,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.ambulance
-      .findByPk(ambulanceId, options)
-      .then((ambulance) => {
-        if (!ambulance) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.ambulance.findByPk(ambulanceId, options).then((ambulance) => {
+      if (!ambulance) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validateHospital: (
     hospitalId,
@@ -93,16 +73,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.hospital
-      .findByPk(hospitalId, options)
-      .then((hospital) => {
-        if (!hospital) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.hospital.findByPk(hospitalId, options).then((hospital) => {
+      if (!hospital) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validatePatient: (
     patientId,
@@ -113,16 +88,11 @@ module.exports = {
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.patient
-      .findByPk(patientId, options)
-      .then((patient) => {
-        if (!patient) {
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return db.patient.findByPk(patientId, options).then((patient) => {
+      if (!patient) {
+        throw new Error(errorMessage);
+      }
+    });
   },
   validateLocationPin: (
     locationPinId,
@@ -139,9 +109,6 @@ module.exports = {
         if (!locationPin) {
           throw new Error(errorMessage);
         }
-      })
-      .catch((error) => {
-        throw error;
       });
   },
 };

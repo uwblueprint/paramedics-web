@@ -61,7 +61,6 @@ const locationPinResolvers = {
     },
     restoreLocationPin: async (parent, args) => {
       await validators.validateLocationPin(args.id, true);
-
       await db.locationPins.restore({
         where: {
           id: args.id,

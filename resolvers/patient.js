@@ -84,7 +84,6 @@ const patientResolvers = {
     },
     restorePatient: async (parent, args) => {
       await validators.validatePatient(args.id, true);
-
       await db.patient.restore({
         where: { id: args.id },
       });
