@@ -83,9 +83,7 @@ const patientResolvers = {
       return db.patient.findByPk(args.id);
     },
     restorePatient: async (parent, args) => {
-      await validators.validatePatient(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validatePatient(args.id, true);
 
       await db.patient.restore({
         where: { id: args.id },

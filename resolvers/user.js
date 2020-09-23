@@ -39,9 +39,7 @@ const userResolvers = {
           return db.user.findByPk(args.id);
         }),
     restoreUser: async (parent, args) => {
-      await validators.validateUser(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateUser(args.id, true);
       await db.user.restore({
         where: {
           id: args.id,

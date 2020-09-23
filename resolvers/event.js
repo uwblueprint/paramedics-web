@@ -295,9 +295,7 @@ const eventResolvers = {
       });
     },
     restoreEvent: async (parent, args) => {
-      await validators.validateEvent(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateEvent(args.id, true);
       await db.event.restore({
         where: {
           id: args.id,

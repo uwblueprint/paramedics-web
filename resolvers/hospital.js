@@ -46,9 +46,7 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
-      await validators.validateHospital(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateHospital(args.id, true);
       await db.hospital.restore({
         where: {
           id: args.id,

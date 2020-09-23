@@ -27,7 +27,7 @@ const ambulanceResolvers = {
       db.ambulance.create({
         vehicleNumber: args.vehicleNumber,
       }),
-    updateAmbulance: (parent, args) => {
+    updateAmbulance: (parent, args) =>
       db.ambulance
         .update(
           {
@@ -44,12 +44,9 @@ const ambulanceResolvers = {
             throw new Error('Failed update for ambulance ID: ' + args.id);
           }
           return db.ambulance.findByPk(args.id);
-        });
-    },
+        }),
     restoreAmbulance: async (parent, args) => {
-      await validators.validateAmbulance(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateAmbulance(args.id, true);
       await db.ambulance.restore({
         where: {
           id: args.id,

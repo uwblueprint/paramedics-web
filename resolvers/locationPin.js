@@ -60,9 +60,7 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     restoreLocationPin: async (parent, args) => {
-      await validators.validateLocationPin(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateLocationPin(args.id, true);
 
       await db.locationPins.restore({
         where: {

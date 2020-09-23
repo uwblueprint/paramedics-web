@@ -62,9 +62,7 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     restoreCollectionPoint: async (parent, args) => {
-      await validators.validateCollectionPoint(args.id, true).catch((error) => {
-        throw error;
-      });
+      await validators.validateCollectionPoint(args.id, true);
 
       await db.collectionPoint.restore({
         where: {
