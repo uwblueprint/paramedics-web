@@ -15,6 +15,7 @@ const { ambulanceSchema } = require('./schema/ambulance');
 const { ambulanceResolvers } = require('./resolvers/ambulance');
 const { locationPinSchema } = require('./schema/locationPin');
 const { locationPinResolvers } = require('./resolvers/locationPin');
+const { roleSchema } = require('./schema/role')
 
 const {
   GraphQLDate,
@@ -62,6 +63,7 @@ const schema = makeExecutableSchema({
     collectionPointSchema,
     patientSchema,
     locationPinSchema,
+    roleSchema,
   ],
   resolvers: merge(
     resolvers,
