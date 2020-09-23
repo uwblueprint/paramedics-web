@@ -49,8 +49,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.sequelize.transaction((t) =>
-      queryInterface.dropTable('roles', { transaction: t })
-    );
+    return queryInterface.dropTable('roles');
   },
 };
