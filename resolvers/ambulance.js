@@ -55,27 +55,29 @@ const ambulanceResolvers = {
       return db.ambulance.findByPk(args.id);
     },
     deleteAmbulance: async (parent, args) => {
-      await Promise.all([
-        db.patient
-          .count({
-            where: {
-              ambulanceId: args.id,
-            },
-          })
-          .then((count) => {
-            if (count > 0) {
-              throw new Error(
-                'Deletion failed; there are associated patients for ambulance ID: ' +
-                  args.id
-              );
-            }
-          }),
-        db.eventAmbulances.destroy({
+      await db.patient
+        .count({
           where: {
             ambulanceId: args.id,
           },
-        }),
-      ]);
+        })
+        .then((count) => {
+          if (count > 0) {
+            throw new Error(
+              'Deletion failed; there are associated patients for ambulance ID: ' +
+                args.id
+            );
+          }
+        })
+        .catch((error) => {
+          throw error;
+        });
+
+      await db.eventAmbulances.destroy({
+        where: {
+          ambulanceId: args.id,
+        },
+      });
 
       return db.ambulance.destroy({
         where: {
