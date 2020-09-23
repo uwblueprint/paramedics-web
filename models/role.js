@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const role = sequelize.define(
-    'role',
+    'roles',
     {
       name: DataTypes.STRING,
       displayName: DataTypes.STRING,
