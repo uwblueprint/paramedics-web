@@ -15,7 +15,7 @@ const { ambulanceSchema } = require('./schema/ambulance');
 const { ambulanceResolvers } = require('./resolvers/ambulance');
 const { locationPinSchema } = require('./schema/locationPin');
 const { locationPinResolvers } = require('./resolvers/locationPin');
-const { roleSchema } = require('./schema/role')
+const { roleSchema } = require('./schema/role');
 
 const {
   GraphQLDate,

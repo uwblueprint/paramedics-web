@@ -2,41 +2,55 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) => {
-        return queryInterface.createTable('roles', {
-          id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+    return queryInterface.sequelize.transaction((t) =>
+      queryInterface
+        .createTable(
+          'roles',
+          {
+            id: {
+              allowNull: false,
+              autoIncrement: true,
+              primaryKey: true,
+              type: Sequelize.INTEGER,
+            },
+            name: {
+              type: Sequelize.STRING,
+            },
+            displayName: {
+              type: Sequelize.STRING,
+            },
           },
-          name: {
-            type: Sequelize.STRING
-          }
-        }, { transaction: t }).then(() => {
-          queryInterface.bulkInsert('roles', [
-            {
-              id: 1,
-              name: 'commander',
-            },
-            {
-              id: 2,
-              name: 'supervisor',
-            },
-            {
-              id: 3,
-              name: 'dispatch',
-            }
-          ], { transaction: t })
-        }).catch((e) => {
-          console.log(e);
-        })
-    })
+          { transaction: t }
+        )
+        .then(() =>
+          queryInterface.bulkInsert(
+            'roles',
+            [
+              {
+                id: 1,
+                name: 'COMMANDER',
+                displayName: 'Commander',
+              },
+              {
+                id: 2,
+                name: 'SUPERVISOR',
+                displayName: 'Supervisor',
+              },
+              {
+                id: 3,
+                name: 'DISPATCH',
+                displayName: 'Dispatch',
+              },
+            ],
+            { transaction: t }
+          )
+        )
+    );
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) => {
-        return queryInterface.dropTable('roles', { transaction: t });
-    })
-  }
+  down: (queryInterface) => {
+    return queryInterface.sequelize.transaction((t) =>
+      queryInterface.dropTable('roles', { transaction: t })
+    );
+  },
 };

@@ -5,7 +5,8 @@ const roleSchema = `
 
   type Role {
     id: ID!,
-    name: String
+    name: String!,
+    displayName: String!
   }
   `;
 exports.roleSchema = roleSchema;
