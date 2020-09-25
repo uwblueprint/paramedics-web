@@ -63,7 +63,6 @@ const collectionPointResolvers = {
     },
     restoreCollectionPoint: async (parent, args) => {
       await validators.validateCollectionPoint(args.id, true);
-
       await db.collectionPoint.restore({
         where: {
           id: args.id,

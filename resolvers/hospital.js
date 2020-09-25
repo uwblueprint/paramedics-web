@@ -68,9 +68,6 @@ const hospitalResolvers = {
                 args.id
             );
           }
-        })
-        .catch((error) => {
-          throw error;
         });
       await db.eventHospitals.destroy({
         where: {

@@ -68,9 +68,6 @@ const ambulanceResolvers = {
                 args.id
             );
           }
-        })
-        .catch((error) => {
-          throw error;
         });
 
       await db.eventAmbulances.destroy({
