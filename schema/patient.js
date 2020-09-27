@@ -71,7 +71,7 @@ const patientSchema = `
     collectionPointId: collectionPoint!,
     status: status,
     triageCategory: Int,
-    triageLevel: triageLevel, 
+    triageLevel: triageLevel!, 
     notes: String,
     transportTime: DateTime,
     createdAt: DateTime,
