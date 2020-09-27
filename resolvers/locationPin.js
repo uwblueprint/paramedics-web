@@ -59,14 +59,14 @@ const locationPinResolvers = {
         });
       return db.locationPins.findByPk(args.id);
     },
-    restoreLocationPin: (parent, args) => {
-      db.locationPins
-        .restore({
-          where: {
-            id: args.id,
-          },
-        })
-        .then(() => db.locationPins.findByPk(args.id));
+    restoreLocationPin: async (parent, args) => {
+      await validators.validateLocationPin(args.id, true);
+      await db.locationPins.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.locationPins.findByPk(args.id);
     },
     deleteLocationPin: (parent, args) =>
       // Return status for destroy

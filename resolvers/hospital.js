@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const hospitalResolvers = {
   Query: {
@@ -45,64 +46,34 @@ const hospitalResolvers = {
           return db.hospital.findByPk(args.id);
         }),
     restoreHospital: async (parent, args) => {
-      await Promise.all([
-        db.hospital.restore({
-          where: {
-            id: args.id,
-          },
-        }),
-        // Restoring event association if event is also avaliable
-        db.eventHospitals
-          .findAll({
-            where: {
-              hospitalId: args.id,
-            },
-            include: [
-              {
-                model: db.event,
-                required: true,
-              },
-            ],
-            paranoid: false,
-          })
-          .then((associatedEvents) =>
-            Promise.all(
-              associatedEvents.map((associatedEvent) =>
-                db.eventHospitals.restore({
-                  where: {
-                    eventId: associatedEvent.eventId,
-                    hospitalId: args.id,
-                  },
-                })
-              )
-            )
-          ),
-      ]);
-
+      await validators.validateHospital(args.id, true);
+      await db.hospital.restore({
+        where: {
+          id: args.id,
+        },
+      });
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
-      await Promise.all([
-        db.patient
-          .count({
-            where: {
-              hospitalId: args.id,
-            },
-          })
-          .then((count) => {
-            if (count > 0) {
-              throw new Error(
-                'Deletion failed; there are associated patients for hospital ID: ' +
-                  args.id
-              );
-            }
-          }),
-        db.eventHospitals.destroy({
+      await db.patient
+        .count({
           where: {
             hospitalId: args.id,
           },
-        }),
-      ]);
+        })
+        .then((count) => {
+          if (count > 0) {
+            throw new Error(
+              'Deletion failed; there are associated patients for hospital ID: ' +
+                args.id
+            );
+          }
+        });
+      await db.eventHospitals.destroy({
+        where: {
+          hospitalId: args.id,
+        },
+      });
 
       return db.hospital.destroy({
         where: {
