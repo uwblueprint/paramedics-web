@@ -81,8 +81,8 @@ const hospitalResolvers = {
 
       return db.hospital.findByPk(args.id);
     },
-    deleteHospital: async (parent, args) => {
-      await Promise.all([
+    deleteHospital: async (parent, args) =>
+      Promise.all([
         db.patient
           .count({
             where: {
@@ -102,14 +102,20 @@ const hospitalResolvers = {
             hospitalId: args.id,
           },
         }),
-      ]);
-
-      return db.hospital.destroy({
-        where: {
-          id: args.id,
-        },
-      });
-    },
+      ])
+        .then(() =>
+          db.hospital.destroy({
+            where: {
+              id: args.id,
+            },
+          })
+        )
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for hospital ID: ' + args.id);
+        }),
   },
 };
 

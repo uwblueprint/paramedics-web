@@ -46,11 +46,18 @@ const userResolvers = {
         })
         .then(() => db.user.findByPk(args.id)),
     deleteUser: (parent, args) =>
-      db.user.destroy({
-        where: {
-          id: args.id,
-        },
-      }),
+      db.user
+        .destroy({
+          where: {
+            id: args.id,
+          },
+        })
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for user ID: ' + args.id);
+        }),
   },
 };
 
