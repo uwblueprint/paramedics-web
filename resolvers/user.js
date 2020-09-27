@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const userResolvers = {
   Query: {
@@ -37,14 +38,15 @@ const userResolvers = {
           }
           return db.user.findByPk(args.id);
         }),
-    restoreUser: (parent, args) =>
-      db.user
-        .restore({
-          where: {
-            id: args.id,
-          },
-        })
-        .then(() => db.user.findByPk(args.id)),
+    restoreUser: async (parent, args) => {
+      await validators.validateUser(args.id, true);
+      await db.user.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.user.findByPk(args.id);
+    },
     deleteUser: (parent, args) =>
       db.user
         .destroy({
