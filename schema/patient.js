@@ -67,7 +67,7 @@ const patientSchema = `
     gender: Gender,
     age: Int,
     runNumber: Int,
-    barcodeValue: String,
+    barcodeValue: String!,
     collectionPointId: collectionPoint!,
     status: status,
     triageCategory: Int,
