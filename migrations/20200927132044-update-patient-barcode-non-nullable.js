@@ -12,11 +12,14 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.changeColumn('patients', 'barcodeValue', {
-      type: Sequelize.STRING,
-      allowNull: true,
-      unique: false,
-    });
+    await Promise.all([
+      queryInterface.changeColumn('patients', 'barcodeValue', {
+        type: Sequelize.STRING,
+        allowNull: true,
+        unique: false,
+      }),
+      queryInterface.removeConstraint('patients', 'patients_barcodeValue_key'),
+    ]);
     return queryInterface.sequelize.query(
       `UPDATE patients SET "barcodeValue" = NULL WHERE "barcodeValue" = "id"::varchar`
     );
