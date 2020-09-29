@@ -69,13 +69,18 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     deleteLocationPin: (parent, args) =>
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      db.locationPins.destroy({
-        where: {
-          id: args.id,
-        },
-      }),
+      db.locationPins
+        .destroy({
+          where: {
+            id: args.id,
+          },
+        })
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for location pin ID: ' + args.id);
+        }),
   },
 };
 

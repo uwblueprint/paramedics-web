@@ -15,7 +15,7 @@ const userSchema = `
     updateUser(id: ID!, accessLevel: accessLevel, name: String, email: String,
       emergencyContact: String): User!
     restoreUser(id: ID!): User!
-    deleteUser(id: ID!): Int!
+    deleteUser(id: ID!): ID!
   }
   
   type User {

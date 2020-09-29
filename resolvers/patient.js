@@ -100,7 +100,12 @@ const patientResolvers = {
             where: { id: args.id },
           }
         )
-        .then((isDeleted) => isDeleted[0]),
+        .then((isDeleted) => {
+          if (isDeleted[0] === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for patient ID: ' + args.id);
+        }),
   },
 };
 

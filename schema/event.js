@@ -21,7 +21,7 @@ const eventSchema = `
     deleteAmbulancesFromEvent(eventId: ID!, ambulances: [AmbulanceInput]!): Event
     deleteHospitalsFromEvent(eventId: ID!, hospitals: [HospitalInput]!): Event
     restoreEvent(id: ID!): Event
-    deleteEvent(id: ID!): Int!
+    deleteEvent(id: ID!): ID!
   }
 
   type Event {

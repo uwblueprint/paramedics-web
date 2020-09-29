@@ -54,8 +54,8 @@ const ambulanceResolvers = {
       });
       return db.ambulance.findByPk(args.id);
     },
-    deleteAmbulance: async (parent, args) => {
-      await db.patient
+    deleteAmbulance: async (parent, args) =>
+      db.patient
         .count({
           where: {
             ambulanceId: args.id,
@@ -68,20 +68,27 @@ const ambulanceResolvers = {
                 args.id
             );
           }
-        });
-
-      await db.eventAmbulances.destroy({
-        where: {
-          ambulanceId: args.id,
-        },
-      });
-
-      return db.ambulance.destroy({
-        where: {
-          id: args.id,
-        },
-      });
-    },
+        })
+        .then(() =>
+          db.eventAmbulances.destroy({
+            where: {
+              ambulanceId: args.id,
+            },
+          })
+        )
+        .then(() =>
+          db.ambulance.destroy({
+            where: {
+              id: args.id,
+            },
+          })
+        )
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for ambulance ID: ' + args.id);
+        }),
   },
 };
 
