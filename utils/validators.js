@@ -1,6 +1,6 @@
 'use strict';
 
-const { AuthenticationError } = require('apollo');
+const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 
 // for validating resolver arguments
@@ -76,7 +76,7 @@ module.exports = {
   validateRole: (role, errorMessage = 'Insufficient permission') => {
     // TODO: remove user role when authentication is done
     const userRole = 'Commander';
-    if (role !== userRole) {
+    if (!role.includes(userRole)) {
       throw new AuthenticationError(errorMessage);
     }
   },

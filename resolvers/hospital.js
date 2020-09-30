@@ -1,32 +1,40 @@
 'use strict';
 
 const db = require('../models');
+const validators = require('../utils/validators');
 
 const hospitalResolvers = {
   Query: {
-    hospitals: () =>
+    hospitals: () => {
+      validators.validateRole(['Admin', 'Commander']);
       db.hospital.findAll({
         include: [
           {
             model: db.event,
           },
         ],
-      }),
-    hospital: (parent, args) =>
+      });
+    },
+    hospital: (parent, args) => {
+      validators.validateRole(['Admin', 'Commander']);
       db.hospital.findByPk(args.id, {
         include: [
           {
             model: db.event,
           },
         ],
-      }),
+      });
+    },
   },
   Mutation: {
-    addHospital: (parent, args) =>
+    addHospital: (parent, args) => {
+      validators.validateRole(['Admin', 'Commander']);
       db.hospital.create({
         name: args.name,
-      }),
-    updateHospital: (parent, args) =>
+      });
+    },
+    updateHospital: (parent, args) => {
+      validators.validateRole(['Admin', 'Commander']);
       db.hospital
         .update(
           {
@@ -43,8 +51,10 @@ const hospitalResolvers = {
             throw new Error('Failed update for hospital ID: ' + args.id);
           }
           return db.hospital.findByPk(args.id);
-        }),
+        });
+    },
     restoreHospital: async (parent, args) => {
+      validators.validateRole(['Admin', 'Commander']);
       await Promise.all([
         db.hospital.restore({
           where: {
@@ -82,6 +92,7 @@ const hospitalResolvers = {
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
+      validators.validateRole(['Admin', 'Commander']);
       await Promise.all([
         db.patient
           .count({

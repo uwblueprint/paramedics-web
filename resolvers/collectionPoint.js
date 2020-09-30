@@ -5,10 +5,18 @@ const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
   Query: {
-    collectionPoints: () => db.collectionPoint.findAll(),
-    collectionPoint: (parent, args) => db.collectionPoint.findByPk(args.id),
-    collectionPointsByEvent: (parent, args) =>
-      db.collectionPoint.findAll({ where: { eventId: args.eventId } }),
+    collectionPoints: () => {
+      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      db.collectionPoint.findAll();
+    },
+    collectionPoint: (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      db.collectionPoint.findByPk(args.id);
+    },
+    collectionPointsByEvent: (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      db.collectionPoint.findAll({ where: { eventId: args.eventId } });
+    },
   },
 
   collectionPoint: {
@@ -18,7 +26,8 @@ const collectionPointResolvers = {
 
   // CRUD Operations
   Mutation: {
-    addCollectionPoint: (parent, args) =>
+    addCollectionPoint: (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
       // Check if user & event is valid
       Promise.all([
         validators.validateUser(args.createdBy),
@@ -29,8 +38,10 @@ const collectionPointResolvers = {
           eventId: args.eventId,
           createdBy: args.createdBy,
         })
-      ),
+      );
+    },
     updateCollectionPoint: async (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER']);
       // Checks if event is valid
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
@@ -61,7 +72,8 @@ const collectionPointResolvers = {
         });
       return db.collectionPoint.findByPk(args.id);
     },
-    restoreCollectionPoint: (parent, args) =>
+    restoreCollectionPoint: (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER']);
       db.collectionPoint
         .restore({
           where: {
@@ -69,8 +81,10 @@ const collectionPointResolvers = {
           },
           individualHooks: true,
         })
-        .then(() => db.collectionPoint.findByPk(args.id)),
-    deleteCollectionPoint: (parent, args) =>
+        .then(() => db.collectionPoint.findByPk(args.id));
+    },
+    deleteCollectionPoint: (parent, args) => {
+      validators.validateRole(['ADMIN', 'COMMANDER']);
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
       db.collectionPoint.destroy({
@@ -78,7 +92,8 @@ const collectionPointResolvers = {
           id: args.id,
         },
         individualHooks: true,
-      }),
+      });
+    },
   },
 };
 
