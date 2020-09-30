@@ -82,12 +82,13 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
-    restorePatient: (parent, args) =>
-      db.patient
-        .restore({
-          where: { id: args.id },
-        })
-        .then(() => db.patient.findByPk(args.id)),
+    restorePatient: async (parent, args) => {
+      await validators.validatePatient(args.id, true);
+      await db.patient.restore({
+        where: { id: args.id },
+      });
+      return db.patient.findByPk(args.id);
+    },
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
     deletePatient: (parent, args) =>
       db.patient
@@ -99,7 +100,12 @@ const patientResolvers = {
             where: { id: args.id },
           }
         )
-        .then((isDeleted) => isDeleted[0]),
+        .then((isDeleted) => {
+          if (isDeleted[0] === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for patient ID: ' + args.id);
+        }),
   },
 };
 

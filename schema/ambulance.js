@@ -8,7 +8,7 @@ const ambulanceSchema = `
     addAmbulance(vehicleNumber: Int!): Ambulance!
     updateAmbulance(id: ID!, vehicleNumber: Int!): Ambulance!
     restoreAmbulance(id: ID!): Ambulance!
-    deleteAmbulance(id: ID!): Int!
+    deleteAmbulance(id: ID!): ID!
   }
   
   type Ambulance {
