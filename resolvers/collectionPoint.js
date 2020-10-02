@@ -57,29 +57,35 @@ const collectionPointResolvers = {
         )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
-            throw new Error('Failed update for ambulance ID: ' + args.id);
+            throw new Error('Failed update for CCP ID: ' + args.id);
           }
         });
       return db.collectionPoint.findByPk(args.id);
     },
-    restoreCollectionPoint: (parent, args) =>
+    restoreCollectionPoint: async (parent, args) => {
+      await validators.validateCollectionPoint(args.id, true);
+      await db.collectionPoint.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
+      return db.collectionPoint.findByPk(args.id);
+    },
+    deleteCollectionPoint: (parent, args) =>
       db.collectionPoint
-        .restore({
+        .destroy({
           where: {
             id: args.id,
           },
           individualHooks: true,
         })
-        .then(() => db.collectionPoint.findByPk(args.id)),
-    deleteCollectionPoint: (parent, args) =>
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      db.collectionPoint.destroy({
-        where: {
-          id: args.id,
-        },
-        individualHooks: true,
-      }),
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for CCP ID: ' + args.id);
+        }),
   },
 };
 
