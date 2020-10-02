@@ -8,7 +8,7 @@ const hospitalSchema = `
     addHospital(name: String!): Hospital!
     updateHospital(id: ID!, name: String!): Hospital!
     restoreHospital(id: ID!): Hospital!
-    deleteHospital(id: ID!): Int!
+    deleteHospital(id: ID!): ID!
   }
   
   type Hospital {

@@ -294,11 +294,18 @@ const eventResolvers = {
         ],
       });
     },
-
-    deleteEvent: async (parent, args) => {
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      await Promise.all([
+    restoreEvent: async (parent, args) => {
+      await validators.validateEvent(args.id, true);
+      await db.event.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
+      return db.event.findByPk(args.id);
+    },
+    deleteEvent: async (parent, args) =>
+      Promise.all([
         db.eventAmbulances.destroy({
           where: {
             eventId: args.id,
@@ -309,15 +316,21 @@ const eventResolvers = {
             eventId: args.id,
           },
         }),
-      ]);
-
-      return db.event.destroy({
-        where: {
-          id: args.id,
-        },
-        individualHooks: true,
-      });
-    },
+      ])
+        .then(() =>
+          db.event.destroy({
+            where: {
+              id: args.id,
+            },
+            individualHooks: true,
+          })
+        )
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for event ID: ' + args.id);
+        }),
   },
 };
 

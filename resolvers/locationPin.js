@@ -59,23 +59,28 @@ const locationPinResolvers = {
         });
       return db.locationPins.findByPk(args.id);
     },
-    restoreLocationPin: (parent, args) => {
+    restoreLocationPin: async (parent, args) => {
+      await validators.validateLocationPin(args.id, true);
+      await db.locationPins.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.locationPins.findByPk(args.id);
+    },
+    deleteLocationPin: (parent, args) =>
       db.locationPins
-        .restore({
+        .destroy({
           where: {
             id: args.id,
           },
         })
-        .then(() => db.locationPins.findByPk(args.id));
-    },
-    deleteLocationPin: (parent, args) =>
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      db.locationPins.destroy({
-        where: {
-          id: args.id,
-        },
-      }),
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for location pin ID: ' + args.id);
+        }),
   },
 };
 
