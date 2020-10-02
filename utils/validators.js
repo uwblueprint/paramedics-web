@@ -77,7 +77,8 @@ module.exports = {
       if (!hospital) {
         throw new Error(errorMessage);
       }
-    }),
+    });
+  },
   validatePatient: (
     patientId,
     checkParanoid = false,
