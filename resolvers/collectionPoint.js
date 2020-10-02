@@ -3,7 +3,6 @@
 const db = require('../models');
 const validators = require('../utils/validators');
 
-// hi
 const collectionPointResolvers = {
   Query: {
     collectionPoints: () => db.collectionPoint.findAll(),
