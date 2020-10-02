@@ -1,32 +1,22 @@
 'use strict';
 
 const db = require('../models');
-const validators = require('../utils/validators');
 
 const userResolvers = {
   Query: {
-    users: () => {
-      validators.validateRole(['Admin', 'Commander']);
-      db.user.findAll();
-    },
-    user: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
-      db.user.findByPk(args.id);
-    },
+    users: () => db.user.findAll(),
+    user: (parent, args) => db.user.findByPk(args.id),
   },
   Mutation: {
-    addUser: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+    addUser: (parent, args) =>
       db.user.create({
         name: args.name,
         email: args.email,
         password: args.password,
         accessLevel: args.accessLevel,
         emergencyContact: args.emergencyContact,
-      });
-    },
-    updateUser: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      }),
+    updateUser: (parent, args) =>
       db.user
         .update(
           {
@@ -46,26 +36,21 @@ const userResolvers = {
             throw new Error('Update failed for user ID: ' + args.id);
           }
           return db.user.findByPk(args.id);
-        });
-    },
-    restoreUser: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+        }),
+    restoreUser: (parent, args) =>
       db.user
         .restore({
           where: {
             id: args.id,
           },
         })
-        .then(() => db.user.findByPk(args.id));
-    },
-    deleteUser: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+        .then(() => db.user.findByPk(args.id)),
+    deleteUser: (parent, args) =>
       db.user.destroy({
         where: {
           id: args.id,
         },
-      });
-    },
+      }),
   },
 };
 

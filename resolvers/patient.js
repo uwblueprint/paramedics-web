@@ -5,19 +5,12 @@ const validators = require('../utils/validators');
 
 const patientResolvers = {
   Query: {
-    patients: () => {
-      validators.validateRole(['Admin', 'Commander']);
-      db.patient.findAll();
-    },
-    patient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
-      db.patient.findByPk(args.id);
-    },
-    patientsByCcp: (parent, args) => {
+    patients: () => db.patient.findAll(),
+    patient: (parent, args) => db.patient.findByPk(args.id),
+    patientsByCcp: (parent, args) =>
       db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
-      });
-    },
+      }),
   },
   Patient: {
     collectionPointId: (parent) =>
@@ -27,7 +20,6 @@ const patientResolvers = {
   },
   Mutation: {
     addPatient: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
       await validators.validateCollectionPoint(args.collectionPointId);
       if (args.hospitalId) {
         await validators.validateHospital(args.hospitalId);
@@ -52,7 +44,6 @@ const patientResolvers = {
       });
     },
     updatePatient: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
       await db.patient.findByPk(args.id).then((patient) => {
         if (!patient) {
           throw new Error('Invalid patient ID: ' + args.id);
@@ -91,17 +82,14 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
-    restorePatient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+    restorePatient: (parent, args) =>
       db.patient
         .restore({
           where: { id: args.id },
         })
-        .then(() => db.patient.findByPk(args.id));
-    },
+        .then(() => db.patient.findByPk(args.id)),
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
-    deletePatient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+    deletePatient: (parent, args) =>
       db.patient
         .update(
           {
@@ -111,8 +99,7 @@ const patientResolvers = {
             where: { id: args.id },
           }
         )
-        .then((isDeleted) => isDeleted[0]);
-    },
+        .then((isDeleted) => isDeleted[0]),
   },
 };
 
