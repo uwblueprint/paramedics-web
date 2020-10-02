@@ -12,5 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return role;
+  return Role;
 };
