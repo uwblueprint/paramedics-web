@@ -6,7 +6,7 @@ const { validateRole } = require('../utils/validators');
 const ambulanceResolvers = {
   Query: {
     ambulances: () => {
-      validateRole(['ADMIN', 'COMMANDER']);
+      validateRole(['COMMANDER']);
       return db.ambulance.findAll({
         include: [
           {
@@ -16,7 +16,7 @@ const ambulanceResolvers = {
       });
     },
     ambulance: (parent, args) => {
-      validateRole(['ADMIN', 'COMMANDER']);
+      validateRole(['COMMANDER']);
       db.ambulance.findByPk(args.id, {
         include: [
           {
@@ -27,13 +27,13 @@ const ambulanceResolvers = {
     },
     Mutation: {
       addAmbulance: (parent, args) => {
-        validateRole(['ADMIN', 'COMMANDER']);
+        validateRole(['COMMANDER', 'SUPERVISOR']);
         db.ambulance.create({
           vehicleNumber: args.vehicleNumber,
         });
       },
       updateAmbulance: (parent, args) => {
-        validateRole(['ADMIN', 'COMMANDER']);
+        validateRole(['COMMANDER']);
         db.ambulance
           .update(
             {
