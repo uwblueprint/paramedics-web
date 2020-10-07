@@ -75,8 +75,14 @@ module.exports = {
   },
   validateRole: (role, errorMessage = 'Insufficient permission') => {
     // TODO: remove user role when authentication is done
-    const userRole = 'Commander';
-    if (!role.includes(userRole)) {
+    const userRole =               
+    {
+      id: 1,
+      name: 'COMMANDER',
+      displayName: 'Commander',
+    };
+
+    if (!role.includes(userRole.name)) {
       throw new AuthenticationError(errorMessage);
     }
   },
