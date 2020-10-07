@@ -6,14 +6,16 @@ const validators = require('../utils/validators');
 const patientResolvers = {
   Query: {
     patients: () => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.patient.findAll();
     },
     patient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.patient.findByPk(args.id);
     },
     patientsByCcp: (parent, args) => {
+      // TODO
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
       });
@@ -27,7 +29,7 @@ const patientResolvers = {
   },
   Mutation: {
     addPatient: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateCollectionPoint(args.collectionPointId);
       if (args.hospitalId) {
         await validators.validateHospital(args.hospitalId);
@@ -52,7 +54,7 @@ const patientResolvers = {
       });
     },
     updatePatient: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await db.patient.findByPk(args.id).then((patient) => {
         if (!patient) {
           throw new Error('Invalid patient ID: ' + args.id);
@@ -92,7 +94,8 @@ const patientResolvers = {
       return db.patient.findByPk(args.id);
     },
     restorePatient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      // TODO
+      validators.validateRole(['COMMANDER']);
       db.patient
         .restore({
           where: { id: args.id },
@@ -101,7 +104,8 @@ const patientResolvers = {
     },
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
     deletePatient: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      // TODO
+      validators.validateRole(['COMMANDER']);
       db.patient
         .update(
           {

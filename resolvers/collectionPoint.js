@@ -4,17 +4,19 @@ const db = require('../models');
 const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
+
   Query: {
     collectionPoints: () => {
-      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.collectionPoint.findAll();
     },
     collectionPoint: (parent, args) => {
-      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.collectionPoint.findByPk(args.id);
     },
+    // TODO: Clarify
     collectionPointsByEvent: (parent, args) => {
-      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.collectionPoint.findAll({ where: { eventId: args.eventId } });
     },
   },
@@ -27,7 +29,7 @@ const collectionPointResolvers = {
   // CRUD Operations
   Mutation: {
     addCollectionPoint: (parent, args) => {
-      validators.validateRole(['ADMIN', 'COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       // Check if user & event is valid
       Promise.all([
         validators.validateUser(args.createdBy),
@@ -41,6 +43,7 @@ const collectionPointResolvers = {
       );
     },
     updateCollectionPoint: async (parent, args) => {
+      // TODO: ask for role
       validators.validateRole(['ADMIN', 'COMMANDER']);
       // Checks if event is valid
       if (args.eventId) {

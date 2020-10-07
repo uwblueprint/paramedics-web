@@ -27,7 +27,7 @@ const ambulanceResolvers = {
     },
     Mutation: {
       addAmbulance: (parent, args) => {
-        validateRole(['COMMANDER', 'SUPERVISOR']);
+        validateRole(['COMMANDER']);
         db.ambulance.create({
           vehicleNumber: args.vehicleNumber,
         });
@@ -53,6 +53,7 @@ const ambulanceResolvers = {
           });
       },
       restoreAmbulance: async (parent, args) => {
+        // TODO: ask about role
         validateRole(['ADMIN', 'COMMANDER']);
         await Promise.all([
           db.ambulance.restore({

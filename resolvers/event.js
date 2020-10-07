@@ -6,7 +6,7 @@ const validators = require('../utils/validators');
 const eventResolvers = {
   Query: {
     events: () => {
-      validators.validateRole(['ADMIN', 'COMMANDER']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.event.findAll({
         include: [
           {
@@ -19,7 +19,7 @@ const eventResolvers = {
       });
     },
     event: (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.event.findByPk(args.id, {
         include: [
           {
@@ -32,6 +32,7 @@ const eventResolvers = {
       });
     },
     archivedEvents: () => {
+      // TODO
       validators.validateRole(['Admin', 'Commander']);
       db.event.findAll({
         where: {
@@ -45,7 +46,7 @@ const eventResolvers = {
   },
   Mutation: {
     addEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER']);
       await validators.validateUser(args.createdBy);
 
       return db.event
@@ -66,7 +67,7 @@ const eventResolvers = {
         }));
     },
     updateEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER']);
       await validators.validateEvent(args.id);
       if (args.createdBy) {
         await validators.validateUser(args.createdBy);
@@ -148,7 +149,8 @@ const eventResolvers = {
       });
     },
     addAmbulancesToEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      //TODO
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
@@ -192,7 +194,7 @@ const eventResolvers = {
     },
 
     addHospitalsToEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
@@ -272,7 +274,8 @@ const eventResolvers = {
     },
 
     deleteHospitalsFromEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      //TODO
+      validators.validateRole(['COMMANDER']);
       await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
@@ -308,7 +311,7 @@ const eventResolvers = {
     },
 
     deleteEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER']);
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
       await Promise.all([
