@@ -59,7 +59,7 @@ const patientSchema = `
 
     restorePatient(id: ID!): Patient!
 
-    deletePatient(id: ID!): ID!
+    deletePatient(id: ID!): Patient!
   }
   
   type Patient {
