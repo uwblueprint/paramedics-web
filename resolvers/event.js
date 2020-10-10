@@ -33,7 +33,7 @@ const eventResolvers = {
     },
     archivedEvents: () => {
       // TODO
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER']);
       db.event.findAll({
         where: {
           isActive: false,
@@ -149,7 +149,6 @@ const eventResolvers = {
       });
     },
     addAmbulancesToEvent: async (parent, args) => {
-      //TODO
       validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateEvent(args.eventId);
 
@@ -238,7 +237,7 @@ const eventResolvers = {
     },
 
     deleteAmbulancesFromEvent: async (parent, args) => {
-      validators.validateRole(['Admin', 'Commander']);
+      validators.validateRole(['COMMANDER']);
       await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
@@ -274,7 +273,6 @@ const eventResolvers = {
     },
 
     deleteHospitalsFromEvent: async (parent, args) => {
-      //TODO
       validators.validateRole(['COMMANDER']);
       await validators.validateEvent(args.eventId);
 

@@ -14,7 +14,6 @@ const collectionPointResolvers = {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.collectionPoint.findByPk(args.id);
     },
-    // TODO: Clarify
     collectionPointsByEvent: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
       db.collectionPoint.findAll({ where: { eventId: args.eventId } });
@@ -43,8 +42,7 @@ const collectionPointResolvers = {
       );
     },
     updateCollectionPoint: async (parent, args) => {
-      // TODO: ask for role
-      validators.validateRole(['ADMIN', 'COMMANDER']);
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       // Checks if event is valid
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
@@ -76,7 +74,7 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     restoreCollectionPoint: (parent, args) => {
-      validators.validateRole(['ADMIN', 'COMMANDER']);
+      validators.validateRole(['COMMANDER']);
       db.collectionPoint
         .restore({
           where: {
@@ -87,7 +85,7 @@ const collectionPointResolvers = {
         .then(() => db.collectionPoint.findByPk(args.id));
     },
     deleteCollectionPoint: (parent, args) => {
-      validators.validateRole(['ADMIN', 'COMMANDER']);
+      validators.validateRole(['COMMANDER']);
       // Return status for destroy
       // 1 for successful deletion, 0 otherwise
       db.collectionPoint.destroy({

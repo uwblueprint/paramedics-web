@@ -53,8 +53,7 @@ const ambulanceResolvers = {
           });
       },
       restoreAmbulance: async (parent, args) => {
-        // TODO: ask about role
-        validateRole(['ADMIN', 'COMMANDER']);
+        validateRole(['COMMANDER']);
         await Promise.all([
           db.ambulance.restore({
             where: {
@@ -92,7 +91,7 @@ const ambulanceResolvers = {
         return db.ambulance.findByPk(args.id);
       },
       deleteAmbulance: async (parent, args) => {
-        validateRole(['ADMIN', 'COMMANDER']);
+        validateRole(['COMMANDER']);
         await Promise.all([
           db.patient
             .count({
