@@ -54,74 +54,52 @@ const hospitalResolvers = {
         });
     },
     restoreHospital: async (parent, args) => {
-      //  TODO
-      validators.validateRole(['Admin', 'Commander']);
-      await Promise.all([
-        db.hospital.restore({
-          where: {
-            id: args.id,
-          },
-        }),
-        // Restoring event association if event is also avaliable
-        db.eventHospitals
-          .findAll({
-            where: {
-              hospitalId: args.id,
-            },
-            include: [
-              {
-                model: db.event,
-                required: true,
-              },
-            ],
-            paranoid: false,
-          })
-          .then((associatedEvents) =>
-            Promise.all(
-              associatedEvents.map((associatedEvent) =>
-                db.eventHospitals.restore({
-                  where: {
-                    eventId: associatedEvent.eventId,
-                    hospitalId: args.id,
-                  },
-                })
-              )
-            )
-          ),
-      ]);
-
-      return db.hospital.findByPk(args.id);
-    },
-    deleteHospital: async (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      await Promise.all([
-        db.patient
-          .count({
-            where: {
-              hospitalId: args.id,
-            },
-          })
-          .then((count) => {
-            if (count > 0) {
-              throw new Error(
-                'Deletion failed; there are associated patients for hospital ID: ' +
-                  args.id
-              );
-            }
-          }),
-        db.eventHospitals.destroy({
-          where: {
-            hospitalId: args.id,
-          },
-        }),
-      ]);
-
-      return db.hospital.destroy({
+      await validators.validateHospital(args.id, true);
+      await db.hospital.restore({
         where: {
           id: args.id,
         },
       });
+      return db.hospital.findByPk(args.id);
     },
+    deleteHospital: async (parent, args) => {
+      validators.validateRole(['COMMANDER']);
+      db.patient
+        .count({
+          where: {
+            hospitalId: args.id,
+          },
+        })
+        .then((count) => {
+          if (count > 0) {
+            throw new Error(
+              'Deletion failed; there are associated patients for hospital ID: ' +
+                args.id
+            );
+          }
+        })
+        .then(() =>
+          db.eventHospitals.destroy({
+            where: {
+              hospitalId: args.id,
+            },
+          })
+        )
+        .then(() =>
+          db.hospital.destroy({
+            where: {
+              id: args.id,
+            },
+          })
+        )
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for hospital ID: ' + args.id);
+        })
+      }
   },
 };
 
