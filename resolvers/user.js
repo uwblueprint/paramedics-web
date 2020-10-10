@@ -46,9 +46,10 @@ const userResolvers = {
             throw new Error('Update failed for user ID: ' + args.id);
           }
           return db.user.findByPk(args.id);
-        })
+        });
     },
     restoreUser: async (parent, args) => {
+      validators.validateRole(['COMMANDER']);
       await validators.validateUser(args.id, true);
       await db.user.restore({
         where: {
@@ -57,7 +58,8 @@ const userResolvers = {
       });
       return db.user.findByPk(args.id);
     },
-    deleteUser: (parent, args) =>
+    deleteUser: (parent, args) => {
+      validators.validateRole(['COMMANDER']);
       db.user
         .destroy({
           where: {
@@ -69,8 +71,9 @@ const userResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for user ID: ' + args.id);
-        })
-      }
-  };
+        });
+    },
+  },
+};
 
 exports.userResolvers = userResolvers;

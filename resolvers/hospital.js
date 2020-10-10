@@ -98,8 +98,8 @@ const hospitalResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for hospital ID: ' + args.id);
-        })
-      }
+        });
+    },
   },
 };
 

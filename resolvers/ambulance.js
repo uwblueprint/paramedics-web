@@ -26,28 +26,26 @@ const ambulanceResolvers = {
       });
     },
   },
-    Mutation: {
-      addAmbulance: (parent, args) => {
-        validators.validateRole(['COMMANDER']);
-        db.ambulance.create({
+  Mutation: {
+    addAmbulance: (parent, args) => {
+      validators.validateRole(['COMMANDER']);
+      db.ambulance.create({
+        vehicleNumber: args.vehicleNumber,
+      });
+    },
+    updateAmbulance: (parent, args) => {
+      validators.validateRole(['COMMANDER']);
+      db.ambulance
+        .update({
           vehicleNumber: args.vehicleNumber,
-        });
-      },
-      updateAmbulance: (parent, args) => {
-        validators.validateRole(['COMMANDER']);
-        db.ambulance
-          .update(
-            {
-              vehicleNumber: args.vehicleNumber,
-            },
-        )
+        })
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
             throw new Error('Failed update for ambulance ID: ' + args.id);
           }
           return db.ambulance.findByPk(args.id);
-        })
-      },
+        });
+    },
     restoreAmbulance: async (parent, args) => {
       validators.validateRole(['COMMANDER']);
       await validators.validateAmbulance(args.id, true);
@@ -93,8 +91,8 @@ const ambulanceResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for ambulance ID: ' + args.id);
-        })
-    }
+        });
+    },
   },
 };
 exports.ambulanceResolvers = ambulanceResolvers;

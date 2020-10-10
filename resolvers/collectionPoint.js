@@ -4,7 +4,6 @@ const db = require('../models');
 const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
-
   Query: {
     collectionPoints: () => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
@@ -98,8 +97,8 @@ const collectionPointResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for CCP ID: ' + args.id);
-        })
-    }
+        });
+    },
   },
 };
 

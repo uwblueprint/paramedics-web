@@ -5,14 +5,22 @@ const validators = require('../utils/validators');
 
 const locationPinResolvers = {
   Query: {
-    pins: () => db.locationPins.findAll(),
-    pin: (parent, args) => db.locationPins.findByPk(args.id),
-    pinsForEvent: (parent, args) =>
+    pins: () => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      return db.locationPins.findAll();
+    },
+    pin: (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      return db.locationPins.findByPk(args.id);
+    },
+    pinsForEvent: (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       db.locationPins.findAll({
         where: {
           eventId: args.eventId,
         },
-      }),
+      });
+    },
   },
 
   LocationPin: {
@@ -22,6 +30,7 @@ const locationPinResolvers = {
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateEvent(args.eventId);
 
       return db.locationPins.create({
@@ -33,6 +42,7 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
       }
@@ -60,6 +70,7 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     restoreLocationPin: async (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       await validators.validateLocationPin(args.id, true);
       await db.locationPins.restore({
         where: {
@@ -68,7 +79,8 @@ const locationPinResolvers = {
       });
       return db.locationPins.findByPk(args.id);
     },
-    deleteLocationPin: (parent, args) =>
+    deleteLocationPin: (parent, args) => {
+      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       db.locationPins
         .destroy({
           where: {
@@ -80,7 +92,8 @@ const locationPinResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for location pin ID: ' + args.id);
-        }),
+        });
+    },
   },
 };
 

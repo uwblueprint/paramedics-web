@@ -345,8 +345,8 @@ const eventResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for event ID: ' + args.id);
-        })
-      }
+        });
+    },
   },
 };
 
