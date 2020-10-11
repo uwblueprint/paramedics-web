@@ -48,7 +48,7 @@ const eventResolvers = {
       validators.validateRole(['COMMANDER']);
       await validators.validateUser(args.createdBy);
 
-      db.event
+      return db.event
         .create({
           name: args.name,
           eventDate: args.eventDate,
@@ -319,7 +319,7 @@ const eventResolvers = {
     },
     deleteEvent: async (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      Promise.all([
+      return Promise.all([
         db.eventAmbulances.destroy({
           where: {
             eventId: args.id,

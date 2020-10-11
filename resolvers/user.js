@@ -17,7 +17,7 @@ const userResolvers = {
   Mutation: {
     addUser: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.user.create({
+      return db.user.create({
         name: args.name,
         email: args.email,
         password: args.password,
@@ -27,7 +27,7 @@ const userResolvers = {
     },
     updateUser: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.user
+      return db.user
         .update(
           {
             name: args.name,
@@ -60,7 +60,7 @@ const userResolvers = {
     },
     deleteUser: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.user
+      return db.user
         .destroy({
           where: {
             id: args.id,

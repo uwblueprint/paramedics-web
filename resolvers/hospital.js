@@ -29,13 +29,13 @@ const hospitalResolvers = {
   Mutation: {
     addHospital: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.hospital.create({
+      return db.hospital.create({
         name: args.name,
       });
     },
     updateHospital: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.hospital
+      return db.hospital
         .update(
           {
             name: args.name,
@@ -65,7 +65,7 @@ const hospitalResolvers = {
     },
     deleteHospital: async (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.patient
+      return db.patient
         .count({
           where: {
             hospitalId: args.id,

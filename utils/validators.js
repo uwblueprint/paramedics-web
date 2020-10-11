@@ -116,8 +116,8 @@ module.exports = {
     // TODO: remove user role when authentication is done
     const userRole = {
       id: 1,
-      name: 'SUPERVISOR',
-      displayName: 'Supervisor',
+      name: 'COMMANDER',
+      displayName: 'Commander',
     };
 
     if (!role.includes(userRole.name)) {

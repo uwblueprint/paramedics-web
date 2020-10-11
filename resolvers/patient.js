@@ -103,7 +103,7 @@ const patientResolvers = {
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
     deletePatient: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR']);
-      db.patient
+      return db.patient
         .update(
           {
             status: 'DELETED',

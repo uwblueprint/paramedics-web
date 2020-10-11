@@ -35,9 +35,13 @@ const ambulanceResolvers = {
     },
     updateAmbulance: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.ambulance
+      return db.ambulance
         .update({
           vehicleNumber: args.vehicleNumber,
+        }, {
+          where: {
+            id: args.id,
+          },
         })
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
@@ -58,7 +62,7 @@ const ambulanceResolvers = {
     },
     deleteAmbulance: async (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.patient
+      return db.patient
         .count({
           where: {
             ambulanceId: args.id,

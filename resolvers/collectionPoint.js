@@ -29,7 +29,7 @@ const collectionPointResolvers = {
     addCollectionPoint: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR']);
       // Check if user & event is valid
-      Promise.all([
+      return Promise.all([
         validators.validateUser(args.createdBy),
         validators.validateEvent(args.eventId),
       ]).then(() =>
@@ -85,7 +85,7 @@ const collectionPointResolvers = {
     },
     deleteCollectionPoint: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.collectionPoint
+      return db.collectionPoint
         .destroy({
           where: {
             id: args.id,
