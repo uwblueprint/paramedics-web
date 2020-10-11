@@ -1,0 +1,174 @@
+'use strict';
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const saml = require('passport-saml');
+const { ApolloServer } = require('apollo-server-express');
+const { Op } = require('sequelize');
+const db = require('./models');
+const { schema } = require('./graphql');
+
+const PORT = 4000;
+const HOST = `http://localhost:${PORT}`;
+const SESSION_SECRET = 'notsecure';
+
+// ** SAML strategy setup
+// passport samlStrategy setup
+passport.use(
+  new saml.Strategy(
+    {
+      path: '/login/callback',
+      entryPoint:
+        'https://uwbp-paramedics.us.auth0.com/samlp/S5q8F6MRwUoeg8VzC9gmkCVjTpNkkZXz',
+      // issuer: 'urn:uwbp-paramedics.us.auth0.com', TODO: might be something like 'stat-app'
+    },
+    // NOTE: pretty sure this is good now
+    (profile, done) => {
+      // this validates the profile on our end (check user table)
+      console.log('-----------------------------');
+      console.log('/ SAML verify callback');
+      // console.log(profile);
+
+      console.log('**** checking user table with email');
+
+      const email =
+        profile[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+        ];
+      db.user
+        .findOne({
+          where: { email: { [Op.like]: email } },
+        })
+        .then((matchingUser) =>
+          done(
+            matchingUser
+              ? null
+              : new Error('Email is not registered: ' + email), // pass error in if encountered
+            matchingUser
+          )
+        ); // TODO: reroute to unauth landing - maybe defined elsewhere (authentication, initial config?))
+    }
+  )
+);
+
+// ** serialize + deserialize
+// used for storing user info in session
+// NOTE: pretty sure this is good for now now
+passport.serializeUser((user, done) => {
+  console.log('-----------------------------');
+  console.log('*** serialize user - only want email');
+  console.log(user);
+  console.log('-----------------------------');
+  done(null, user.email);
+});
+// NOTE: pretty sure this is good now
+passport.deserializeUser(async (email, done) => {
+  console.log('-----------------------------');
+  console.log('*** deserialize user - convert email to user');
+  console.log(email);
+  // const matchingUser = await db.user.findOne({
+  //   where: { email: { [Op.like]: email } },
+  // });
+  console.log('-----------------------------');
+  done(
+    null,
+    await db.user.findOne({
+      where: { email: { [Op.like]: email } },
+    })
+  );
+});
+
+const app = express();
+
+// ** TODO: cors setup - npm install cors
+// const corsOptions = {
+//   origin: 'http://localhost:3000',
+//   credentials: true,
+// };
+// app.use(cors(corsOptions));
+
+// ** express-session setup
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 },
+  })
+);
+
+// ** passport setup
+app.use(passport.initialize({}));
+app.use(passport.session({})); // this needs to happen after express-session?
+
+// necessary otherwise we get stuck in an infinite loop within callback
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// ** setup relevant routes
+// login route - this should reroute to IDP
+// TODO: what does this do
+app.get(
+  '/login',
+  (req, res, next) => {
+    console.log('/Start login handler');
+    next();
+  },
+  passport.authenticate('saml')
+);
+
+// login callback - this catches the request from IDP
+// TODO: what does this do
+app.post(
+  '/login/callback',
+  (req, res, next) => {
+    console.log('-----------------------------');
+    console.log('/Start login callback ');
+    next();
+  },
+  passport.authenticate('saml'),
+  (req, res) => {
+    console.log('-----------------------------');
+    console.log('login call back dumps');
+    console.log(req.session);
+    console.log(req.user);
+    console.log('-----------------------------');
+    res.send('Log in Callback Success');
+  }
+);
+
+// testing logout as endpoint
+app.get('/logout', (req, res) => {
+  console.log('endpoint logout');
+  req.logout();
+  // req.session.destroy(() => {
+  console.log('inside session destroy');
+  // res.redirect('/login');
+  console.log(req.session);
+  console.log(req.user);
+  res.clearCookie('connect.sid');
+  res.send('Logged out');
+  // });
+});
+
+// ** setup apollo server + middleware + run
+
+const server = new ApolloServer({
+  schema,
+  // TODO: what goes here - logout seems right
+  context: ({ req }) => ({
+    getUser: () => req.session,
+    logout: () => req.logout(),
+  }),
+  playground: {
+    settings: {
+      'request.credentials': 'same-origin',
+    },
+  },
+});
+
+server.applyMiddleware({ app /* , cors: false */ });
+
+app.listen({ port: PORT }, () => console.log(`🚀 Server ready at ${HOST}`));
