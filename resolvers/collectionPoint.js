@@ -7,15 +7,15 @@ const collectionPointResolvers = {
   Query: {
     collectionPoints: () => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.collectionPoint.findAll();
+      return db.collectionPoint.findAll();
     },
     collectionPoint: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.collectionPoint.findByPk(args.id);
+      return db.collectionPoint.findByPk(args.id);
     },
     collectionPointsByEvent: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.collectionPoint.findAll({ where: { eventId: args.eventId } });
+      return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
     },
   },
 

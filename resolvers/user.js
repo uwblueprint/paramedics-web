@@ -7,11 +7,11 @@ const userResolvers = {
   Query: {
     users: () => {
       validators.validateRole(['COMMANDER']);
-      db.user.findAll();
+      return db.user.findAll();
     },
     user: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.user.findByPk(args.id);
+      return db.user.findByPk(args.id);
     },
   },
   Mutation: {

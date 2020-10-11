@@ -15,7 +15,7 @@ const locationPinResolvers = {
     },
     pinsForEvent: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR']);
-      db.locationPins.findAll({
+      return db.locationPins.findAll({
         where: {
           eventId: args.eventId,
         },

@@ -117,7 +117,7 @@ module.exports = {
     const userRole = {
       id: 1,
       name: 'SUPERVISOR',
-      displayName: 'Commander',
+      displayName: 'Supervisor',
     };
 
     if (!role.includes(userRole.name)) {

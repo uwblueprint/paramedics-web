@@ -17,7 +17,7 @@ const ambulanceResolvers = {
     },
     ambulance: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.ambulance.findByPk(args.id, {
+      return db.ambulance.findByPk(args.id, {
         include: [
           {
             model: db.event,
@@ -29,7 +29,7 @@ const ambulanceResolvers = {
   Mutation: {
     addAmbulance: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.ambulance.create({
+      return db.ambulance.create({
         vehicleNumber: args.vehicleNumber,
       });
     },

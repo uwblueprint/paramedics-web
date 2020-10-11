@@ -7,7 +7,7 @@ const hospitalResolvers = {
   Query: {
     hospitals: () => {
       validators.validateRole(['COMMANDER']);
-      db.hospital.findAll({
+      return db.hospital.findAll({
         include: [
           {
             model: db.event,
@@ -17,7 +17,7 @@ const hospitalResolvers = {
     },
     hospital: (parent, args) => {
       validators.validateRole(['COMMANDER']);
-      db.hospital.findByPk(args.id, {
+      return db.hospital.findByPk(args.id, {
         include: [
           {
             model: db.event,

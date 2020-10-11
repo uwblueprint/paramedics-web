@@ -7,7 +7,7 @@ const eventResolvers = {
   Query: {
     events: () => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.event.findAll({
+      return db.event.findAll({
         include: [
           {
             model: db.ambulance,
@@ -20,7 +20,7 @@ const eventResolvers = {
     },
     event: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.event.findByPk(args.id, {
+      return db.event.findByPk(args.id, {
         include: [
           {
             model: db.ambulance,
@@ -32,9 +32,8 @@ const eventResolvers = {
       });
     },
     archivedEvents: () => {
-      // TODO
       validators.validateRole(['COMMANDER']);
-      db.event.findAll({
+      return db.event.findAll({
         where: {
           isActive: false,
         },
@@ -49,7 +48,7 @@ const eventResolvers = {
       validators.validateRole(['COMMANDER']);
       await validators.validateUser(args.createdBy);
 
-      return db.event
+      db.event
         .create({
           name: args.name,
           eventDate: args.eventDate,

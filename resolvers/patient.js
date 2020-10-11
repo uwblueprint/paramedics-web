@@ -7,16 +7,15 @@ const patientResolvers = {
   Query: {
     patients: () => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.patient.findAll();
+      return db.patient.findAll();
     },
     patient: (parent, args) => {
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.patient.findByPk(args.id);
+      return db.patient.findByPk(args.id);
     },
     patientsByCcp: (parent, args) => {
-      // TODO
       validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
-      db.patient.findAll({
+      return db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
       });
     },
