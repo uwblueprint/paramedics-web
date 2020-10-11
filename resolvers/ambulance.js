@@ -36,13 +36,16 @@ const ambulanceResolvers = {
     updateAmbulance: (parent, args) => {
       validators.validateRole(['COMMANDER']);
       return db.ambulance
-        .update({
-          vehicleNumber: args.vehicleNumber,
-        }, {
-          where: {
-            id: args.id,
+        .update(
+          {
+            vehicleNumber: args.vehicleNumber,
           },
-        })
+          {
+            where: {
+              id: args.id,
+            },
+          }
+        )
         .then((rowsAffected) => {
           if (rowsAffected[0] === 0) {
             throw new Error('Failed update for ambulance ID: ' + args.id);
