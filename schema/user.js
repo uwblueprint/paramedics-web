@@ -3,11 +3,13 @@ const userSchema = `
     COMMANDER
     SUPERVISOR
     ADMIN
-  }  
+  }
 
   extend type Query {
     user(id: ID!): User
     users: [User]
+    currentUser: User
+    userByEmail: User
   }
   
   extend type Mutation {
@@ -16,6 +18,8 @@ const userSchema = `
       emergencyContact: String): User!
     restoreUser(id: ID!): User!
     deleteUser(id: ID!): Int!
+    login(body: String!): AuthPayload
+    logout: Boolean
   }
   
   type User {
@@ -26,6 +30,10 @@ const userSchema = `
     emergencyContact: String
     createdAt: DateTime
     updatedAt: DateTime
+  }
+
+  type AuthPayload {
+    user: User
   }
   `;
 exports.userSchema = userSchema;

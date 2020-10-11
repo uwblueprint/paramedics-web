@@ -1,11 +1,15 @@
 'use strict';
 
+const { Op } = require('sequelize');
 const db = require('../models');
 
 const userResolvers = {
   Query: {
     users: () => db.user.findAll(),
     user: (parent, args) => db.user.findByPk(args.id),
+    currentUser: (parent, args, context) => context.getUser(),
+    userByEmail: (parent, args) =>
+      db.user.findOne({ where: { email: { [Op.like]: args.email } } }),
   },
   Mutation: {
     addUser: (parent, args) =>
@@ -51,6 +55,14 @@ const userResolvers = {
           id: args.id,
         },
       }),
+    // login: async (parent, args, context) => {
+    //   console.log('**** LOGIN RESOLVER');
+    //   console.log(args);
+    //   const { user } = await context.authenticate('graphql-local', args);
+    //   context.login(user);
+    //   return { user };
+    // },
+    logout: (parent, args, context) => context.logout(),
   },
 };
 

@@ -5,8 +5,10 @@ const validators = require('../utils/validators');
 
 const eventResolvers = {
   Query: {
-    events: () =>
-      db.event.findAll({
+    events: (parent, args, context) => {
+      console.log('**** events resolver');
+      console.log(context.getUser());
+      return db.event.findAll({
         include: [
           {
             model: db.ambulance,
@@ -15,7 +17,8 @@ const eventResolvers = {
             model: db.hospital,
           },
         ],
-      }),
+      });
+    },
     event: (parent, args) =>
       db.event.findByPk(args.id, {
         include: [
