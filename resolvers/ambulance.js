@@ -82,7 +82,7 @@ const ambulanceResolvers = {
         .then(() =>
           db.eventAmbulances.destroy({
             where: {
-              id: args.id,
+              ambulanceId: args.id,
             },
           })
         )
@@ -102,4 +102,5 @@ const ambulanceResolvers = {
     },
   },
 };
+
 exports.ambulanceResolvers = ambulanceResolvers;

@@ -114,7 +114,7 @@ const patientResolvers = {
         )
         .then((isDeleted) => {
           if (isDeleted[0] === 1) {
-            return args.id;
+            return db.patient.findByPk(args.id);
           }
           throw new Error('Deletion failed for patient ID: ' + args.id);
         });

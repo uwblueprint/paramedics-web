@@ -18,12 +18,10 @@ const collectionPointResolvers = {
       return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
     },
   },
-
   collectionPoint: {
     eventId: (parent) => db.event.findByPk(parent.eventId),
     createdBy: (parent) => db.user.findByPk(parent.createdBy),
   },
-
   // CRUD Operations
   Mutation: {
     addCollectionPoint: (parent, args) => {
