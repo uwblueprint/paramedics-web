@@ -14,7 +14,7 @@ const userResolvers = {
         name: args.name,
         email: args.email,
         password: args.password,
-        accessLevel: args.accessLevel,
+        role: args.role,
         emergencyContact: args.emergencyContact,
       }),
     updateUser: (parent, args) =>
@@ -23,7 +23,7 @@ const userResolvers = {
           {
             name: args.name,
             email: args.email,
-            accessLevel: args.accessLevel,
+            role: args.role,
             emergencyContact: args.emergencyContact,
           },
           {
