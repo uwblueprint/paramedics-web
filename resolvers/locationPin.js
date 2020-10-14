@@ -1,20 +1,30 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const locationPinResolvers = {
   Query: {
     pins: () => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       return db.locationPins.findAll();
     },
     pin: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       return db.locationPins.findByPk(args.id);
     },
     pinsForEvent: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       return db.locationPins.findAll({
         where: {
           eventId: args.eventId,
@@ -30,7 +40,10 @@ const locationPinResolvers = {
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateEvent(args.eventId);
 
       return db.locationPins.create({
@@ -42,7 +55,10 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
       }
@@ -70,7 +86,10 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     restoreLocationPin: async (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateLocationPin(args.id, true);
       await db.locationPins.restore({
         where: {
@@ -80,7 +99,10 @@ const locationPinResolvers = {
       return db.locationPins.findByPk(args.id);
     },
     deleteLocationPin: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       db.locationPins
         .destroy({
           where: {

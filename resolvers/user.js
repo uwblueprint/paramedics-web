@@ -1,22 +1,23 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const userResolvers = {
   Query: {
     users: () => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.user.findAll();
     },
     user: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.user.findByPk(args.id);
     },
   },
   Mutation: {
     addUser: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.user.create({
         name: args.name,
         email: args.email,
@@ -26,7 +27,7 @@ const userResolvers = {
       });
     },
     updateUser: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.user
         .update(
           {
@@ -49,7 +50,7 @@ const userResolvers = {
         });
     },
     restoreUser: async (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateUser(args.id, true);
       await db.user.restore({
         where: {
@@ -59,7 +60,7 @@ const userResolvers = {
       return db.user.findByPk(args.id);
     },
     deleteUser: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.user
         .destroy({
           where: {

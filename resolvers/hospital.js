@@ -1,12 +1,13 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const hospitalResolvers = {
   Query: {
     hospitals: () => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.hospital.findAll({
         include: [
           {
@@ -16,7 +17,7 @@ const hospitalResolvers = {
       });
     },
     hospital: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.hospital.findByPk(args.id, {
         include: [
           {
@@ -28,13 +29,13 @@ const hospitalResolvers = {
   },
   Mutation: {
     addHospital: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.hospital.create({
         name: args.name,
       });
     },
     updateHospital: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.hospital
         .update(
           {
@@ -54,7 +55,7 @@ const hospitalResolvers = {
         });
     },
     restoreHospital: async (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateHospital(args.id, true);
       await db.hospital.restore({
         where: {
@@ -64,7 +65,7 @@ const hospitalResolvers = {
       return db.hospital.findByPk(args.id);
     },
     deleteHospital: async (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.patient
         .count({
           where: {

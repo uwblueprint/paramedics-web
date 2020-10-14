@@ -1,20 +1,30 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
   Query: {
     collectionPoints: () => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
       return db.collectionPoint.findAll();
     },
     collectionPoint: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
       return db.collectionPoint.findByPk(args.id);
     },
     collectionPointsByEvent: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR', 'DISPATCH']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
       return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
     },
   },
@@ -25,7 +35,10 @@ const collectionPointResolvers = {
   // CRUD Operations
   Mutation: {
     addCollectionPoint: (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       // Check if user & event is valid
       return Promise.all([
         validators.validateUser(args.createdBy),
@@ -39,7 +52,10 @@ const collectionPointResolvers = {
       );
     },
     updateCollectionPoint: async (parent, args) => {
-      validators.validateRole(['COMMANDER', 'SUPERVISOR']);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       // Checks if event is valid
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
@@ -71,7 +87,7 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     restoreCollectionPoint: async (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateCollectionPoint(args.id, true);
       await db.collectionPoint.restore({
         where: {
@@ -82,7 +98,7 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     deleteCollectionPoint: (parent, args) => {
-      validators.validateRole(['COMMANDER']);
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       return db.collectionPoint
         .destroy({
           where: {

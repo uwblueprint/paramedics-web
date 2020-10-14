@@ -1,6 +1,7 @@
 'use strict';
 
 const { AuthenticationError } = require('apollo-server');
+const { Roles } = require('../utils/enum');
 const db = require('../models');
 
 // for validating resolver arguments
@@ -112,16 +113,19 @@ module.exports = {
         }
       });
   },
-  validateRole: (role, errorMessage = 'Insufficient permission') => {
-    // TODO: remove user role when authentication is done
-    const userRole = {
-      id: 1,
-      name: 'COMMANDER',
-      displayName: 'Commander',
-    };
-
+  validateRole: (
+    role,
+    userRole,
+    errorMessage = 'You do not have sufficient permission to perform this action'
+  ) => {
     if (!role.includes(userRole.name)) {
       throw new AuthenticationError(errorMessage);
     }
+  },
+  // TODO: remove user role when authentication is done
+  demoRole: {
+    id: 1,
+    name: Roles.SUPERVISOR,
+    displayName: 'Supervisor',
   },
 };
