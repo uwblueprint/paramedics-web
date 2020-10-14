@@ -1,7 +1,10 @@
+const Roles = {
+  COMMANDER: 'COMMANDER',
+  SUPERVISOR: 'SUPERVISOR',
+  DISPATCH: 'DISPATCH',
+};
+Object.freeze(Roles);
+
 module.exports = {
-  Roles: {
-    COMMANDER: 'COMMANDER',
-    SUPERVISOR: 'SUPERVISOR',
-    DISPATCH: 'DISPATCH',
-  },
+  Roles: Roles,
 };
