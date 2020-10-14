@@ -7,6 +7,7 @@ const userResolvers = {
   Query: {
     users: () => db.user.findAll(),
     user: (parent, args) => db.user.findByPk(args.id),
+    roles: () => db.role.findAll(),
   },
   Mutation: {
     addUser: (parent, args) =>
