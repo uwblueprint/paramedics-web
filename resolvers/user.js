@@ -15,7 +15,7 @@ const userResolvers = {
         name: args.name,
         email: args.email,
         password: args.password,
-        role: args.role,
+        roleId: args.roleId,
         emergencyContact: args.emergencyContact,
       }),
     updateUser: (parent, args) =>
@@ -24,7 +24,7 @@ const userResolvers = {
           {
             name: args.name,
             email: args.email,
-            role: args.role,
+            roleId: args.roleId,
             emergencyContact: args.emergencyContact,
           },
           {

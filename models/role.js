@@ -12,5 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  role.associate = (models) => {
+    role.hasMany(models.user);
+  };
+
   return role;
 };
