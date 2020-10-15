@@ -48,7 +48,13 @@ const eventResolvers = {
     },
   },
   Event: {
-    createdBy: (parent) => db.user.findByPk(parent.createdBy),
+    createdBy: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+      return db.user.findByPk(parent.createdBy);
+    },
   },
   Mutation: {
     addEvent: async (parent, args) => {

@@ -31,10 +31,30 @@ const patientResolvers = {
     },
   },
   Patient: {
-    collectionPointId: (parent) =>
-      db.collectionPoint.findByPk(parent.collectionPointId),
-    hospitalId: (parent) => db.hospital.findByPk(parent.hospitalId),
-    ambulanceId: (parent) => db.ambulance.findByPk(parent.ambulanceId),
+    collectionPointId: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+
+      return db.collectionPoint.findByPk(parent.collectionPointId);
+    },
+    hospitalId: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+
+      return db.hospital.findByPk(parent.hospitalId);
+    },
+    ambulanceId: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+
+      return db.ambulance.findByPk(parent.ambulanceId);
+    },
   },
   Mutation: {
     addPatient: async (parent, args) => {
@@ -67,7 +87,7 @@ const patientResolvers = {
     },
     updatePatient: async (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR],
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
         validators.demoRole
       );
       await db.patient.findByPk(args.id).then((patient) => {

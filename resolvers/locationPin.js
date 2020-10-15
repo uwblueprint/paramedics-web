@@ -8,21 +8,21 @@ const locationPinResolvers = {
   Query: {
     pins: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR],
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
         validators.demoRole
       );
       return db.locationPins.findAll();
     },
     pin: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR],
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
         validators.demoRole
       );
       return db.locationPins.findByPk(args.id);
     },
     pinsForEvent: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR],
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
         validators.demoRole
       );
       return db.locationPins.findAll({
@@ -34,7 +34,14 @@ const locationPinResolvers = {
   },
 
   LocationPin: {
-    eventId: (parent) => db.event.findByPk(parent.eventId),
+    eventId: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+
+      return db.event.findByPk(parent.eventId);
+    },
   },
 
   // CRUD Operations

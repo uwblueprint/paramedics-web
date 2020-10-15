@@ -7,7 +7,10 @@ const validators = require('../utils/validators');
 const ambulanceResolvers = {
   Query: {
     ambulances: () => {
-      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
       return db.ambulance.findAll({
         include: [
           {
@@ -17,7 +20,10 @@ const ambulanceResolvers = {
       });
     },
     ambulance: (parent, args) => {
-      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
       return db.ambulance.findByPk(args.id, {
         include: [
           {

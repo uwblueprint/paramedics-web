@@ -29,8 +29,20 @@ const collectionPointResolvers = {
     },
   },
   collectionPoint: {
-    eventId: (parent) => db.event.findByPk(parent.eventId),
-    createdBy: (parent) => db.user.findByPk(parent.createdBy),
+    eventId: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+      return db.event.findByPk(parent.eventId);
+    },
+    createdBy: (parent) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        validators.demoRole
+      );
+      return db.user.findByPk(parent.createdBy);
+    },
   },
   // CRUD Operations
   Mutation: {
