@@ -124,8 +124,8 @@ module.exports = {
   },
   // TODO: remove user role when authentication is done
   demoRole: {
-    id: 2,
-    name: Roles.SUPERVISOR,
-    displayName: 'Supervisor',
+    id: 0,
+    name: Roles.COMMANDER,
+    displayName: 'Commander',
   },
 };
