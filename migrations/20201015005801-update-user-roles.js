@@ -14,13 +14,13 @@ module.exports = {
           `UPDATE users SET "roleId" = 1 WHERE "accessLevel" = 'COMMANDER' OR "accessLevel" = 'ADMIN'`,
           { transaction: t }
         ),
-        queryInterface.sequelize.query( 
+        queryInterface.sequelize.query(
           `UPDATE users SET "roleId" = 2 WHERE "accessLevel" = 'SUPERVISOR'`,
           { transaction: t }
         ),
         queryInterface.removeColumn('users', 'accessLevel', {
           transaction: t,
-        })
+        }),
       ]);
     });
   },
@@ -53,6 +53,5 @@ module.exports = {
         }),
       ]);
     });
-  
   },
 };
