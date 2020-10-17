@@ -8,7 +8,7 @@ const eventResolvers = {
   Query: {
     events: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.event.findAll({
@@ -24,7 +24,7 @@ const eventResolvers = {
     },
     event: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.event.findByPk(args.id, {
@@ -50,7 +50,7 @@ const eventResolvers = {
   Event: {
     createdBy: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.user.findByPk(parent.createdBy);

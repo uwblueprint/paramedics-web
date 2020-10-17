@@ -8,14 +8,14 @@ const userResolvers = {
   Query: {
     users: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.user.findAll();
     },
     user: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.user.findByPk(args.id);

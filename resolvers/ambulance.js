@@ -8,7 +8,7 @@ const ambulanceResolvers = {
   Query: {
     ambulances: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.ambulance.findAll({
@@ -21,7 +21,7 @@ const ambulanceResolvers = {
     },
     ambulance: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.ambulance.findByPk(args.id, {
@@ -82,7 +82,7 @@ const ambulanceResolvers = {
           if (count > 0) {
             throw new Error(
               'Deletion failed; there are associated patients for ambulance ID: ' +
-                args.id
+              args.id
             );
           }
         })

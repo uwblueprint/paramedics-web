@@ -8,21 +8,21 @@ const collectionPointResolvers = {
   Query: {
     collectionPoints: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.collectionPoint.findAll();
     },
     collectionPoint: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.collectionPoint.findByPk(args.id);
     },
     collectionPointsByEvent: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
@@ -31,14 +31,14 @@ const collectionPointResolvers = {
   collectionPoint: {
     eventId: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.event.findByPk(parent.eventId);
     },
     createdBy: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.user.findByPk(parent.createdBy);

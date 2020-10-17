@@ -8,21 +8,21 @@ const patientResolvers = {
   Query: {
     patients: () => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.patient.findAll();
     },
     patient: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.patient.findByPk(args.id);
     },
     patientsByCcp: (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       return db.patient.findAll({
@@ -33,7 +33,7 @@ const patientResolvers = {
   Patient: {
     collectionPointId: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
 
@@ -41,7 +41,7 @@ const patientResolvers = {
     },
     hospitalId: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
 
@@ -49,7 +49,7 @@ const patientResolvers = {
     },
     ambulanceId: (parent) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
 
@@ -87,7 +87,7 @@ const patientResolvers = {
     },
     updatePatient: async (parent, args) => {
       validators.validateRole(
-        [Roles.COMMANDER, Roles.SUPERVISOR, Roles.DISPATCH],
+        Object.keys(Roles),
         validators.demoRole
       );
       await db.patient.findByPk(args.id).then((patient) => {
