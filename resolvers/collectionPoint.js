@@ -7,40 +7,25 @@ const validators = require('../utils/validators');
 const collectionPointResolvers = {
   Query: {
     collectionPoints: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.collectionPoint.findAll();
     },
     collectionPoint: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.collectionPoint.findByPk(args.id);
     },
     collectionPointsByEvent: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
     },
   },
   collectionPoint: {
     eventId: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findByPk(parent.eventId);
     },
     createdBy: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findByPk(parent.createdBy);
     },
   },

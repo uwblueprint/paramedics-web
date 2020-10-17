@@ -7,24 +7,15 @@ const validators = require('../utils/validators');
 const patientResolvers = {
   Query: {
     patients: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.patient.findAll();
     },
     patient: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.patient.findByPk(args.id);
     },
     patientsByCcp: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
       });
@@ -32,26 +23,17 @@ const patientResolvers = {
   },
   Patient: {
     collectionPointId: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
 
       return db.collectionPoint.findByPk(parent.collectionPointId);
     },
     hospitalId: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
 
       return db.hospital.findByPk(parent.hospitalId);
     },
     ambulanceId: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
 
       return db.ambulance.findByPk(parent.ambulanceId);
     },
@@ -86,10 +68,7 @@ const patientResolvers = {
       });
     },
     updatePatient: async (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       await db.patient.findByPk(args.id).then((patient) => {
         if (!patient) {
           throw new Error('Invalid patient ID: ' + args.id);

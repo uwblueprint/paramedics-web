@@ -7,24 +7,15 @@ const validators = require('../utils/validators');
 const locationPinResolvers = {
   Query: {
     pins: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.locationPins.findAll();
     },
     pin: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.locationPins.findByPk(args.id);
     },
     pinsForEvent: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.locationPins.findAll({
         where: {
           eventId: args.eventId,
@@ -35,10 +26,7 @@ const locationPinResolvers = {
 
   LocationPin: {
     eventId: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
 
       return db.event.findByPk(parent.eventId);
     },

@@ -7,17 +7,11 @@ const validators = require('../utils/validators');
 const userResolvers = {
   Query: {
     users: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findAll();
     },
     user: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findByPk(args.id);
     },
   },

@@ -7,10 +7,7 @@ const validators = require('../utils/validators');
 const eventResolvers = {
   Query: {
     events: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findAll({
         include: [
           {
@@ -23,10 +20,7 @@ const eventResolvers = {
       });
     },
     event: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findByPk(args.id, {
         include: [
           {
@@ -49,10 +43,7 @@ const eventResolvers = {
   },
   Event: {
     createdBy: (parent) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findByPk(parent.createdBy);
     },
   },

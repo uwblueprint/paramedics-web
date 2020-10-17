@@ -7,10 +7,7 @@ const validators = require('../utils/validators');
 const ambulanceResolvers = {
   Query: {
     ambulances: () => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.ambulance.findAll({
         include: [
           {
@@ -20,10 +17,7 @@ const ambulanceResolvers = {
       });
     },
     ambulance: (parent, args) => {
-      validators.validateRole(
-        Object.keys(Roles),
-        validators.demoRole
-      );
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.ambulance.findByPk(args.id, {
         include: [
           {
@@ -82,7 +76,7 @@ const ambulanceResolvers = {
           if (count > 0) {
             throw new Error(
               'Deletion failed; there are associated patients for ambulance ID: ' +
-              args.id
+                args.id
             );
           }
         })
