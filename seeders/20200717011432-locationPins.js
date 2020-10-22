@@ -1,32 +1,52 @@
 'use strict';
 
+const db = require('../models');
+
 module.exports = {
-  up: (queryInterface) => {
+  up: async (queryInterface) => {
+    const user = await db.user.create({
+      name: 'Space Garbage',
+      email: 'space_garbage@gmail.com',
+      accessLevel: 'SUPERVISOR',
+      password: 'asdfgh1234',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const event = await db.event.create({
+      eventDate: new Date(),
+      name: 'Spooky Scary Event',
+      createdBy: user.id,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
     return queryInterface.bulkInsert('locationPins', [
       {
-        latitude: 65.679012,
-        longitude: -60.68729,
+        latitude: 43.470648,
+        longitude: -80.535515,
         label: 'Pin 1',
         address: 'Test Address 1',
-        eventId: 1,
+        eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        latitude: 10.2392,
-        longitude: 76.989,
+        latitude: 43.472431,
+        longitude: -80.534667,
         label: 'Pin 2',
         address: 'Test Address 2',
-        eventId: 1,
+        eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        latitude: 60.891,
-        longitude: 60.891,
+        latitude: 43.473778,
+        longitude: -80.534324,
         label: 'Pin 3',
         address: 'Test Address 3',
-        eventId: 1,
+        eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
