@@ -62,6 +62,13 @@ const patientSchema = `
     deletePatient(id: ID!): Patient!
   }
   
+  type Subscription {
+    patientAdded(collectionPointId: ID!): Patient
+    patientUpdated(collectionPointId: ID!): Patient
+    patientDeleted(collectionPointId: ID!): Patient
+    patientRestored(collectionPointId: ID!): Patient
+  }
+
   type Patient {
     id: ID!,
     gender: Gender,
