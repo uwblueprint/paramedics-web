@@ -1,5 +1,7 @@
 'use strict';
 
+const { Roles } = require('../utils/enum');
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) =>
@@ -28,17 +30,17 @@ module.exports = {
             [
               {
                 id: 1,
-                name: 'COMMANDER',
+                name: Roles.COMMANDER,
                 displayName: 'Commander',
               },
               {
                 id: 2,
-                name: 'SUPERVISOR',
+                name: Roles.SUPERVISOR,
                 displayName: 'Supervisor',
               },
               {
                 id: 3,
-                name: 'DISPATCH',
+                name: Roles.DISPATCH,
                 displayName: 'Dispatch',
               },
             ],
