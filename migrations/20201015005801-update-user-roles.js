@@ -17,6 +17,10 @@ module.exports = {
         `UPDATE users SET "roleId" = 2 WHERE "accessLevel" = 'SUPERVISOR'`,
         { transaction: t }
       );
+      await queryInterface.sequelize.query(
+        `UPDATE users SET "roleId" = 3 WHERE "accessLevel" = 'DISPATCH'`,
+        { transaction: t }
+      );
       await queryInterface.removeColumn('users', 'accessLevel', {
         transaction: t,
       });
