@@ -19,8 +19,7 @@ const SESSION_SECRET = 'notsecure';
 const samlStrategy = new saml.Strategy(
   {
     path: '/login/callback',
-    entryPoint:
-      `https://uwbp-paramedics.us.auth0.com/samlp/${process.env.AUTH0_CLIENT_ID}`,
+    entryPoint: `https://uwbp-paramedics.us.auth0.com/samlp/${process.env.AUTH0_CLIENT_ID}`,
     acceptedClockSkewMs: -1, // SAML assertion not yet valid fix
     logoutUrl: 'https://uwbp-paramedics.us.auth0.com/v2/logout',
     additionalLogoutParams: {
@@ -91,9 +90,9 @@ app.get('/login', passport.authenticate('saml'));
 // TODO: Redirect to frontend auth landing page
 app.post('/login/callback', passport.authenticate('saml'), (req, res) => {
   if (!req.user) {
-    res.send("Login unsuccessful")
+    res.send('Login unsuccessful');
   } else {
-    res.send("Login successful!")
+    res.send('Login successful!');
   }
 });
 
@@ -128,7 +127,7 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: "/" });
+server.applyMiddleware({ app, path: '/' });
 
 app.listen({ port: PORT }, () => {
   console.log(`🚀 Server ready at ${HOST}`);
