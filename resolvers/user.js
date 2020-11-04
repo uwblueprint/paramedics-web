@@ -1,25 +1,35 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const userResolvers = {
   Query: {
-    users: () => db.user.findAll(),
-    user: (parent, args) => db.user.findByPk(args.id),
+    users: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.user.findAll();
+    },
+    user: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.user.findByPk(args.id);
+    },
     roles: () => db.role.findAll(),
   },
   Mutation: {
-    addUser: (parent, args) =>
-      db.user.create({
+    addUser: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.user.create({
         name: args.name,
         email: args.email,
         password: args.password,
         roleId: args.roleId,
         emergencyContact: args.emergencyContact,
-      }),
-    updateUser: (parent, args) =>
-      db.user
+      });
+    },
+    updateUser: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.user
         .update(
           {
             name: args.name,
@@ -38,8 +48,10 @@ const userResolvers = {
             throw new Error('Update failed for user ID: ' + args.id);
           }
           return db.user.findByPk(args.id);
-        }),
+        });
+    },
     restoreUser: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateUser(args.id, true);
       await db.user.restore({
         where: {
@@ -48,8 +60,9 @@ const userResolvers = {
       });
       return db.user.findByPk(args.id);
     },
-    deleteUser: (parent, args) =>
-      db.user
+    deleteUser: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.user
         .destroy({
           where: {
             id: args.id,
@@ -60,7 +73,8 @@ const userResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for user ID: ' + args.id);
-        }),
+        });
+    },
   },
 };
 
