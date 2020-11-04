@@ -44,6 +44,12 @@ const Mutation = `
   }
 `;
 
+const Subscription = `
+  type Subscription {
+    _empty: String
+  }
+`;
+
 const resolvers = {
   // Custom scalars
   Date: GraphQLDate,
@@ -56,6 +62,7 @@ const schema = makeExecutableSchema({
     scalars,
     Query,
     Mutation,
+    Subscription,
     userSchema,
     eventSchema,
     hospitalSchema,

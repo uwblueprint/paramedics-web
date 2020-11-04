@@ -1,4 +1,7 @@
+/* eslint-disable prettier/prettier */
+
 'use strict';
+
 const { PubSub, withFilter } = require('apollo-server');
 const pubsub = new PubSub();
 const db = require('../models');
@@ -15,33 +18,45 @@ const patientResolvers = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([PATIENT_ADDED]),
         (payload, variables) => {
-          return payload.patientAdded.collectionPointId === parseInt(variables.collectionPointId);
+          return (
+            payload.patientAdded.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
         }
-        ),
+      ),
     },
     patientUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([PATIENT_UPDATED]),
         (payload, variables) => {
-          return payload.patientUpdated.collectionPointId === parseInt(variables.collectionPointId);
+          return (
+            payload.patientUpdated.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
         }
-        ),
+      ),
     },
     patientRestored: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([PATIENT_RESTORED]),
         (payload, variables) => {
-          return payload.patientRestored.collectionPointId === parseInt(variables.collectionPointId);
+          return (
+            payload.patientRestored.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
         }
-        ),
+      ),
     },
     patientDeleted: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([PATIENT_DELETED]),
         (payload, variables) => {
-          return payload.patientDeleted.collectionPointId === parseInt(variables.collectionPointId);
+          return (
+            payload.patientDeleted.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
         }
-        ),
+      ),
     },
   },
   Query: {
@@ -81,7 +96,7 @@ const patientResolvers = {
         hospitalId: args.hospitalId,
         ambulanceId: args.ambulanceId,
       });
-      pubsub.publish(PATIENT_ADDED, { patientAdded: newPatient});
+      pubsub.publish(PATIENT_ADDED, { patientAdded: newPatient });
       return newPatient;
     },
     updatePatient: async (parent, args) => {
