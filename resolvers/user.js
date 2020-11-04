@@ -1,6 +1,5 @@
 'use strict';
 
-const { Op } = require('sequelize');
 const db = require('../models');
 const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');

@@ -8,8 +8,6 @@ const userSchema = `
   extend type Query {
     user(id: ID!): User
     users: [User]
-    currentUser: User
-    userByEmail: User
   }
   
   extend type Mutation {
@@ -28,10 +26,6 @@ const userSchema = `
     emergencyContact: String
     createdAt: DateTime
     updatedAt: DateTime
-  }
-
-  type AuthPayload {
-    user: User
   }
   `;
 exports.userSchema = userSchema;
