@@ -1,13 +1,13 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const eventResolvers = {
   Query: {
-    events: (parent, args, context) => {
-      console.log('**** events resolver');
-      console.log(context.getUser());
+    events: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findAll({
         include: [
           {
@@ -19,8 +19,9 @@ const eventResolvers = {
         ],
       });
     },
-    event: (parent, args) =>
-      db.event.findByPk(args.id, {
+    event: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.event.findByPk(args.id, {
         include: [
           {
             model: db.ambulance,
@@ -29,19 +30,26 @@ const eventResolvers = {
             model: db.hospital,
           },
         ],
-      }),
-    archivedEvents: () =>
-      db.event.findAll({
+      });
+    },
+    archivedEvents: () => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.event.findAll({
         where: {
           isActive: false,
         },
-      }),
+      });
+    },
   },
   Event: {
-    createdBy: (parent) => db.user.findByPk(parent.createdBy),
+    createdBy: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.user.findByPk(parent.createdBy);
+    },
   },
   Mutation: {
     addEvent: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateUser(args.createdBy);
 
       return db.event
@@ -62,6 +70,7 @@ const eventResolvers = {
         }));
     },
     updateEvent: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateEvent(args.id);
       if (args.createdBy) {
         await validators.validateUser(args.createdBy);
@@ -143,6 +152,10 @@ const eventResolvers = {
       });
     },
     addAmbulancesToEvent: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
@@ -186,6 +199,10 @@ const eventResolvers = {
     },
 
     addHospitalsToEvent: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
@@ -229,6 +246,7 @@ const eventResolvers = {
     },
 
     deleteAmbulancesFromEvent: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateEvent(args.eventId);
 
       // Checking if all ambulances exist
@@ -264,6 +282,7 @@ const eventResolvers = {
     },
 
     deleteHospitalsFromEvent: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateEvent(args.eventId);
 
       // Checking if all hospitals exist
@@ -297,11 +316,20 @@ const eventResolvers = {
         ],
       });
     },
-
+    restoreEvent: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      await validators.validateEvent(args.id, true);
+      await db.event.restore({
+        where: {
+          id: args.id,
+        },
+        individualHooks: true,
+      });
+      return db.event.findByPk(args.id);
+    },
     deleteEvent: async (parent, args) => {
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      await Promise.all([
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return Promise.all([
         db.eventAmbulances.destroy({
           where: {
             eventId: args.id,
@@ -312,14 +340,21 @@ const eventResolvers = {
             eventId: args.id,
           },
         }),
-      ]);
-
-      return db.event.destroy({
-        where: {
-          id: args.id,
-        },
-        individualHooks: true,
-      });
+      ])
+        .then(() =>
+          db.event.destroy({
+            where: {
+              id: args.id,
+            },
+            individualHooks: true,
+          })
+        )
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for event ID: ' + args.id);
+        });
     },
   },
 };

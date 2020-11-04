@@ -1,27 +1,44 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const locationPinResolvers = {
   Query: {
-    pins: () => db.locationPins.findAll(),
-    pin: (parent, args) => db.locationPins.findByPk(args.id),
-    pinsForEvent: (parent, args) =>
-      db.locationPins.findAll({
+    pins: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.locationPins.findAll();
+    },
+    pin: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.locationPins.findByPk(args.id);
+    },
+    pinsForEvent: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.locationPins.findAll({
         where: {
           eventId: args.eventId,
         },
-      }),
+      });
+    },
   },
 
   LocationPin: {
-    eventId: (parent) => db.event.findByPk(parent.eventId),
+    eventId: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+
+      return db.event.findByPk(parent.eventId);
+    },
   },
 
   // CRUD Operations
   Mutation: {
     addLocationPin: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateEvent(args.eventId);
 
       return db.locationPins.create({
@@ -33,6 +50,10 @@ const locationPinResolvers = {
       });
     },
     updateLocationPin: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
       }
@@ -59,23 +80,37 @@ const locationPinResolvers = {
         });
       return db.locationPins.findByPk(args.id);
     },
-    restoreLocationPin: (parent, args) => {
+    restoreLocationPin: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
+      await validators.validateLocationPin(args.id, true);
+      await db.locationPins.restore({
+        where: {
+          id: args.id,
+        },
+      });
+      return db.locationPins.findByPk(args.id);
+    },
+    deleteLocationPin: (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       db.locationPins
-        .restore({
+        .destroy({
           where: {
             id: args.id,
           },
         })
-        .then(() => db.locationPins.findByPk(args.id));
+        .then((isDeleted) => {
+          if (isDeleted === 1) {
+            return args.id;
+          }
+          throw new Error('Deletion failed for location pin ID: ' + args.id);
+        });
     },
-    deleteLocationPin: (parent, args) =>
-      // Return status for destroy
-      // 1 for successful deletion, 0 otherwise
-      db.locationPins.destroy({
-        where: {
-          id: args.id,
-        },
-      }),
   },
 };
 

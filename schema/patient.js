@@ -59,7 +59,7 @@ const patientSchema = `
 
     restorePatient(id: ID!): Patient!
 
-    deletePatient(id: ID!): Int!
+    deletePatient(id: ID!): Patient!
   }
   
   type Patient {
@@ -67,11 +67,11 @@ const patientSchema = `
     gender: Gender,
     age: Int,
     runNumber: Int,
-    barcodeValue: String,
+    barcodeValue: String!,
     collectionPointId: collectionPoint!,
     status: status,
     triageCategory: Int,
-    triageLevel: triageLevel, 
+    triageLevel: triageLevel!, 
     notes: String,
     transportTime: DateTime,
     createdAt: DateTime,

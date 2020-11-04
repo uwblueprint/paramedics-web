@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       emergencyContact: DataTypes.STRING,
     },
-    {}
+    { paranoid: true }
   );
   return User;
 };

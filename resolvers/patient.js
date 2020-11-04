@@ -1,25 +1,49 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const patientResolvers = {
   Query: {
-    patients: () => db.patient.findAll(),
-    patient: (parent, args) => db.patient.findByPk(args.id),
-    patientsByCcp: (parent, args) =>
-      db.patient.findAll({
+    patients: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.patient.findAll();
+    },
+    patient: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.patient.findByPk(args.id);
+    },
+    patientsByCcp: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.patient.findAll({
         where: { collectionPointId: args.collectionPointId },
-      }),
+      });
+    },
   },
   Patient: {
-    collectionPointId: (parent) =>
-      db.collectionPoint.findByPk(parent.collectionPointId),
-    hospitalId: (parent) => db.hospital.findByPk(parent.hospitalId),
-    ambulanceId: (parent) => db.ambulance.findByPk(parent.ambulanceId),
+    collectionPointId: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+
+      return db.collectionPoint.findByPk(parent.collectionPointId);
+    },
+    hospitalId: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+
+      return db.hospital.findByPk(parent.hospitalId);
+    },
+    ambulanceId: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+
+      return db.ambulance.findByPk(parent.ambulanceId);
+    },
   },
   Mutation: {
     addPatient: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       await validators.validateCollectionPoint(args.collectionPointId);
       if (args.hospitalId) {
         await validators.validateHospital(args.hospitalId);
@@ -44,6 +68,7 @@ const patientResolvers = {
       });
     },
     updatePatient: async (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
       await db.patient.findByPk(args.id).then((patient) => {
         if (!patient) {
           throw new Error('Invalid patient ID: ' + args.id);
@@ -82,15 +107,24 @@ const patientResolvers = {
       );
       return db.patient.findByPk(args.id);
     },
-    restorePatient: (parent, args) =>
-      db.patient
-        .restore({
-          where: { id: args.id },
-        })
-        .then(() => db.patient.findByPk(args.id)),
+    restorePatient: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
+      await validators.validatePatient(args.id, true);
+      await db.patient.restore({
+        where: { id: args.id },
+      });
+      return db.patient.findByPk(args.id);
+    },
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
-    deletePatient: (parent, args) =>
-      db.patient
+    deletePatient: (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
+      return db.patient
         .update(
           {
             status: 'DELETED',
@@ -99,7 +133,13 @@ const patientResolvers = {
             where: { id: args.id },
           }
         )
-        .then((isDeleted) => isDeleted[0]),
+        .then((isDeleted) => {
+          if (isDeleted[0] === 1) {
+            return db.patient.findByPk(args.id);
+          }
+          throw new Error('Deletion failed for patient ID: ' + args.id);
+        });
+    },
   },
 };
 

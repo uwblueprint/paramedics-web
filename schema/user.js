@@ -17,9 +17,15 @@ const userSchema = `
     updateUser(id: ID!, accessLevel: accessLevel, name: String, email: String,
       emergencyContact: String): User!
     restoreUser(id: ID!): User!
+<<<<<<< HEAD
     deleteUser(id: ID!): Int!
     login(body: String!): AuthPayload
     logout: Boolean
+||||||| merged common ancestors
+    deleteUser(id: ID!): Int!
+=======
+    deleteUser(id: ID!): ID!
+>>>>>>> 475c13e74581f8a68e901f0032cb6a47ee7120d0
   }
   
   type User {
