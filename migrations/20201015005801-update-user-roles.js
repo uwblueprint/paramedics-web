@@ -17,10 +17,6 @@ module.exports = {
         `UPDATE users SET "roleId" = 2 WHERE "accessLevel" = 'SUPERVISOR'`,
         { transaction: t }
       );
-      await queryInterface.sequelize.query(
-        `UPDATE users SET "roleId" = 3 WHERE "accessLevel" = 'DISPATCH'`,
-        { transaction: t }
-      );
       await queryInterface.removeColumn('users', 'accessLevel', {
         transaction: t,
       });
@@ -50,7 +46,7 @@ module.exports = {
         { transaction: t }
       );
       await queryInterface.sequelize.query(
-        `UPDATE users SET "accessLevel" = 'DISPATCH' WHERE "roleId" = 3`,
+        `UPDATE users SET "accessLevel" = 'SUPERVISOR' WHERE "roleId" = 3`,
         { transaction: t }
       );
       await queryInterface.removeColumn('users', 'roleId', {
