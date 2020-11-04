@@ -128,6 +128,8 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, path: "/" });
 
-app.listen({ port: PORT }, () => console.log(`🚀 Server ready at ${HOST}`));
+app.listen({ port: PORT }, () => {
+  console.log(`🚀 Server ready at ${HOST}`);
+});
