@@ -1,26 +1,43 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const collectionPointResolvers = {
   Query: {
-    collectionPoints: () => db.collectionPoint.findAll(),
-    collectionPoint: (parent, args) => db.collectionPoint.findByPk(args.id),
-    collectionPointsByEvent: (parent, args) =>
-      db.collectionPoint.findAll({ where: { eventId: args.eventId } }),
+    collectionPoints: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.collectionPoint.findAll();
+    },
+    collectionPoint: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.collectionPoint.findByPk(args.id);
+    },
+    collectionPointsByEvent: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.collectionPoint.findAll({ where: { eventId: args.eventId } });
+    },
   },
-
   collectionPoint: {
-    eventId: (parent) => db.event.findByPk(parent.eventId),
-    createdBy: (parent) => db.user.findByPk(parent.createdBy),
+    eventId: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.event.findByPk(parent.eventId);
+    },
+    createdBy: (parent) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.user.findByPk(parent.createdBy);
+    },
   },
-
   // CRUD Operations
   Mutation: {
-    addCollectionPoint: (parent, args) =>
+    addCollectionPoint: (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       // Check if user & event is valid
-      Promise.all([
+      return Promise.all([
         validators.validateUser(args.createdBy),
         validators.validateEvent(args.eventId),
       ]).then(() =>
@@ -29,8 +46,13 @@ const collectionPointResolvers = {
           eventId: args.eventId,
           createdBy: args.createdBy,
         })
-      ),
+      );
+    },
     updateCollectionPoint: async (parent, args) => {
+      validators.validateRole(
+        [Roles.COMMANDER, Roles.SUPERVISOR],
+        validators.demoRole
+      );
       // Checks if event is valid
       if (args.eventId) {
         await validators.validateEvent(args.eventId);
@@ -62,6 +84,7 @@ const collectionPointResolvers = {
       return db.collectionPoint.findByPk(args.id);
     },
     restoreCollectionPoint: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateCollectionPoint(args.id, true);
       await db.collectionPoint.restore({
         where: {
@@ -71,8 +94,9 @@ const collectionPointResolvers = {
       });
       return db.collectionPoint.findByPk(args.id);
     },
-    deleteCollectionPoint: (parent, args) =>
-      db.collectionPoint
+    deleteCollectionPoint: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.collectionPoint
         .destroy({
           where: {
             id: args.id,
@@ -84,7 +108,8 @@ const collectionPointResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for CCP ID: ' + args.id);
-        }),
+        });
+    },
   },
 };
 

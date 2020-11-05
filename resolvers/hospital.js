@@ -1,34 +1,42 @@
 'use strict';
 
 const db = require('../models');
+const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
 const hospitalResolvers = {
   Query: {
-    hospitals: () =>
-      db.hospital.findAll({
+    hospitals: () => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.hospital.findAll({
         include: [
           {
             model: db.event,
           },
         ],
-      }),
-    hospital: (parent, args) =>
-      db.hospital.findByPk(args.id, {
+      });
+    },
+    hospital: (parent, args) => {
+      validators.validateRole(Object.values(Roles), validators.demoRole);
+      return db.hospital.findByPk(args.id, {
         include: [
           {
             model: db.event,
           },
         ],
-      }),
+      });
+    },
   },
   Mutation: {
-    addHospital: (parent, args) =>
-      db.hospital.create({
+    addHospital: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.hospital.create({
         name: args.name,
-      }),
-    updateHospital: (parent, args) =>
-      db.hospital
+      });
+    },
+    updateHospital: (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.hospital
         .update(
           {
             name: args.name,
@@ -44,8 +52,10 @@ const hospitalResolvers = {
             throw new Error('Failed update for hospital ID: ' + args.id);
           }
           return db.hospital.findByPk(args.id);
-        }),
+        });
+    },
     restoreHospital: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
       await validators.validateHospital(args.id, true);
       await db.hospital.restore({
         where: {
@@ -54,8 +64,9 @@ const hospitalResolvers = {
       });
       return db.hospital.findByPk(args.id);
     },
-    deleteHospital: async (parent, args) =>
-      db.patient
+    deleteHospital: async (parent, args) => {
+      validators.validateRole([Roles.COMMANDER], validators.demoRole);
+      return db.patient
         .count({
           where: {
             hospitalId: args.id,
@@ -88,7 +99,8 @@ const hospitalResolvers = {
             return args.id;
           }
           throw new Error('Deletion failed for hospital ID: ' + args.id);
-        }),
+        });
+    },
   },
 };
 

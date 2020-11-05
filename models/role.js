@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const role = sequelize.define(
-    'roles',
+    'role',
     {
       name: DataTypes.STRING,
       displayName: DataTypes.STRING,
@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
+  role.associate = (models) => {
+    role.hasMany(models.user);
+  };
 
   return role;
 };
