@@ -14,6 +14,7 @@ const userResolvers = {
       validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findByPk(args.id);
     },
+    roles: () => db.role.findAll(),
   },
   Mutation: {
     addUser: (parent, args) => {
@@ -22,7 +23,7 @@ const userResolvers = {
         name: args.name,
         email: args.email,
         password: args.password,
-        accessLevel: args.accessLevel,
+        roleId: args.roleId,
         emergencyContact: args.emergencyContact,
       });
     },
@@ -33,7 +34,7 @@ const userResolvers = {
           {
             name: args.name,
             email: args.email,
-            accessLevel: args.accessLevel,
+            roleId: args.roleId,
             emergencyContact: args.emergencyContact,
           },
           {

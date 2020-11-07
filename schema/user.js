@@ -1,25 +1,19 @@
 const userSchema = `
-  enum accessLevel {
-    COMMANDER
-    SUPERVISOR
-    ADMIN
-  }
-
   extend type Query {
     user(id: ID!): User
     users: [User]
   }
   
   extend type Mutation {
-    addUser(name: String!, email: String!, password: String!, accessLevel: accessLevel!, emergencyContact: String!): User!
-    updateUser(id: ID!, accessLevel: accessLevel, name: String, email: String,
+    addUser(name: String!, email: String!, password: String!, roleId: ID!, emergencyContact: String!): User!
+    updateUser(id: ID!, roleId: ID, name: String, email: String,
       emergencyContact: String): User!
     restoreUser(id: ID!): User!
     deleteUser(id: ID!): ID!
   }
   
   type User {
-    accessLevel: accessLevel
+    roleId: ID!
     id: ID!
     name: String!
     email: String!
