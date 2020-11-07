@@ -1,5 +1,8 @@
 'use strict';
 
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-console */
+
 require('dotenv').config();
 
 const express = require('express');
