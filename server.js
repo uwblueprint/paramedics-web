@@ -1,8 +1,5 @@
 'use strict';
 
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-console */
-
 require('dotenv').config();
 
 const express = require('express');
@@ -17,8 +14,11 @@ const { schema } = require('./graphql');
 
 const PORT = 4000;
 const HOST = `http://localhost:${PORT}`;
+// TODO: Change this session secret
 const SESSION_SECRET = 'notsecure';
 
+// This is used to configure login/logout functionality, e.g. the entry point to our IDP, 
+// the login callback, etc.
 const samlStrategy = new saml.Strategy(
   {
     path: '/login/callback',
@@ -26,7 +26,6 @@ const samlStrategy = new saml.Strategy(
     acceptedClockSkewMs: -1, // SAML assertion not yet valid fix
     logoutUrl: 'https://uwbp-paramedics.us.auth0.com/v2/logout',
     additionalLogoutParams: {
-      // TODO: Move this to env variable
       client_id: process.env.AUTH0_CLIENT_ID,
       federated: '',
       returnTo: 'http://localhost:4000/logout/callback',
@@ -44,8 +43,11 @@ const samlStrategy = new saml.Strategy(
       })
       .then((matchingUser) => {
         // Save the nameId and nameIDFormat for logout
+        /* eslint-disable-next-line no-param-reassign */
         matchingUser.saml = {};
+        /* eslint-disable-next-line no-param-reassign */
         matchingUser.saml.nameID = profile.nameID;
+        /* eslint-disable-next-line no-param-reassign */
         matchingUser.saml.nameIDFormat = profile.nameIDFormat;
         done(
           matchingUser ? null : new Error('Email is not registered: ' + email),
@@ -57,10 +59,18 @@ const samlStrategy = new saml.Strategy(
 
 passport.use(samlStrategy);
 
+/** This saves user.email in the session, under req.session.passport.user,
+ *    which is later used by deserializeUser to find the user object and attach 
+ *    it to req.user. After this operation, req.session.passport.user = user.email */ 
 passport.serializeUser((user, done) => {
   done(null, user.email);
 });
 
+
+/** This is called with the email that was saved in serializeUser as the
+*     first argument to this function. (i.e. email = user.email). We would then
+*     use the user's email to get the actual user object (using db.user.findOne(...))
+*     Afterwards, the user object is attached to req.user */
 passport.deserializeUser(async (email, done) => {
   done(
     null,
@@ -133,5 +143,6 @@ const server = new ApolloServer({
 server.applyMiddleware({ app, path: '/' });
 
 app.listen({ port: PORT }, () => {
+  /* eslint-disable-next-line no-console */
   console.log(`🚀 Server ready at ${HOST}`);
 });
