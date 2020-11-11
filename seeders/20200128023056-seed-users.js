@@ -4,26 +4,23 @@ module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert('users', [
       {
-        name: 'John Doe',
+        name: 'John Admin',
         email: 'example@example.com',
-        accessLevel: 'COMMANDER',
-        emergencyContact: '1234567890',
+        roleId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: 'Clark Kent',
+        name: 'Clark Supervisor',
         email: 'clark.kent@example.com',
-        accessLevel: 'SUPERVISOR',
-        emergencyContact: '1234567890',
+        roleId: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: 'Chris Paul',
+        name: 'Chris Dispatch',
         email: 'chris.paul@example.com',
-        accessLevel: 'ADMIN',
-        emergencyContact: '1234567890',
+        roleId: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

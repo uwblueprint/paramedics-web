@@ -6,17 +6,17 @@ module.exports = {
       'hospitals',
       [
         {
-          name: 'Hospital 1',
+          name: 'Grand River Hospital',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: 'Hospital 2',
+          name: 'Columbia Ice Field',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: 'Hospital 3',
+          name: 'Mr Paninos',
           createdAt: new Date(),
           updatedAt: new Date(),
         },

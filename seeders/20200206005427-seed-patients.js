@@ -5,10 +5,9 @@ const db = require('../models');
 module.exports = {
   up: async (queryInterface) => {
     const user = await db.user.create({
-      name: 'Darth Vader',
+      name: 'Admin Vader',
       email: 'darthvader@sithlords.com',
-      accessLevel: 'COMMANDER',
-      password: 'ga1axyru1er',
+      roleId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -30,13 +29,45 @@ module.exports = {
       updatedAt: new Date(),
     });
 
+    const hospital = await db.hospital.create({
+      name: 'Endor Base',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const ambulance = await db.ambulance.create({
+      vehicleNumber: 5454,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    await Promise.all([
+      queryInterface.bulkInsert('eventAmbulances', [
+        {
+          eventId: event.id,
+          ambulanceId: ambulance.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]),
+      queryInterface.bulkInsert('eventHospitals', [
+        {
+          eventId: event.id,
+          hospitalId: hospital.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]),
+    ]);
+
     return queryInterface.bulkInsert('patients', [
       {
         gender: 'M',
         age: 19,
-        barcodeValue: '1525242sa',
+        barcodeValue: '1234abcd',
         collectionPointId: collectionPoint.id,
         status: 'ON_SITE',
+        triageCategory: 3,
         triageLevel: 'YELLOW',
         notes: 'This guy looks super drunk',
         transportTime: new Date(),
@@ -45,8 +76,9 @@ module.exports = {
       },
       {
         gender: 'F',
+        age: 45,
         runNumber: 65433,
-        barcodeValue: '9876F5E4',
+        barcodeValue: '12345abcde',
         collectionPointId: collectionPoint.id,
         status: 'RELEASED',
         triageCategory: 1,
@@ -59,11 +91,13 @@ module.exports = {
         gender: 'M',
         age: 21,
         runNumber: 65433,
-        barcodeValue: '9876FY54',
+        barcodeValue: '123456abcdef',
         collectionPointId: collectionPoint.id,
         status: 'TRANSPORTED',
-        triageCategory: 3,
+        triageCategory: 5,
         triageLevel: 'BLACK',
+        ambulanceId: ambulance.id,
+        hospitalId: hospital.id,
         transportTime: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
