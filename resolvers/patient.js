@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 'use strict';
 
 const { PubSub, withFilter } = require('apollo-server');
