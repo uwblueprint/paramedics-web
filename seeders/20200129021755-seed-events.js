@@ -5,17 +5,16 @@ const db = require('../models');
 module.exports = {
   up: async (queryInterface) => {
     const user = await db.user.create({
-      name: 'Capt Holt',
+      name: 'Admin Holt',
       email: 'capt.holt@asd.com',
-      accessLevel: 'COMMANDER',
-      password: 'asdfgh1234',
+      roleId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     return queryInterface.bulkInsert('events', [
       {
-        name: "St Patrick's Day",
+        name: 'Fire @ Precinct 99',
         eventDate: new Date(),
         createdBy: user.id,
         isActive: true,
@@ -23,10 +22,10 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        name: 'Homecoming',
+        name: 'Halloween Heist',
         eventDate: new Date(),
         createdBy: user.id,
-        isActive: true,
+        isActive: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

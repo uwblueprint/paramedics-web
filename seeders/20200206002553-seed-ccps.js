@@ -5,32 +5,32 @@ const db = require('../models');
 module.exports = {
   up: async (queryInterface) => {
     const user = await db.user.create({
-      name: 'Firas Mansour',
+      name: 'Supervisor Mansour',
       email: 'mansour_is_a_cool_guy@gmail.com',
-      accessLevel: 'SUPERVISOR',
-      password: 'asdfgh1234',
+      roleId: 2,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     const event = await db.event.create({
       eventDate: new Date(),
-      name: 'St. Patricks',
+      name: 'Mass exam panic attack',
       createdBy: user.id,
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
     return queryInterface.bulkInsert('collectionPoints', [
       {
-        name: 'Checkpoint 0',
+        name: 'MC 1085',
         eventId: event.id,
         createdBy: user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: 'Checkpoint 1',
+        name: 'DC 2531',
         eventId: event.id,
         createdBy: user.id,
         createdAt: new Date(),
