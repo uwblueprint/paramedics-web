@@ -112,6 +112,7 @@ app.post('/login/callback', passport.authenticate('saml'), (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
+  // TODO: Redirect to proper unauth screen upon logout
   if (req.user == null) {
     res.send('No logged in user!');
     return;
@@ -120,6 +121,7 @@ app.get('/logout', (req, res) => {
     // Clear user login session on our end
     res.clearCookie('connect.sid');
     // Redirect to logout callback URL
+    // Note: this uri is specified in the `returnTo` field of `samlStrategy`'s `additionalLogoutParams`
     return res.redirect(uri);
   });
 });
