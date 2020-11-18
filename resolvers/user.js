@@ -22,9 +22,7 @@ const userResolvers = {
       return db.user.create({
         name: args.name,
         email: args.email,
-        password: args.password,
         roleId: args.roleId,
-        emergencyContact: args.emergencyContact,
       });
     },
     updateUser: (parent, args) => {
@@ -35,7 +33,6 @@ const userResolvers = {
             name: args.name,
             email: args.email,
             roleId: args.roleId,
-            emergencyContact: args.emergencyContact,
           },
           {
             where: {

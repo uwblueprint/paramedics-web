@@ -5,9 +5,8 @@ const userSchema = `
   }
   
   extend type Mutation {
-    addUser(name: String!, email: String!, password: String!, roleId: ID!, emergencyContact: String!): User!
-    updateUser(id: ID!, roleId: ID, name: String, email: String,
-      emergencyContact: String): User!
+    addUser(name: String!, email: String!, roleId: ID!): User!
+    updateUser(id: ID!, roleId: ID, name: String, email: String): User!
     restoreUser(id: ID!): User!
     deleteUser(id: ID!): ID!
   }
@@ -17,7 +16,6 @@ const userSchema = `
     id: ID!
     name: String!
     email: String!
-    emergencyContact: String
     createdAt: DateTime
     updatedAt: DateTime
   }

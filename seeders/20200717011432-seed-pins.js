@@ -5,10 +5,9 @@ const db = require('../models');
 module.exports = {
   up: async (queryInterface) => {
     const user = await db.user.create({
-      name: 'Space Garbage',
+      name: 'Scary Supervisor',
       email: 'space_garbage@gmail.com',
-      accessLevel: 'SUPERVISOR',
-      password: 'asdfgh1234',
+      roleId: 2,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
