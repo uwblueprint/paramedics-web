@@ -43,15 +43,17 @@ const samlStrategy = new saml.Strategy(
       })
       .then((matchingUser) => {
         // Save the nameId and nameIDFormat for logout
-        /* eslint-disable-next-line no-param-reassign */
-        matchingUser.saml = {};
-        /* eslint-disable-next-line no-param-reassign */
-        matchingUser.saml.nameID = profile.nameID;
-        /* eslint-disable-next-line no-param-reassign */
-        matchingUser.saml.nameIDFormat = profile.nameIDFormat;
+        // Note: the only field from the user object we need is the email
+        const returnVal = {
+          userEmail: matchingUser.email,
+          saml: {
+            nameID: profile.nameID,
+            nameIDFormat: profile.nameIDFormat,
+          }
+        }
         done(
-          matchingUser ? null : new Error('Email is not registered: ' + email),
-          matchingUser
+          returnVal.userEmail ? null : new Error('Email is not registered: ' + email),
+          returnVal
         );
       });
   }
@@ -62,8 +64,8 @@ passport.use(samlStrategy);
 /** This saves user.email in the session, under req.session.passport.user,
  *    which is later used by deserializeUser to find the user object and attach 
  *    it to req.user. After this operation, req.session.passport.user = user.email */ 
-passport.serializeUser((user, done) => {
-  done(null, user.email);
+passport.serializeUser(({ userEmail }, done) => {
+  done(null, userEmail);
 });
 
 
