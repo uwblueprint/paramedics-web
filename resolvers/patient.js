@@ -1,10 +1,63 @@
 'use strict';
 
+const { PubSub, withFilter } = require('apollo-server');
+const pubsub = new PubSub();
 const db = require('../models');
 const { Roles } = require('../utils/enum');
 const validators = require('../utils/validators');
 
+const PATIENT_ADDED = 'PATIENT_ADDED';
+const PATIENT_UPDATED = 'PATIENT_UPDATED';
+const PATIENT_DELETED = 'PATIENT_DELETED';
+const PATIENT_RESTORED = 'PATIENT_RESTORED';
+
 const patientResolvers = {
+  Subscription: {
+    patientAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([PATIENT_ADDED]),
+        (payload, variables) => {
+          return (
+            payload.patientAdded.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
+        }
+      ),
+    },
+    patientUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([PATIENT_UPDATED]),
+        (payload, variables) => {
+          return (
+            payload.patientUpdated.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
+        }
+      ),
+    },
+    patientRestored: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([PATIENT_RESTORED]),
+        (payload, variables) => {
+          return (
+            payload.patientRestored.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
+        }
+      ),
+    },
+    patientDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([PATIENT_DELETED]),
+        (payload, variables) => {
+          return (
+            payload.patientDeleted.collectionPointId ===
+            parseInt(variables.collectionPointId)
+          );
+        }
+      ),
+    },
+  },
   Query: {
     patients: () => {
       validators.validateRole(Object.values(Roles), validators.demoRole);
@@ -51,8 +104,7 @@ const patientResolvers = {
       if (args.ambulanceId) {
         await validators.validateAmbulance(args.ambulanceId);
       }
-
-      return db.patient.create({
+      const newPatient = await db.patient.create({
         gender: args.gender,
         age: args.age,
         runNumber: args.runNumber,
@@ -66,6 +118,8 @@ const patientResolvers = {
         hospitalId: args.hospitalId,
         ambulanceId: args.ambulanceId,
       });
+      pubsub.publish(PATIENT_ADDED, { patientAdded: newPatient });
+      return newPatient;
     },
     updatePatient: async (parent, args) => {
       validators.validateRole(Object.values(Roles), validators.demoRole);
@@ -105,7 +159,9 @@ const patientResolvers = {
           },
         }
       );
-      return db.patient.findByPk(args.id);
+      const updatedPatient = await db.patient.findByPk(args.id);
+      pubsub.publish(PATIENT_UPDATED, { patientUpdated: updatedPatient });
+      return updatedPatient;
     },
     restorePatient: async (parent, args) => {
       validators.validateRole(
@@ -116,7 +172,9 @@ const patientResolvers = {
       await db.patient.restore({
         where: { id: args.id },
       });
-      return db.patient.findByPk(args.id);
+      const restoredPatient = await db.patient.findByPk(args.id);
+      pubsub.publish(PATIENT_RESTORED, { patientRestored: restoredPatient });
+      return restoredPatient;
     },
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
     deletePatient: (parent, args) => {
@@ -133,9 +191,11 @@ const patientResolvers = {
             where: { id: args.id },
           }
         )
-        .then((isDeleted) => {
+        .then(async (isDeleted) => {
           if (isDeleted[0] === 1) {
-            return db.patient.findByPk(args.id);
+            const deletedPatient = await db.patient.findByPk(args.id);
+            pubsub.publish(PATIENT_DELETED, { patientDeleted: deletedPatient });
+            return deletedPatient;
           }
           throw new Error('Deletion failed for patient ID: ' + args.id);
         });
