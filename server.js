@@ -17,7 +17,7 @@ const HOST = `http://localhost:${PORT}`;
 // TODO: Change this session secret
 const SESSION_SECRET = 'notsecure';
 
-// This is used to configure login/logout functionality, e.g. the entry point to our IDP, 
+// This is used to configure login/logout functionality, e.g. the entry point to our IDP,
 // the login callback, etc.
 const samlStrategy = new saml.Strategy(
   {
@@ -49,10 +49,12 @@ const samlStrategy = new saml.Strategy(
           saml: {
             nameID: profile.nameID,
             nameIDFormat: profile.nameIDFormat,
-          }
-        }
+          },
+        };
         done(
-          returnVal.userEmail ? null : new Error('Email is not registered: ' + email),
+          returnVal.userEmail
+            ? null
+            : new Error('Email is not registered: ' + email),
           returnVal
         );
       });
@@ -62,17 +64,17 @@ const samlStrategy = new saml.Strategy(
 passport.use(samlStrategy);
 
 /** This saves user.email in the session, under req.session.passport.user,
- *    which is later used by deserializeUser to find the user object and attach 
- *    it to req.user. After this operation, req.session.passport.user = user.email */ 
+ *    which is later used by deserializeUser to find the user object and attach
+ *    it to req.user. After this operation, req.session.passport.user = user.email */
+
 passport.serializeUser(({ userEmail }, done) => {
   done(null, userEmail);
 });
 
-
 /** This is called with the email that was saved in serializeUser as the
-*     first argument to this function. (i.e. email = user.email). We would then
-*     use the user's email to get the actual user object (using db.user.findOne(...))
-*     Afterwards, the user object is attached to req.user */
+ *     first argument to this function. (i.e. email = user.email). We would then
+ *     use the user's email to get the actual user object (using db.user.findOne(...))
+ *     Afterwards, the user object is attached to req.user */
 passport.deserializeUser(async (email, done) => {
   done(
     null,
