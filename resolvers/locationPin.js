@@ -98,7 +98,7 @@ const locationPinResolvers = {
         [Roles.COMMANDER, Roles.SUPERVISOR],
         validators.demoRole
       );
-      db.locationPins
+      return db.locationPins
         .destroy({
           where: {
             id: args.id,
