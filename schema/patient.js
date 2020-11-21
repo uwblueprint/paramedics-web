@@ -63,10 +63,10 @@ const patientSchema = `
   }
   
   type Subscription {
-    patientAdded(collectionPointId: ID!): Patient
-    patientUpdated(collectionPointId: ID!): Patient
-    patientDeleted(collectionPointId: ID!): Patient
-    patientRestored(collectionPointId: ID!): Patient
+    patientAdded(eventId: ID!): Patient
+    patientUpdated(eventId: ID!): Patient
+    patientDeleted(eventId: ID!): Patient
+    patientRestored(eventId: ID!): Patient
   }
 
   type Patient {
