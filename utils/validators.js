@@ -1,6 +1,6 @@
 'use strict';
 
-const { AuthenticationError } = require('apollo-server');
+const { AuthenticationError } = require('apollo-server-express');
 const { Roles } = require('../utils/enum');
 const db = require('../models');
 

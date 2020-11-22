@@ -1,6 +1,6 @@
 'use strict';
 
-const { PubSub, withFilter } = require('apollo-server');
+const { PubSub, withFilter } = require('apollo-server-express');
 const pubsub = new PubSub();
 const db = require('../models');
 const { Roles } = require('../utils/enum');
