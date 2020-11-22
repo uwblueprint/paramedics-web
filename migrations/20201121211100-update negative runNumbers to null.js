@@ -8,7 +8,5 @@ module.exports = {
       { runNumber: '-1' }
     );
   },
-  down: () => {
-    return Promise.resolve();
-  },
+  down: () => Promise.resolve(),
 };
