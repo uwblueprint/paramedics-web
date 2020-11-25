@@ -97,21 +97,54 @@ module.exports = {
     });
   },
   validateLocationPin: (
-    locationPinId,
+    locationPinId = 0,
+    pinType,
+    ccpParentId,
+    eventParentId,
+    eventId,
+    newPin = false,
     checkParanoid = false,
     errorMessage = 'Invalid location pin ID: ' + locationPinId
   ) => {
+    console.log(pinType);
     const options = { paranoid: true };
     if (checkParanoid) {
       options.paranoid = false;
     }
-    return db.locationPins
+
+    if(pinType === 'CCP') {
+      if(!ccpParentId) {
+        throw new Error('A CCP pin must be created by a valid CCP');
+      }
+
+      if(eventParentId) {
+        throw new Error('A CCP pin cannot be created by an event');
+      }
+    }
+
+    if(pinType === 'EVENT') {
+      if(!eventParentId) {
+        throw new Error('An event pin must be created by a valid event');
+      }
+
+      if (eventParentId !== eventId) {
+        throw new Error('An event pin must be created by the same associated event');
+      }
+      
+      if(ccpParentId) {
+        throw new Error('An event pin cannot be created by a CCP');
+      }
+    }
+    
+    if(!newPin) {
+      return db.locationPins
       .findByPk(locationPinId, options)
       .then((locationPin) => {
         if (!locationPin) {
           throw new Error(errorMessage);
         }
       });
+    }
   },
   validateRole: (
     role,

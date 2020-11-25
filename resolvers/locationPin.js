@@ -27,7 +27,6 @@ const locationPinResolvers = {
   LocationPin: {
     eventId: (parent) => {
       validators.validateRole(Object.values(Roles), validators.demoRole);
-
       return db.event.findByPk(parent.eventId);
     },
   },
@@ -40,6 +39,11 @@ const locationPinResolvers = {
         validators.demoRole
       );
       await validators.validateEvent(args.eventId);
+      if(args.ccpParentId) {
+        await validators.validateCollectionPoint(args.ccpParentId);
+      }
+
+      await validators.validateLocationPin(args.pinType, args.ccpParentId, args.eventId, args.eventId, true);
 
       return db.locationPins.create({
         label: args.label,
@@ -47,6 +51,9 @@ const locationPinResolvers = {
         latitude: args.latitude,
         longitude: args.longitude,
         address: args.address,
+        pinType: args.pinType,
+        ccpParentId: args.ccpParentId,
+        eventParentId: args.eventParentId,
       });
     },
     updateLocationPin: async (parent, args) => {
@@ -66,6 +73,9 @@ const locationPinResolvers = {
             latitude: args.latitude,
             longitude: args.longitude,
             address: args.address,
+            pinType: args.pinType,
+            ccpParentId: args.ccpParentId,
+            eventParentId: args.eventParentId,
           },
           {
             where: {
