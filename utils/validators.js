@@ -106,7 +106,7 @@ module.exports = {
     checkParanoid = false,
     errorMessage = 'Invalid location pin ID: ' + locationPinId
   ) => {
-    console.log(pinType);
+
     const options = { paranoid: true };
     if (checkParanoid) {
       options.paranoid = false;
@@ -135,7 +135,7 @@ module.exports = {
         throw new Error('An event pin cannot be created by a CCP');
       }
     }
-    
+
     if(!newPin) {
       return db.locationPins
       .findByPk(locationPinId, options)

@@ -29,6 +29,12 @@ const locationPinResolvers = {
       validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findByPk(parent.eventId);
     },
+    eventParentId: (parent) => {
+      return db.event.findByPk(parent.eventId);
+    },
+    ccpParentId: (parent) => {
+      return db.event.findByPk(parent.eventId);
+    }
   },
 
   // CRUD Operations
@@ -43,8 +49,7 @@ const locationPinResolvers = {
         await validators.validateCollectionPoint(args.ccpParentId);
       }
 
-      await validators.validateLocationPin(args.pinType, args.ccpParentId, args.eventId, args.eventId, true);
-
+      await validators.validateLocationPin(args.pinType, args.ccpParentId, args.eventParentId, args.eventId, true);
       return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
