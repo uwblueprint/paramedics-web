@@ -18,8 +18,8 @@ const patientResolvers = {
         () => pubsub.asyncIterator([PATIENT_ADDED]),
         (payload, variables) => {
           return (
-            payload.patientAdded.collectionPointId ===
-            parseInt(variables.collectionPointId)
+            payload.eventId ===
+            parseInt(variables.eventId)
           );
         }
       ),
@@ -29,8 +29,8 @@ const patientResolvers = {
         () => pubsub.asyncIterator([PATIENT_UPDATED]),
         (payload, variables) => {
           return (
-            payload.patientUpdated.collectionPointId ===
-            parseInt(variables.collectionPointId)
+            payload.eventId ===
+            parseInt(variables.eventId)
           );
         }
       ),
@@ -40,8 +40,8 @@ const patientResolvers = {
         () => pubsub.asyncIterator([PATIENT_RESTORED]),
         (payload, variables) => {
           return (
-            payload.patientRestored.collectionPointId ===
-            parseInt(variables.collectionPointId)
+            payload.eventId ===
+            parseInt(variables.eventId)
           );
         }
       ),
@@ -51,8 +51,8 @@ const patientResolvers = {
         () => pubsub.asyncIterator([PATIENT_DELETED]),
         (payload, variables) => {
           return (
-            payload.patientDeleted.collectionPointId ===
-            parseInt(variables.collectionPointId)
+            payload.eventId ===
+            parseInt(variables.eventId)
           );
         }
       ),
@@ -118,7 +118,8 @@ const patientResolvers = {
         hospitalId: args.hospitalId,
         ambulanceId: args.ambulanceId,
       });
-      pubsub.publish(PATIENT_ADDED, { patientAdded: newPatient });
+      const collectionPoint = await db.collectionPoint.findByPk(newPatient.collectionPointId);
+      pubsub.publish(PATIENT_ADDED, { patientAdded: newPatient, eventId: collectionPoint.eventId });
       return newPatient;
     },
     updatePatient: async (parent, args) => {
@@ -160,7 +161,8 @@ const patientResolvers = {
         }
       );
       const updatedPatient = await db.patient.findByPk(args.id);
-      pubsub.publish(PATIENT_UPDATED, { patientUpdated: updatedPatient });
+      const collectionPoint = await db.collectionPoint.findByPk(updatedPatient.collectionPointId);
+      pubsub.publish(PATIENT_UPDATED, { patientUpdated: updatedPatient, eventId: collectionPoint.eventId });
       return updatedPatient;
     },
     restorePatient: async (parent, args) => {
@@ -173,7 +175,8 @@ const patientResolvers = {
         where: { id: args.id },
       });
       const restoredPatient = await db.patient.findByPk(args.id);
-      pubsub.publish(PATIENT_RESTORED, { patientRestored: restoredPatient });
+      const collectionPoint = await db.collectionPoint.findByPk(restoredPatient.collectionPointId);
+      pubsub.publish(PATIENT_RESTORED, { patientRestored: restoredPatient, eventId: collectionPoint.eventId });
       return restoredPatient;
     },
     // This is a user delete of a patient, where the status is updated. A system delete happens if a CCP with associated patients is deleted
@@ -194,7 +197,8 @@ const patientResolvers = {
         .then(async (isDeleted) => {
           if (isDeleted[0] === 1) {
             const deletedPatient = await db.patient.findByPk(args.id);
-            pubsub.publish(PATIENT_DELETED, { patientDeleted: deletedPatient });
+            const collectionPoint = await db.collectionPoint.findByPk(deletedPatient.collectionPointId);
+            pubsub.publish(PATIENT_DELETED, { patientDeleted: deletedPatient, eventId: collectionPoint.eventId });
             return deletedPatient;
           }
           throw new Error('Deletion failed for patient ID: ' + args.id);
