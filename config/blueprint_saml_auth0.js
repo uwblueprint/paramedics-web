@@ -1,5 +1,7 @@
 const saml = require('passport-saml');
 
+const db = require('../models');
+
 // This is used to configure login/logout functionality, e.g. the entry point to our IDP,
 // the login callback, etc.
 const samlStrategy = new saml.Strategy(
