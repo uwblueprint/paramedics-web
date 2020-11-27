@@ -29,12 +29,9 @@ const locationPinResolvers = {
       validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findByPk(parent.eventId);
     },
-    eventParentId: (parent) => {
-      return db.event.findByPk(parent.eventId);
-    },
     ccpParentId: (parent) => {
       return db.event.findByPk(parent.eventId);
-    }
+    },
   },
 
   // CRUD Operations
@@ -45,11 +42,17 @@ const locationPinResolvers = {
         validators.demoRole
       );
       await validators.validateEvent(args.eventId);
-      if(args.ccpParentId) {
+      if (args.ccpParentId) {
         await validators.validateCollectionPoint(args.ccpParentId);
       }
 
-      await validators.validateLocationPin(args.pinType, args.ccpParentId, args.eventParentId, args.eventId, true);
+      await validators.validateLocationPin(
+        0,
+        args.pinType,
+        args.ccpParentId,
+        args.eventId,
+        true
+      );
       return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
@@ -58,7 +61,6 @@ const locationPinResolvers = {
         address: args.address,
         pinType: args.pinType,
         ccpParentId: args.ccpParentId,
-        eventParentId: args.eventParentId,
       });
     },
     updateLocationPin: async (parent, args) => {
@@ -70,6 +72,13 @@ const locationPinResolvers = {
         await validators.validateEvent(args.eventId);
       }
 
+      await validators.validateLocationPin(
+        args.id,
+        args.pinType,
+        args.ccpParentId,
+        args.eventId
+      );
+
       await db.locationPins
         .update(
           {
@@ -80,7 +89,6 @@ const locationPinResolvers = {
             address: args.address,
             pinType: args.pinType,
             ccpParentId: args.ccpParentId,
-            eventParentId: args.eventParentId,
           },
           {
             where: {
@@ -100,7 +108,7 @@ const locationPinResolvers = {
         [Roles.COMMANDER, Roles.SUPERVISOR],
         validators.demoRole
       );
-      await validators.validateLocationPin(args.id, true);
+      await validators.validateLocationPin(args.id, 'OTHER', 0, 0, false, true);
       await db.locationPins.restore({
         where: {
           id: args.id,

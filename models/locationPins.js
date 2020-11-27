@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         values: ['OTHER', 'CCP', 'EVENT'],
       },
       ccpParentId: DataTypes.INTEGER,
-      eventParentId: DataTypes.INTEGER,
     },
     { paranoid: true }
   );
@@ -23,11 +22,6 @@ module.exports = (sequelize, DataTypes) => {
 
     locationPin.belongsTo(models.event, {
       foreignKey: 'eventId',
-      targetKey: 'id',
-    });
-
-    locationPin.belongsTo(models.event, {
-      foreignKey: 'eventParentId',
       targetKey: 'id',
     });
 

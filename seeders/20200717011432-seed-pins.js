@@ -46,7 +46,6 @@ module.exports = {
         address: 'Test Address 2',
         eventId: event.id,
         pinType: 'EVENT',
-        eventParentId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
