@@ -48,4 +48,4 @@ const samlStrategy = new saml.Strategy(
   }
 );
 
-export default samlStrategy;
+module.exports = samlStrategy;
