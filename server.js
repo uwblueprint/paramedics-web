@@ -107,6 +107,8 @@ function application({ authStrategy, graphqlPath }) {
   return app;
 }
 
+module.exports = application;
+
 if (require.main === module) {
   const authStrategy = require('./config/blueprint_saml_auth0');
   application({ authStrategy, graphqlPath: '/' }).listen({ port: PORT }, () => {
