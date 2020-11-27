@@ -1,4 +1,5 @@
 const saml = require('passport-saml');
+const { Op } = require('sequelize');
 
 const db = require('../models');
 

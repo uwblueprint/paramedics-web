@@ -75,11 +75,11 @@ function application({ authStrategy, graphqlPath }) {
       res.send('No logged in user!');
       return;
     }
-    samlStrategy.logout(req, function(err, uri) {
+    authStrategy.logout(req, (err, uri) => {
       // Clear user login session on our end
       res.clearCookie('connect.sid');
       // Redirect to logout callback URL
-      // Note: this uri is specified in the `returnTo` field of `samlStrategy`'s `additionalLogoutParams`
+      // Note: this uri is specified in the `returnTo` field of `authStrategy`'s `additionalLogoutParams`
       return res.redirect(uri);
     });
   });
@@ -110,6 +110,7 @@ function application({ authStrategy, graphqlPath }) {
 module.exports = application;
 
 if (require.main === module) {
+  /* eslint-disable-next-line global-require */
   const authStrategy = require('./config/blueprint_saml_auth0');
   application({ authStrategy, graphqlPath: '/' }).listen({ port: PORT }, () => {
     /* eslint-disable-next-line no-console */
