@@ -46,13 +46,13 @@ const locationPinResolvers = {
         await validators.validateCollectionPoint(args.ccpParentId);
       }
 
-      await validators.validateLocationPin(
-        0,
-        args.pinType,
-        args.ccpParentId,
-        args.eventId,
-        true
-      );
+      await validators.validateLocationPin({
+        pinType: args.pinType,
+        ccpParentId: args.ccpParentId,
+        eventId: args.eventId,
+        newPin: true,
+      });
+
       return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
@@ -72,12 +72,13 @@ const locationPinResolvers = {
         await validators.validateEvent(args.eventId);
       }
 
-      await validators.validateLocationPin(
-        args.id,
-        args.pinType,
-        args.ccpParentId,
-        args.eventId
-      );
+      await validators.validateLocationPin({
+        locationPinId: args.id,
+        pinType: args.pinType,
+        ccpParentId: args.ccpParentId,
+        eventId: args.eventId,
+        errorMessage: 'Invalid location pin ID: ' + args.id,
+      });
 
       await db.locationPins
         .update(
@@ -108,7 +109,15 @@ const locationPinResolvers = {
         [Roles.COMMANDER, Roles.SUPERVISOR],
         validators.demoRole
       );
-      await validators.validateLocationPin(args.id, 'OTHER', 0, 0, false, true);
+      await validators.validateLocationPin({
+        locationPinId: args.id,
+        pinType: args.pinType,
+        ccpParentId: args.ccpParentId,
+        eventId: args.eventId,
+        errorMessage: 'Invalid location pin ID: ' + args.id,
+        checkParanoid: true,
+      });
+      
       await db.locationPins.restore({
         where: {
           id: args.id,
