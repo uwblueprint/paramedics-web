@@ -30,7 +30,7 @@ const locationPinResolvers = {
       return db.event.findByPk(parent.eventId);
     },
     ccpParentId: (parent) => {
-      return db.event.findByPk(parent.eventId);
+      return db.collectionPoint.findByPk(parent.ccpParentId);
     },
   },
 
