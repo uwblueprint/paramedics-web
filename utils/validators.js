@@ -96,9 +96,7 @@ module.exports = {
       }
     });
   },
-  validateLocationPin: (
-    params
-  ) => {
+  validateLocationPin: (params) => {
     const options = { paranoid: true };
 
     if (params.checkParanoid) {
@@ -110,10 +108,8 @@ module.exports = {
         throw new Error('A CCP pin must be created by a valid CCP');
       }
     }
-    
+
     if (params.pinType === 'EVENT') {
-      console.log(params.eventId);
-      console.log(params.ccpParentId);
       if (!params.eventId) {
         throw new Error('An event pin must be created by a valid event');
       }

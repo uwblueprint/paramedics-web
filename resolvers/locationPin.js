@@ -117,7 +117,7 @@ const locationPinResolvers = {
         errorMessage: 'Invalid location pin ID: ' + args.id,
         checkParanoid: true,
       });
-      
+
       await db.locationPins.restore({
         where: {
           id: args.id,
