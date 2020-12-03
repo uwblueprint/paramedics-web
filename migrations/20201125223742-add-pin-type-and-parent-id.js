@@ -9,39 +9,37 @@ module.exports = {
           'pinType',
           {
             type: Sequelize.DataTypes.ENUM('EVENT', 'CCP', 'OTHER'),
+            defaultValue: 'OTHER',
           },
           { transaction: t }
         ),
         queryInterface.addColumn(
           'locationPins',
-          'ccpParentId',
+          'ccpId',
           {
             type: Sequelize.INTEGER,
           },
           { transaction: t }
         ),
-      ]).then(() => {
-        queryInterface.sequelize.query(
-          `UPDATE "locationPins" SET "pinType" = 'OTHER' WHERE "pinType" IS NULL`
-        );
-      });
+      ]);
     });
   },
 
   down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn('locationPins', 'ccpParentId', {
+        queryInterface.removeColumn('locationPins', 'ccpId', {
           transaction: t,
         }),
         queryInterface.removeColumn('locationPins', 'pinType', {
           transaction: t,
         }),
+      ]).then(() =>
         queryInterface.sequelize.query(
           'DROP TYPE IF EXISTS "enum_locationPins_pinType"',
           { transaction: t }
-        ),
-      ]);
+        )
+      );
     });
   },
 };

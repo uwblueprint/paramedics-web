@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+
 'use strict';
 
 const { AuthenticationError } = require('apollo-server-express');
@@ -103,33 +105,43 @@ module.exports = {
       options.paranoid = false;
     }
 
-    if (params.pinType === 'CCP') {
-      if (!params.ccpParentId) {
+    if (params.args.pinType === 'CCP') {
+      if (!params.args.ccpId) {
         throw new Error('A CCP pin must be created by a valid CCP');
+      } else {
+        db.collectionPoint.findByPk(params.args.ccpId, options).then((ccp) => {
+          if (!ccp) {
+            throw new Error('Invalid CCP pin: ', params.args.ccpId);
+          }
+        })
       }
     }
 
-    if (params.pinType === 'EVENT') {
-      if (!params.eventId) {
+    if (params.args.pinType === 'EVENT') {
+      if (!params.args.eventId) {
         throw new Error('An event pin must be created by a valid event');
       }
 
-      if (params.ccpParentId) {
+      if (params.args.ccpId) {
         throw new Error('An event pin cannot be created by a CCP');
       }
     }
 
-    if (!params.newPin) {
+    if (params.args.pinType === 'OTHER') {
+      if (params.args.ccpId) {
+        throw new Error('An event pin cannot be created by a CCP');
+      }
+    }
+
+    if (params.args.id) {
       return db.locationPins
-        .findByPk(params.locationPinId, options)
+        .findByPk(params.args.id, options)
         .then((locationPin) => {
           if (!locationPin) {
-            throw new Error(params.errorMessage);
+            throw new Error('Invalid location pin ID: ' + params.args.id);
           }
         });
     }
-
-    return true;
   },
   validateRole: (
     role,

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ['OTHER', 'CCP', 'EVENT'],
       },
-      ccpParentId: DataTypes.INTEGER,
+      ccpId: DataTypes.INTEGER,
     },
     { paranoid: true }
   );
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     locationPin.belongsTo(models.collectionPoint, {
-      foreignKey: 'ccpParentId',
+      foreignKey: 'ccpId',
       targetKey: 'id',
     });
   };

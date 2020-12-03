@@ -55,7 +55,7 @@ module.exports = {
         label: 'Pin 3',
         address: 'Test Address 3',
         pinType: 'CCP',
-        ccpParentId: collectionPoint.id,
+        ccpId: collectionPoint.id,
         eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),

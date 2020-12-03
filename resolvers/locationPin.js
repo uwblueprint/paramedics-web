@@ -29,8 +29,8 @@ const locationPinResolvers = {
       validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.event.findByPk(parent.eventId);
     },
-    ccpParentId: (parent) => {
-      return db.collectionPoint.findByPk(parent.ccpParentId);
+    ccpId: (parent) => {
+      return db.collectionPoint.findByPk(parent.ccpId);
     },
   },
 
@@ -42,14 +42,9 @@ const locationPinResolvers = {
         validators.demoRole
       );
       await validators.validateEvent(args.eventId);
-      if (args.ccpParentId) {
-        await validators.validateCollectionPoint(args.ccpParentId);
-      }
 
       await validators.validateLocationPin({
-        pinType: args.pinType,
-        ccpParentId: args.ccpParentId,
-        eventId: args.eventId,
+        args: args,
         newPin: true,
       });
 
@@ -73,11 +68,7 @@ const locationPinResolvers = {
       }
 
       await validators.validateLocationPin({
-        locationPinId: args.id,
-        pinType: args.pinType,
-        ccpParentId: args.ccpParentId,
-        eventId: args.eventId,
-        errorMessage: 'Invalid location pin ID: ' + args.id,
+        args: args,
       });
 
       await db.locationPins
@@ -110,11 +101,7 @@ const locationPinResolvers = {
         validators.demoRole
       );
       await validators.validateLocationPin({
-        locationPinId: args.id,
-        pinType: args.pinType,
-        ccpParentId: args.ccpParentId,
-        eventId: args.eventId,
-        errorMessage: 'Invalid location pin ID: ' + args.id,
+        args: args,
         checkParanoid: true,
       });
 
