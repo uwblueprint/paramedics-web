@@ -20,6 +20,7 @@ if (require.main === module) {
   }).listen(PORT, () => {
     /* eslint-disable-next-line no-console */
     console.log(`🚀 Server ready at ${HOST}`);
+    /* eslint-disable-next-line no-console */
     console.log(`🚀 Subscriptions ready at ${WEBSOCKET}`);
   });
 }
