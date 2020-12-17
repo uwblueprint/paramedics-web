@@ -1,3 +1,4 @@
+const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -93,7 +94,10 @@ function application({ authStrategy, graphqlPath, sessionSecret }) {
 
   server.applyMiddleware({ app, path: graphqlPath });
 
-  return app;
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+
+  return httpServer;
 }
 
 module.exports = application;
