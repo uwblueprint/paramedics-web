@@ -6,6 +6,7 @@ const App = require('./app');
 
 const PORT = 4000;
 const HOST = `http://localhost:${PORT}`;
+const WEBSOCKET = `ws://localhost:${PORT}/graphql`;
 // TODO: change secret and move to env variable
 const SESSION_SECRET = 'notsecure';
 
@@ -16,8 +17,10 @@ if (require.main === module) {
     authStrategy,
     graphqlPath: '/',
     sessionSecret: SESSION_SECRET,
-  }).listen({ port: PORT }, () => {
+  }).listen(PORT, () => {
     /* eslint-disable-next-line no-console */
     console.log(`🚀 Server ready at ${HOST}`);
+    /* eslint-disable-next-line no-console */
+    console.log(`🚀 Subscriptions ready at ${WEBSOCKET}`);
   });
 }
