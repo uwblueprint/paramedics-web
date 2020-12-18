@@ -7,7 +7,7 @@ module.exports = {
     const user = await db.user.create({
       name: 'Scary Supervisor',
       email: 'space_garbage@gmail.com',
-      roleId: 2,
+      roleId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -21,6 +21,13 @@ module.exports = {
       updatedAt: new Date(),
     });
 
+    const collectionPoint = await db.collectionPoint.create({
+      name: 'Checkpoint Coruscant',
+      eventId: event.id,
+      createdBy: user.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
     return queryInterface.bulkInsert('locationPins', [
       {
         latitude: 43.470648,
@@ -28,6 +35,7 @@ module.exports = {
         label: 'Pin 1',
         address: 'Test Address 1',
         eventId: event.id,
+        pinType: 'OTHER',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -37,6 +45,7 @@ module.exports = {
         label: 'Pin 2',
         address: 'Test Address 2',
         eventId: event.id,
+        pinType: 'EVENT',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -45,6 +54,8 @@ module.exports = {
         longitude: -80.534324,
         label: 'Pin 3',
         address: 'Test Address 3',
+        pinType: 'CCP',
+        ccpId: collectionPoint.id,
         eventId: event.id,
         createdAt: new Date(),
         updatedAt: new Date(),

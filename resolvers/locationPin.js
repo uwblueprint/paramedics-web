@@ -27,8 +27,10 @@ const locationPinResolvers = {
   LocationPin: {
     eventId: (parent) => {
       validators.validateRole(Object.values(Roles), validators.demoRole);
-
       return db.event.findByPk(parent.eventId);
+    },
+    ccpId: (parent) => {
+      return db.collectionPoint.findByPk(parent.ccpId);
     },
   },
 
@@ -41,12 +43,19 @@ const locationPinResolvers = {
       );
       await validators.validateEvent(args.eventId);
 
+      await validators.validateLocationPin({
+        args: args,
+        newPin: true,
+      });
+
       return db.locationPins.create({
         label: args.label,
         eventId: args.eventId,
         latitude: args.latitude,
         longitude: args.longitude,
         address: args.address,
+        pinType: args.pinType,
+        ccpParentId: args.ccpParentId,
       });
     },
     updateLocationPin: async (parent, args) => {
@@ -58,6 +67,10 @@ const locationPinResolvers = {
         await validators.validateEvent(args.eventId);
       }
 
+      await validators.validateLocationPin({
+        args: args,
+      });
+
       await db.locationPins
         .update(
           {
@@ -66,6 +79,8 @@ const locationPinResolvers = {
             latitude: args.latitude,
             longitude: args.longitude,
             address: args.address,
+            pinType: args.pinType,
+            ccpParentId: args.ccpParentId,
           },
           {
             where: {
@@ -85,7 +100,11 @@ const locationPinResolvers = {
         [Roles.COMMANDER, Roles.SUPERVISOR],
         validators.demoRole
       );
-      await validators.validateLocationPin(args.id, true);
+      await validators.validateLocationPin({
+        args: args,
+        checkParanoid: true,
+      });
+
       await db.locationPins.restore({
         where: {
           id: args.id,
