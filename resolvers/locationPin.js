@@ -55,7 +55,7 @@ const locationPinResolvers = {
         longitude: args.longitude,
         address: args.address,
         pinType: args.pinType,
-        ccpParentId: args.ccpParentId,
+        ccpId: args.ccpId,
       });
     },
     updateLocationPin: async (parent, args) => {
@@ -80,7 +80,7 @@ const locationPinResolvers = {
             longitude: args.longitude,
             address: args.address,
             pinType: args.pinType,
-            ccpParentId: args.ccpParentId,
+            ccpId: args.ccpId,
           },
           {
             where: {
