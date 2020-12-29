@@ -16,8 +16,8 @@ const userResolvers = {
     },
     loggedInUser: async (parent, args, context) => {
       console.log("JASON: LoggedInUser");
-      console.log(context.getUser());
-      return context.getUser();
+      console.log(await context.getUser());
+      return await context.getUser();
     },
     roles: () => db.role.findAll(),
   },

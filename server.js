@@ -45,6 +45,7 @@ const samlStrategy = new saml.Strategy(
         // Save the nameId and nameIDFormat for logout
         // Note: the only field from the user object we need is the email
         const returnVal = {
+          // TODO: Change to email instead of userEmail
           userEmail: matchingUser.email,
           saml: {
             nameID: profile.nameID,
@@ -68,6 +69,8 @@ passport.use(samlStrategy);
  *    it to req.user. After this operation, req.session.passport.user = user.email */
 
 passport.serializeUser(({ userEmail }, done) => {
+  console.log("Serialize: EMail");
+  console.log(userEmail);
   done(null, userEmail);
 });
 
@@ -76,6 +79,8 @@ passport.serializeUser(({ userEmail }, done) => {
  *     use the user's email to get the actual user object (using db.user.findOne(...))
  *     Afterwards, the user object is attached to req.user */
 passport.deserializeUser(async (email, done) => {
+  console.log("Deserialize:  Email");
+  console.log(email);
   done(
     null,
     await db.user.findOne({
@@ -114,7 +119,9 @@ app.post('/login/callback', passport.authenticate('saml'), (req, res, next) => {
   // Redirect to auth landing page
   // TODO: Add environment variable
   console.log("JASON: Login callback");
+  console.log(req.user);
   res.locals.user = req.user;
+  // TODO: Look to purge this
   app.locals.user = req.user;
   //res.locals.user = req.user;
   //next();
@@ -125,12 +132,13 @@ app.post('/login/callback', passport.authenticate('saml'), (req, res, next) => {
     res.send('Login successful!');
   }
 });
-
 app.get('/logout', (req, res) => {
   // If there's no logged in user, just redirect to frontend login screen
   if (req.user == null) {
     return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`);
   }
+  // Clear app.locals.user
+  delete app.locals.user;
   samlStrategy.logout(req, function (err, uri) {
     // Clear user login session on our end
     res.clearCookie('connect.sid');
@@ -153,11 +161,15 @@ app.get('/logout/callback', (req, res) => {
 const server = new ApolloServer({
   schema,
   context: ({ req, res }) => ({
-    getUser: () => {
+    getUser: async () => {
       console.log("JASON: Res");
-      console.log(res.locals.user);
       console.log(app.locals.user);
-      return app.locals.user;
+    
+      const user = await db.user.findOne({
+        where: { email: { [Op.like]: app.locals.user.userEmail } },
+      });
+      console.log(user);
+      return user;
     },
   }),
   playground: {
