@@ -97,7 +97,10 @@ function application({ authStrategy, graphqlPath, sessionSecret }) {
   const httpServer = http.createServer(app);
   server.installSubscriptionHandlers(httpServer);
 
-  return httpServer;
+  return {
+    app: app,
+    server: httpServer,
+  };
 }
 
 module.exports = application;

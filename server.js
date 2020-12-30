@@ -4,11 +4,21 @@ require('dotenv').config();
 
 const App = require('./app');
 
-const PORT = 4000;
-const HOST = `http://localhost:${PORT}`;
-const WEBSOCKET = `ws://localhost:${PORT}/graphql`;
 // TODO: change secret and move to env variable
 const SESSION_SECRET = 'notsecure';
+
+const PORT = 4000;
+
+const hostUrl = process.env.REACT_APP_BACKEND_HOST || `http://localhost:${PORT}`;
+let webSocketUrl = `ws://localhost:${PORT}/graphql`;
+if (process.env.REACT_APP_BACKEND_WEBSOCKET_URL) {
+  if (process.env.REACT_APP_BACKEND_WEBSOCKET_URL === '/') {
+    const url = new URL(process.env.REACT_APP_BACKEND_WEBSOCKET_URL, window.location.href);
+    webSocketUrl = url.protocol.replace('http', 'ws');
+  } else {
+    webSocketUrl = process.env.REACT_APP_BACKEND_WEBSOCKET_URL;
+  }
+}
 
 if (require.main === module) {
   /* eslint-disable-next-line global-require */
@@ -17,10 +27,10 @@ if (require.main === module) {
     authStrategy,
     graphqlPath: '/',
     sessionSecret: SESSION_SECRET,
-  }).listen(PORT, () => {
+  }).server.listen(PORT, () => {
     /* eslint-disable-next-line no-console */
-    console.log(`🚀 Server ready at ${HOST}`);
+    console.log(`🚀 Server ready at ${hostUrl}`);
     /* eslint-disable-next-line no-console */
-    console.log(`🚀 Subscriptions ready at ${WEBSOCKET}`);
+    console.log(`🚀 Subscriptions ready at ${webSocketUrl}`);
   });
 }
