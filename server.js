@@ -11,6 +11,8 @@ const { ApolloServer } = require('apollo-server-express');
 const { Op } = require('sequelize');
 const db = require('./models');
 const { schema } = require('./graphql');
+const uuid = require('uuid').v4;
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const PORT = 4000;
 const HOST = `http://localhost:${PORT}`;
@@ -91,9 +93,20 @@ passport.deserializeUser(async (email, done) => {
 
 const app = express();
 
+// Used for storing sessions in postgres
+const sequelizeStore = new SequelizeStore({
+  db: db.sequelize,
+});
+
 app.use(
   session({
+    genid: (req) => {
+      console.log("Inside session middleware");
+      // Generate UUID for session ID
+      return uuid();
+    },
     secret: SESSION_SECRET,
+    store: sequelizeStore,
     resave: false,
     saveUninitialized: false,
     // TODO: Handle login cookie expiring
@@ -101,6 +114,8 @@ app.use(
     //TODO: 24 hours? every week?
   })
 );
+// Updates our database to include sessions table
+sequelizeStore.sync();
 
 app.use(passport.initialize({}));
 app.use(passport.session({}));
@@ -110,9 +125,6 @@ app.use(bodyParser.json());
 
 
 app.get('/login', passport.authenticate('saml'));
-
-// TODO: Remove this global variable
-let user = null;
 
 // TODO: Redirect to frontend auth landing page
 app.post('/login/callback', passport.authenticate('saml'), (req, res, next) => {
@@ -157,29 +169,26 @@ app.get('/logout/callback', (req, res) => {
   return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`)
 });
 
-// ** setup apollo server + middleware + run
+app.use('/', (req, res, next) => {
+  passport.authenticate('saml', { scope: ['profile','email'] }, (err, user, info) => {
+    if (user) {
+      req.user = user
+    }
+
+    next()
+  })(req, res, next)
+})
 const server = new ApolloServer({
   schema,
-  context: ({ req, res }) => ({
-    getUser: async () => {
-      console.log("JASON: Res");
-      console.log(app.locals.user);
-    
-      const user = await db.user.findOne({
-        where: { email: { [Op.like]: app.locals.user.userEmail } },
-      });
-      console.log(user);
-      return user;
-    },
-  }),
-  playground: {
-    settings: {
-      'request.credentials': 'same-origin',
-    },
-  },
+  context: ({ req }) => {
+    console.log("JASON: REq user");
+    console.log(req.user);
+    return req.user;
+  }
+
 });
 
-server.applyMiddleware({ app, path: '/' });
+server.applyMiddleware({ app });
   
 // wrap this in if statement?
 app.listen({ port: PORT }, () => {
