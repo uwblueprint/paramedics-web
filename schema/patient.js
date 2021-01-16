@@ -39,6 +39,7 @@ const patientSchema = `
       transportTime: DateTime,
       hospitalId: ID,
       ambulanceId: ID
+      ctas: Int
     ): Patient!
     
     updatePatient(
@@ -55,6 +56,7 @@ const patientSchema = `
       transportTime: DateTime,
       hospitalId: ID,
       ambulanceId: ID
+      ctas: Int
     ): Patient!
 
     restorePatient(id: ID!): Patient!
@@ -85,6 +87,7 @@ const patientSchema = `
     updatedAt: DateTime,
     hospitalId: Hospital,
     ambulanceId: Ambulance
+    ctas: Int
   }
   `;
 exports.patientSchema = patientSchema;
