@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
                 collectionPoint.destroy()
               )
             );
+
+          instance
+            .getLocationPins()
+            .then((pins) => pins.map((pin) => pin.destroy()));
         },
         afterRestore: (instance) => {
           instance
@@ -28,12 +32,20 @@ module.exports = (sequelize, DataTypes) => {
                 collectionPoint.restore()
               )
             );
+
+          instance
+            .getLocationPins({ paranoid: false })
+            .then((pins) => pins.map((pin) => pin.restore()));
         },
       },
     }
   );
   Event.associate = (models) => {
     Event.hasMany(models.collectionPoint, {
+      hooks: true,
+    });
+
+    Event.hasMany(models.locationPins, {
       hooks: true,
     });
 

@@ -15,17 +15,28 @@ module.exports = (sequelize, DataTypes) => {
           instance
             .getPatients()
             .then((patients) => patients.map((patient) => patient.destroy()));
+
+          instance.getLocationPin().then((pin) => pin.destroy());
         },
         afterRestore: (instance) => {
           instance
             .getPatients({ paranoid: false })
             .then((patients) => patients.map((patient) => patient.restore()));
+          instance
+            .getLocationPin({ paranoid: false })
+            .then((pin) => pin.restore());
         },
       },
     }
   );
   collectionPoint.associate = (models) => {
     collectionPoint.hasMany(models.patient, {
+      hooks: true,
+    });
+
+    collectionPoint.hasOne(models.locationPins, {
+      foreignKey: 'ccpId',
+      targetKey: 'id',
       hooks: true,
     });
 

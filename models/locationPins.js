@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       latitude: DataTypes.FLOAT,
       longitude: DataTypes.FLOAT,
       address: DataTypes.STRING,
+      pinType: {
+        type: DataTypes.ENUM,
+        values: ['OTHER', 'CCP', 'EVENT'],
+      },
+      ccpId: DataTypes.INTEGER,
     },
     { paranoid: true }
   );
@@ -17,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
 
     locationPin.belongsTo(models.event, {
       foreignKey: 'eventId',
+      targetKey: 'id',
+    });
+
+    locationPin.belongsTo(models.collectionPoint, {
+      foreignKey: 'ccpId',
       targetKey: 'id',
     });
   };

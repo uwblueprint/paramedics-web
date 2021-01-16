@@ -11,11 +11,8 @@ module.exports = {
     checkParanoid = false,
     errorMessage = 'Invalid user ID: ' + userId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.user.findByPk(userId, options).then((user) => {
+    // if checkParanoid is TRUE, we want to turn OFF the paranoid check in sequelize options
+    db.user.findByPk(userId, { paranoid: !checkParanoid }).then((user) => {
       if (!user) {
         throw new Error(errorMessage);
       }
@@ -26,11 +23,7 @@ module.exports = {
     checkParanoid = false,
     errorMessage = 'Invalid event ID: ' + eventId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.event.findByPk(eventId, options).then((event) => {
+    db.event.findByPk(eventId, { paranoid: !checkParanoid }).then((event) => {
       if (!event) {
         throw new Error(errorMessage);
       }
@@ -41,77 +34,93 @@ module.exports = {
     checkParanoid = false,
     errorMessage = 'Invalid CCP ID: ' + ccpId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.collectionPoint.findByPk(ccpId, options).then((ccp) => {
-      if (!ccp) {
-        throw new Error(errorMessage);
-      }
-    });
+    db.collectionPoint
+      .findByPk(ccpId, { paranoid: !checkParanoid })
+      .then((ccp) => {
+        if (!ccp) {
+          throw new Error(errorMessage);
+        }
+      });
   },
   validateAmbulance: (
     ambulanceId,
     checkParanoid = false,
     errorMessage = 'Invalid ambulance ID: ' + ambulanceId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.ambulance.findByPk(ambulanceId, options).then((ambulance) => {
-      if (!ambulance) {
-        throw new Error(errorMessage);
-      }
-    });
+    db.ambulance
+      .findByPk(ambulanceId, { paranoid: !checkParanoid })
+      .then((ambulance) => {
+        if (!ambulance) {
+          throw new Error(errorMessage);
+        }
+      });
   },
   validateHospital: (
     hospitalId,
     checkParanoid = false,
     errorMessage = 'Invalid hospital ID: ' + hospitalId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.hospital.findByPk(hospitalId, options).then((hospital) => {
-      if (!hospital) {
-        throw new Error(errorMessage);
-      }
-    });
+    db.hospital
+      .findByPk(hospitalId, { paranoid: !checkParanoid })
+      .then((hospital) => {
+        if (!hospital) {
+          throw new Error(errorMessage);
+        }
+      });
   },
   validatePatient: (
     patientId,
     checkParanoid = false,
     errorMessage = 'Invalid patient ID: ' + patientId
   ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.patient.findByPk(patientId, options).then((patient) => {
-      if (!patient) {
-        throw new Error(errorMessage);
-      }
-    });
-  },
-  validateLocationPin: (
-    locationPinId,
-    checkParanoid = false,
-    errorMessage = 'Invalid location pin ID: ' + locationPinId
-  ) => {
-    const options = { paranoid: true };
-    if (checkParanoid) {
-      options.paranoid = false;
-    }
-    return db.locationPins
-      .findByPk(locationPinId, options)
-      .then((locationPin) => {
-        if (!locationPin) {
+    db.patient
+      .findByPk(patientId, { paranoid: !checkParanoid })
+      .then((patient) => {
+        if (!patient) {
           throw new Error(errorMessage);
         }
       });
+  },
+  validateLocationPin: (params) => {
+    if (params.args.pinType === 'CCP') {
+      if (!params.args.ccpId) {
+        throw new Error('A CCP pin must be created by a valid CCP');
+      } else {
+        db.collectionPoint
+          .findByPk(params.args.ccpId, { paranoid: !params.checkParanoid })
+          .then((ccp) => {
+            if (!ccp) {
+              throw new Error('Invalid CCP pin: ', params.args.ccpId);
+            }
+          });
+      }
+    }
+
+    if (params.args.pinType === 'EVENT') {
+      if (!params.args.eventId) {
+        throw new Error('An event pin must be created by a valid event');
+      }
+
+      if (params.args.ccpId) {
+        throw new Error('An event pin cannot be created by a CCP');
+      }
+    }
+
+    if (params.args.pinType === 'OTHER') {
+      if (params.args.ccpId) {
+        throw new Error('An event pin cannot be created by a CCP');
+      }
+    }
+
+    if (params.args.id) {
+      db.locationPins
+        .findByPk(params.args.id, { paranoid: !params.checkParanoid })
+        .then((locationPin) => {
+          if (!locationPin) {
+            throw new Error('Invalid location pin ID: ' + params.args.id);
+          }
+        });
+    }
   },
   validateRole: (
     role,
