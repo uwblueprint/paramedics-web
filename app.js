@@ -109,11 +109,11 @@ function application({ authStrategy, graphqlPath, sessionSecret }) {
     }
     // Clear app.locals.user
     delete app.locals.user;
-    samlStrategy.logout(req, function (err, uri) {
+    authStrategy.logout(req, function (err, uri) {
       // Clear user login session on our end
       res.clearCookie('connect.sid');
       // Redirect to logout callback URL
-      // Note: this uri is specified in the `returnTo` field of `samlStrategy`'s `additionalLogoutParams`
+      // Note: this uri is specified in the `returnTo` field of `authStrategy`'s `additionalLogoutParams`
       return res.redirect(uri);
     });
   });
