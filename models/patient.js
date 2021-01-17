@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       notes: DataTypes.TEXT,
       transportTime: DataTypes.DATE,
+      ctas: DataTypes.INTEGER,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },

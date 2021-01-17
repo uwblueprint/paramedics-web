@@ -105,6 +105,7 @@ const patientResolvers = {
         transportTime: args.transportTime,
         hospitalId: args.hospitalId,
         ambulanceId: args.ambulanceId,
+        ctas: args.ctas,
       });
       const collectionPoint = await db.collectionPoint.findByPk(
         newPatient.collectionPointId
@@ -136,6 +137,7 @@ const patientResolvers = {
         {
           gender: args.gender,
           age: args.age,
+          ctas: args.ctas,
           runNumber: args.runNumber,
           barcodeValue: args.barcodeValue,
           collectionPointId: args.collectionPointId,
