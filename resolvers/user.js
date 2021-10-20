@@ -14,6 +14,12 @@ const userResolvers = {
       validators.validateRole(Object.values(Roles), validators.demoRole);
       return db.user.findByPk(args.id);
     },
+    loggedInUser: async (parent, args, context) => {
+      console.log("JASON: LoggedInUser");
+      //console.log(await context.getUser());
+      console.log(await context());
+      return await context();
+    },
     roles: () => db.role.findAll(),
   },
   Mutation: {
